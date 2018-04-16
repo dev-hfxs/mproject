@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<importDatas>
+	<!-- excel 行号和列号从0开始 -->
+	<data name="processor" sheetNum="0" heardRowNum="0">
+		<column name="nfc_number" 	  dataType="String" isNull="N" cellNum="1">NFC序列号</column>
+		<column name="moxa_number" 	  dataType="String" isNull="Y" cellNum="2">MOXA序列号</column>
+		<column name="processor_id"   dataType="String" isNull="Y" cellNum="3">处理器ID</column>
+		<column name="ip"			  dataType="String" isNull="Y" cellNum="4">IP</column>
+		<column name="detector_num"   dataType="int" isNull="Y" cellNum="5">下属探测器数量</column>
+	</data>
+	<data name="detector" sheetNum="0" heardRowNum="0">
+		<column name="detector_id"    dataType="String"		 isNull="Y" cellNum="1">探测器ID</column>
+		<column name="processor_id"   dataType="String" 	 isNull="Y" cellNum="2">处理器ID</column>
+		<column name="nfc_number" 	  dataType="String" 	 isNull="Y" cellNum="3">NFC序列号</column>
+		<column name="moxa_number" 	  dataType="String" 	 isNull="Y" cellNum="4">MOXA序列号</column>
+		<column name="longitude"	  dataType="double(9,6)" isNull="Y" cellNum="5">经度</column>
+		<column name="latitude"   	  dataType="double(9,6)" isNull="Y" cellNum="6">纬度量</column>
+		<column name="start_point"    dataType="double(9,6)" isNull="Y" cellNum="7">起点</column>
+		<column name="end_point"      dataType="double(9,6)" isNull="Y" cellNum="8">终点</column>
+		<column name="pos_desc"       dataType="String"		 isNull="Y" cellNum="9">位置描述</column>
+	</data>
+</importDatas>

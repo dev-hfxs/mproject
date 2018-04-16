@@ -1,0 +1,17 @@
+eclipse.preferences.version=1
+encoding//config/mproject.properties=UTF-8
+encoding//src/main/java=UTF-8
+encoding//src/main/java/com/sierotech/mproject/cache/EhCacheProvider.java=UTF-8
+encoding//src/main/java/com/sierotech/mproject/common/utils/ConfigSQLUtil.java=UTF-8
+encoding//src/main/java/com/sierotech/mproject/common/utils/DateUtils.java=UTF-8
+encoding//src/main/java/com/sierotech/mproject/common/utils/EncodingDetect.java=UTF-8
+encoding//src/main/java/com/sierotech/mproject/common/utils/JsonUtil.java=UTF-8
+encoding//src/main/java/com/sierotech/mproject/common/utils/KeyUtil.java=UTF-8
+encoding//src/main/java/com/sierotech/mproject/common/utils/SQLPoolInitializor.java=UTF-8
+encoding//src/main/java/com/sierotech/mproject/common/utils/SecretUtil.java=UTF-8
+encoding//src/main/java/com/sierotech/mproject/common/utils/SerializeUtil.java=UTF-8
+encoding//src/main/java/com/sierotech/mproject/common/utils/UUIDGenerator.java=UTF-8
+encoding//src/main/java/com/sierotech/mproject/common/utils/spring/ContextLoadFinishHandle.java=UTF-8
+encoding//src/main/java/com/sierotech/mproject/common/utils/spring/SpringContextUtil.java=UTF-8
+encoding//src/main/webapp/style/default/main.css=UTF-8
+encoding//src/test/java=UTF-8
