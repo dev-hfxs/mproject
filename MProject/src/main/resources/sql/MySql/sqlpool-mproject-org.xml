@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sqls>
+	<sql id="mproject-org-getValidOrgs" name="获取未删除的组织机构">
+		<content>
+		 SELECT id,id as org_id, org_code, org_name,create_date 
+		 FROM t_org
+		 WHERE status IN ('N','R')  
+		</content>
+		<description></description>
+	</sql>
+	
+	<sql id="mproject-org-checkOrgExistsByOrgName" name="检查单位名是否存在">
+		<content>
+		SELECT COUNT(*) as countNum FROM t_org WHERE id != ':orgId' AND org_name = ':orgName'
+		</content>
+		<description>
+		</description>
+	</sql>
+	
+	<sql id="mproject-org-addOrg" name="添加单位">
+		<content>
+		INSERT INTO t_org(id,org_name,org_code,tax_number,address,area_code,telephone,status,open_bank,account,contacts,contact_position,email,contact_phone,creator,create_date) 
+		VALUES (':orgId',':orgName',':orgCode',':taxNumber',':address',':areaCode',':telephone','N',':openBank',':account',':contacts',':contactPosition',':email',':contactPhone',':creator',':createDate') ;
+		</content>
+		<description>
+		</description>
+	</sql>
+	
+	<sql id="mproject-org-updateOrg" name="修改单位">
+		<content>
+		UPDATE t_org SET id=':id', org_name=':orgName', org_code=':orgCode', tax_number=':taxNumber', address=':address', area_code=':areaCode', telephone=':telephone', open_bank=':openBank', account=':account', contacts=':contacts', contact_position=':contactPosition', email=':email', contact_phone=':contactPhone' WHERE id = ':orgId' 
+		</content>
+		<description>
+		</description>
+	</sql>
+
+	<sql id="mproject-org-deleteOrgById" name="删除单位">
+		<content>
+		UPDATE t_org SET status='D' WHERE id = ':orgId' 
+		</content>
+		<description>
+		</description>
+	</sql>
+	
+	<sql id="mproject-org-recoverOrgById" name="恢复单位">
+		<content>
+		UPDATE t_org SET status='R' WHERE id = ':orgId' 
+		</content>
+		<description>
+		</description>
+	</sql>
+	
+	<sql id="mproject-org-queryValidOrgs" name="获取未删除的单位列表">
+		<content>
+		SELECT id,org_name, org_code, tax_number, address, area_code, telephone, open_bank, account, contacts, contact_position, email, contact_phone, status, creator,create_date
+		FROM t_org 
+		WHERE status IN ('N','R') [ AND instr(org_name,':orgName') > 0 ] ORDER BY create_date DESC 
+		</content>
+		<description>
+		</description>
+	</sql>
+
+	<sql id="mproject-org-queryNotValidOrgs" name="获取删除的单位列表">
+		<content>
+		SELECT id,org_name, org_code, tax_number, address, area_code, telephone, open_bank, account, contacts, contact_position, email, contact_phone, status, creator,create_date
+		FROM t_org 
+		WHERE status = 'D' [ AND instr(org_name,':orgName') > 0 ]  ORDER BY create_date DESC 
+		</content>
+		<description>
+		</description>
+	</sql>
+	
+	<sql id="mproject-org-queryOrgById" name="根据ID获取单位">
+		<content>
+		SELECT id,org_name, org_code, tax_number, address, area_code, telephone, open_bank, account, contacts, contact_position, email, contact_phone, status, creator,create_date
+		FROM t_org 
+		WHERE id = ':orgId'  
+		</content>
+		<description>
+		</description>
+	</sql>
+	
+</sqls>

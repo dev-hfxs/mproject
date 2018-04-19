@@ -15,7 +15,7 @@ create table t_user
    init_password	char(1)			       null		comment '是否初始化密码',
    sex                  char(1)                        null		comment '性别M:男,F:女',
    birthday             varchar(19)                    null		comment '出生日期',
-   creator              Varchar(64)                    null ,
+   creator              varchar(64)                    null ,
    create_date          varchar(19)                    null ,
    constraint pk_t_user_id primary key (id)
 );
@@ -59,7 +59,7 @@ create table t_project
 create table t_org 
 (
    id                   varchar(32)                    not null,
-   org_name             varchar(128)                   not null comment '单位名称',
+   org_name             varchar(256)                   not null comment '单位名称',
    org_code             varchar(20)                    not null comment '单位编码',
    tax_number           varchar(25)                    null comment '单位税号',
    address              varchar(256)                   null comment '单位地址',

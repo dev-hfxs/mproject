@@ -11,6 +11,10 @@
        http://cxf.apache.org/schemas/jaxws.xsd">
 	
     
+    <context:component-scan base-package="com.sierotech.mproject.common.utils">
+		<context:exclude-filter type="annotation" expression="org.springframework.stereotype.Controller"/> 
+	</context:component-scan>
+	
 	<!-- 使用annotation 自动注册bean,并保证@Required,@Autowired的属性被注入 -->
 	<context:component-scan base-package="com.sierotech.mproject.server.service">
 	</context:component-scan>

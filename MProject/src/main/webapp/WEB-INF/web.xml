@@ -36,10 +36,10 @@
         <servlet-name>appServlet</servlet-name>
         <url-pattern>*.do</url-pattern>
     </servlet-mapping>
-    <!-- 
+    <!--  认证拦截  -->
 	<filter>
 		<filter-name>AuthFilter</filter-name>
-		<filter-class>com.richfit.eplanet.etp.web.filter.AuthFilter</filter-class>
+		<filter-class>com.sierotech.mproject.server.filter.AuthFilter</filter-class>
 		<init-param>
 			<param-name>_except_urlpattern</param-name>
 			<param-value>/error/.+\.jsp,/login.jsp,/auth/login.do,/auth/logout.do</param-value>
@@ -53,7 +53,7 @@
 		<filter-name>AuthFilter</filter-name>
 		<url-pattern>/*</url-pattern>
 	</filter-mapping>
- -->
+	
 	<filter>
 		<description>过滤编码配置</description>
 		<filter-name>encodingFilter</filter-name>

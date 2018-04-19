@@ -5,12 +5,12 @@ INSERT INTO t_org(id,org_name,org_code,tax_number,address,area_code,telephone,st
 
 /* 初始用户类型即角色 */
 
-INSERT INTO t_role(id,role_name,role_type,home_page,role_desc) VALUES('r0dd980638bc43efb2e01d362db32159','超级管理员','S','/project/projectList.jsp','');
-INSERT INTO t_role(id,role_name,role_type,home_page,role_desc) VALUES('rc106393c9f649e393d7c5d1a52c6105','管理员','M','','/project/projectList.jsp');
-INSERT INTO t_role(id,role_name,role_type,home_page,role_desc) VALUES('r9f16963cd27441594bb8fc6de9738a1','系统工程师','E','/project/projectPsnList.jsp','可作为安装工程师、调试工程师');
-INSERT INTO t_role(id,role_name,role_type,home_page,role_desc) VALUES('re0957cb47484ae8b0647300c0f7fac7','施工经理','B','/currentProjectMgr.jsp','外部施工单位人员');
-INSERT INTO t_role(id,role_name,role_type,home_page,role_desc) VALUES('r88c5aa7352a4c1081675436dc06b991','安装工程师','I','/project/waitingJobList.jsp','');
-INSERT INTO t_role(id,role_name,role_type,home_page,role_desc) VALUES('rbeea068409440528713d361e814c8b3','调试工程师','D','/project/waitingJobList.jsp','');
+INSERT INTO t_role(id,role_name,role_type,home_page,role_desc) VALUES('r0dd980638bc43efb2e01d362db32159','超级管理员','S','m.user.mgr#m.add.user','');
+INSERT INTO t_role(id,role_name,role_type,home_page,role_desc) VALUES('rc106393c9f649e393d7c5d1a52c6105','管理员','M','m.user.mgr#m.add.user','');
+INSERT INTO t_role(id,role_name,role_type,home_page,role_desc) VALUES('r9f16963cd27441594bb8fc6de9738a1','系统工程师','E','m.buildproject.mgr#m.project.psn.mgr','可作为安装工程师、调试工程师');
+INSERT INTO t_role(id,role_name,role_type,home_page,role_desc) VALUES('re0957cb47484ae8b0647300c0f7fac7','施工经理','B','m.buildproject.mgr#m.current.project','外部施工单位人员');
+INSERT INTO t_role(id,role_name,role_type,home_page,role_desc) VALUES('r88c5aa7352a4c1081675436dc06b991','安装工程师','I','m.buildproject.mgr#m.wait.job','');
+INSERT INTO t_role(id,role_name,role_type,home_page,role_desc) VALUES('rbeea068409440528713d361e814c8b3','调试工程师','D','m.buildproject.mgr#m.wait.job','');
 
 /* 初始用户 */
 
@@ -32,18 +32,19 @@ INSERT INTO t_user(id,user_name,full_name,id_number,org_id,contact_number,role_i
 /* 初始菜单 */
 
 INSERT INTO  t_menu(id,menu_name,menu_code,menu_url,icon_url,parent_id,order_num) VALUES ('ma900252694f4bd99fa3e16ce9df3cd1','人员管理','m.user.mgr','','','ROOT',1);
-INSERT INTO  t_menu(id,menu_name,menu_code,menu_url,icon_url,parent_id,order_num) VALUES ('m74ddfae86104121883fec9edbbbdc88','添加用户','m.add.user','/user/userAdd.jsp','','ma900252694f4bd99fa3e16ce9df3cd1',11);
-INSERT INTO  t_menu(id,menu_name,menu_code,menu_url,icon_url,parent_id,order_num) VALUES ('m74ddfae86104121883fec9edbbbdc66','用户修改','m.update.user','/user/userList.jsp','','ma900252694f4bd99fa3e16ce9df3cd1',12);
+
+INSERT INTO  t_menu(id,menu_name,menu_code,menu_url,icon_url,parent_id,order_num) VALUES ('m74ddfae86104121883fec9edbbbdc66','用户修改','m.update.user','/user/userList.jsp','','ma900252694f4bd99fa3e16ce9df3cd1',11);
+INSERT INTO  t_menu(id,menu_name,menu_code,menu_url,icon_url,parent_id,order_num) VALUES ('m74ddfae86104121883fec9edbbbdc88','添加用户','m.add.user','/user/userAdd.jsp','','ma900252694f4bd99fa3e16ce9df3cd1',12);
 INSERT INTO  t_menu(id,menu_name,menu_code,menu_url,icon_url,parent_id,order_num) VALUES ('m74ddfae86104121883fec9edbbbdc99','恢复用户','m.resume.user','/user/delUserList.jsp','','ma900252694f4bd99fa3e16ce9df3cd1',13);
 
 INSERT INTO  t_menu(id,menu_name,menu_code,menu_url,icon_url,parent_id,order_num) VALUES ('ma900252694f4bd99fa3e16ce9df3cd2','单位管理','m.org.mgr','','','ROOT',2);
-INSERT INTO  t_menu(id,menu_name,menu_code,menu_url,icon_url,parent_id,order_num) VALUES ('m2212adcb9d8458882fb04b1ecfbca7a','添加单位','m.add.org','/org/orgAdd.jsp','','ma900252694f4bd99fa3e16ce9df3cd2',21);
-INSERT INTO  t_menu(id,menu_name,menu_code,menu_url,icon_url,parent_id,order_num) VALUES ('ma900252694f4bd99fa3e16ce9df3c68','单位修改','m.update.org','org/orgList.jsp','','ma900252694f4bd99fa3e16ce9df3cd2',22);
-INSERT INTO  t_menu(id,menu_name,menu_code,menu_url,icon_url,parent_id,order_num) VALUES ('mcc00252694f4bd99fa3e16ce9df3c69','恢复单位','m.resume.org','org/delOrgList.jsp','','ma900252694f4bd99fa3e16ce9df3cd2',23);
+INSERT INTO  t_menu(id,menu_name,menu_code,menu_url,icon_url,parent_id,order_num) VALUES ('ma900252694f4bd99fa3e16ce9df3c68','单位修改','m.update.org','/org/orgList.jsp','','ma900252694f4bd99fa3e16ce9df3cd2',21);
+INSERT INTO  t_menu(id,menu_name,menu_code,menu_url,icon_url,parent_id,order_num) VALUES ('m2212adcb9d8458882fb04b1ecfbca7a','添加单位','m.add.org','/org/orgAdd.jsp','','ma900252694f4bd99fa3e16ce9df3cd2',22);
+INSERT INTO  t_menu(id,menu_name,menu_code,menu_url,icon_url,parent_id,order_num) VALUES ('mcc00252694f4bd99fa3e16ce9df3c69','恢复单位','m.resume.org','/org/delOrgList.jsp','','ma900252694f4bd99fa3e16ce9df3cd2',23);
 
 INSERT INTO  t_menu(id,menu_name,menu_code,menu_url,icon_url,parent_id,order_num) VALUES ('ma900252694f4bd99fa3e16ce9df3cd3','项目管理','m.project.mgr','','','ROOT',3);
-INSERT INTO  t_menu(id,menu_name,menu_code,menu_url,icon_url,parent_id,order_num) VALUES ('md27e92105364fa3a8a940939b4e20a6','新建项目','m.add.project','/project/projectAdd.jsp','','ma900252694f4bd99fa3e16ce9df3cd3',31);
-INSERT INTO  t_menu(id,menu_name,menu_code,menu_url,icon_url,parent_id,order_num) VALUES ('md2ce92105364fa3a8a910939b4e2096','修改项目','m.update.project','/project/projectList.jsp','','ma900252694f4bd99fa3e16ce9df3cd3',32);
+INSERT INTO  t_menu(id,menu_name,menu_code,menu_url,icon_url,parent_id,order_num) VALUES ('md2ce92105364fa3a8a910939b4e2096','修改项目','m.update.project','/project/projectList.jsp','','ma900252694f4bd99fa3e16ce9df3cd3',31);
+INSERT INTO  t_menu(id,menu_name,menu_code,menu_url,icon_url,parent_id,order_num) VALUES ('md27e92105364fa3a8a940939b4e20a6','新建项目','m.add.project','/project/projectAdd.jsp','','ma900252694f4bd99fa3e16ce9df3cd3',32);
 
 
 INSERT INTO  t_menu(id,menu_name,menu_code,menu_url,icon_url,parent_id,order_num) VALUES ('ma900252694f4bd99fa3e16ce9df3cd4','查询管理','m.query.mgr','','','ROOT',4);

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sqls>
+	<sql id="mproject-login-getUserByUserName" name="根据用户名获取用户">
+		<content>
+		 SELECT u.id, u.user_name, u.full_name, u.id_number, u.org_id, u.role_id, u.status, u.password, init_password,o.org_name,r.role_type,r.role_name,r.home_page
+		 FROM t_user u
+		 LEFT JOIN t_org o ON u.org_id = o.id
+		 LEFT JOIn t_role r ON u.role_id = r.id 
+		 WHERE user_name = ':userName' 
+		</content>
+		<description></description>
+	</sql>
+	
+</sqls>

@@ -30,16 +30,16 @@ body{
 <body>
 <div style="width:400px;height:360px;margin-left:auto;margin-right:auto;margin-top:200px;">
 	<div class="easyui-panel" title=" 用 户 登 录" style="width:400px;max-width:400px;padding:30px 60px;">
-		<form id="ff" class="easyui-form" method="post" data-options="novalidate:true">
+		<form id="ff" class="easyui-form" method="post">
 			<div style="margin-bottom:20px">
-				<input class="easyui-textbox" name="name" style="width:100%;height:28px;" data-options="label:'用户名:',required:true,validType:'email'">
+				<input class="easyui-textbox" id="userName" name="userName" style="width:100%;height:28px;" data-options="label:'用户名:',required:true,validType:['email','length[10,50]']">
 			</div>
 			<div style="margin-bottom:20px">
-				<input class="easyui-textbox" name="email" style="width:100%;height:28px;" data-options="label:'姓 名:',required:true">
+				<input class="easyui-textbox" id="fullName" name="fullName" style="width:100%;height:28px;" data-options="label:'姓 名:',required:true,validType:'length[2,15]'">
 			</div>
 			<div style="margin-bottom:20px">
-				<input class="easyui-passwordbox" prompt="Password" iconWidth="28" style="width:100%;height:28px;" data-options="label:'密 码:',showEye:false,required:true">
-			</div>			
+				<input class="easyui-passwordbox" id="password" name="password" prompt="Password" iconWidth="28" style="width:100%;height:28px;" data-options="label:'密 码:',showEye:false,required:true,validType:'length[8,20]'">
+			</div>
 		</form>
 		<div style="text-align:center;padding:5px 0">
 			<a href="javascript:void(0)" class="easyui-linkbutton" onclick="doLogin()" style="width:80px;height:32px">登 录</a>
@@ -50,10 +50,32 @@ body{
 <div>
 	<script>
 		function doLogin(){
-			$('#ff').form('submit',{
-				onSubmit:function(){
-					return $(this).form('enableValidation').form('validate');
-				}
+			if($("#ff").form('validate') == false){
+				$.messager.alert('输入错误','请检查输入项!');
+				return false;
+			}
+			
+			$.ajax( {
+			    url:'<%=path%>/auth/login.do',
+			    data:{
+			    	'userName':$("#userName").val(),
+			    	'fullName':$("#fullName").val(),
+			    	'password':$("#password").val()	    	
+			    },
+			    type:'post',
+			    async:false,
+			    dataType:'json',
+			    success:function(data) {
+			        if (data.returnCode == "success") {
+					  	$("#msgContent").html("&nbsp;&nbsp;正在登录...");
+						window.location="<%=path%>/system/layout/main.jsp";
+			    	}else {
+					  	$("#msgContent").html(data.msg);
+					}
+			    },
+			    error : function(data) {
+			    	$.messager.alert('异常',data.responseText);
+		        }
 			});
 		}
 		

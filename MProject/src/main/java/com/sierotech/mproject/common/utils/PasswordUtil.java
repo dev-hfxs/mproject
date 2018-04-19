@@ -39,9 +39,9 @@ public class PasswordUtil {
 	
 //	  public static void main(String[] arg0) throws Exception
 //	  {
-//	       String pwd = "12345";
+//	       String pwd = "00000000";
 //		   String str = encrypt(pwd);
 //		   System.out.println(str);
-//		   System.out.println(validPassword("12345",str));
+//		   System.out.println(validPassword("00000000",str));
 //	  }
 }

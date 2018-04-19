@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sqls>
+	<sql id="mproject-user-getUserTypes" name="获取用户类型供选择">
+		<content>
+		SELECT a.id as 'id',a.role_name as 'text' ,a.role_desc as 'desc' 
+		FROM t_role a 
+		WHERE not exists (select b.id from t_role b where b.role_type = 'S' and a.id = b.id)
+		UNION 
+		SELECT a.id as 'id',a.role_name as 'text' ,a.role_desc as 'desc' 
+		FROM t_role a 
+		WHERE a.role_type = 'S' AND 'u8952c8666964e07a9a285b10d706a61' = ':userId'
+		</content>
+		<description>
+		</description>
+	</sql>
+	
+	<sql id="mproject-user-checkUserExistsByUserName" name="检查用户名是否存在">
+		<content>
+		SELECT COUNT(*) as countNum FROM t_user WHERE id != ':userId' AND user_name = ':userName'
+		</content>
+		<description>
+		</description>
+	</sql>
+	
+	<sql id="mproject-user-addUser" name="添加用户">
+		<content>
+		INSERT INTO t_user(id,user_name,full_name,id_number,org_id,contact_number,role_id,status,password,init_password,sex,birthday,creator,create_date) 
+		VALUES (':userId',':userName',':fullName',':idCard',':orgId',':contactNumber',':roleId','N',':password','Y',':sex',':birthday',':creator',':createDate') 
+		</content>
+		<description>
+		</description>
+	</sql>
+	
+	<sql id="mproject-user-updateUser" name="修改用户">
+		<content>
+		UPDATE t_user set user_name=':userName', full_name=':fullName',id_number=':idCard', org_id=':orgId', contact_number=':contactNumber', role_id=':roleId',sex=':sex', birthday=':birthday' WHERE id = ':userId' 
+		</content>
+		<description>
+		</description>
+	</sql>
+	
+	<sql id="mproject-user-getValidUsers" name="获取有效的用户列表">
+		<content>
+		SELECT u.id, u.user_name, u.full_name, u.org_id, o.org_name, u.contact_number, u.role_id, r.role_name, u.status 
+		FROM t_user u 
+		LEFT JOIN t_org o ON u.org_id = o.id 
+		LEFT JOIN t_role r ON u.role_id = r.id 
+		WHERE u.status IN ('N','R') [ AND instr(u.user_name,':userName') > 0 ] ORDER BY u.create_date DESC
+		</content>
+		<description>
+		</description>
+	</sql>
+
+	<sql id="mproject-user-getNotValidUsers" name="获取删除的用户列表">
+		<content>
+		SELECT u.id, u.user_name, u.full_name, u.org_id, o.org_name, u.contact_number, u.role_id, r.role_name, u.status 
+		FROM t_user u 
+		LEFT JOIN t_org o ON u.org_id = o.id 
+		LEFT JOIN t_role r ON u.role_id = r.id 
+		WHERE u.status IN ('D') [ AND instr(u.user_name,':userName') > 0 ] ORDER BY u.create_date DESC
+		</content>
+		<description>
+		</description>
+	</sql>
+	<sql id="mproject-user-getUserById" name="根据ID获取用户">
+		<content>
+		SELECT u.id, u.user_name, u.full_name,u.id_number,u.birthday,u.sex, u.org_id, o.org_name, u.contact_number, u.role_id, r.role_name, u.status, u.password, u.init_password 
+		FROM t_user u 
+		LEFT JOIN t_org o ON u.org_id = o.id 
+		LEFT JOIN t_role r ON u.role_id = r.id 
+		WHERE u.id = ':userId' 
+		</content>
+		<description>
+		</description>
+	</sql>
+		
+	<sql id="mproject-user-getUserProjects" name="获取用户的项目">
+		<content>
+		SELECT p.id,p.project_name FROM t_project p 
+		LEFT JOIN t_project_ personnel pp on p.id = pp.project_id 
+		WHERE p.status = 'I' AND pp.user_id = ':userId' 
+		</content>
+		<description>
+		</description>
+	</sql>
+	
+	<sql id="mproject-user-getUserProjects" name="获取用户的菜单">
+		<content>
+		SELECT id, menu_name,menu_code,menu_url,icon_url,parent_id 
+		FROM t_menu m 
+		WHERE  EXISTS (SELECT res_id FROM t_role_res r WHERE m.id = r.res_id AND res_type = 'm' AND role_id = ':roleId' )
+		ORDER BY m.order_num ASC		
+		</content>
+		<description>
+		</description>
+	</sql>
+	
+	<sql id="mproject-user-updatePwdByUsrId" name="修改用户密码">
+		<content>
+		UPDATE t_user set password = ':newPassword', init_password = ':initPassword' WHERE id = ':userId' 
+		</content>
+		<description>
+		</description>
+	</sql>
+	
+	<sql id="mproject-user-deleteUserByUsrId" name="删除用户">
+		<content>
+		UPDATE t_user set status = 'D' WHERE id = ':userId' 
+		</content>
+		<description>
+		</description>
+	</sql>
+	
+	<sql id="mproject-user-recoverUserByUsrId" name="恢复用户">
+		<content>
+		UPDATE t_user set status = 'R' WHERE id = ':userId' 
+		</content>
+		<description>
+		</description>
+	</sql>
+</sqls>

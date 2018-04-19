@@ -35,7 +35,9 @@ public class ContextLoadFinishHandle implements ApplicationListener<ContextRefre
 
 	@Override
 	public void onApplicationEvent(ContextRefreshedEvent event) {
+		
 		if (event.getApplicationContext().getDisplayName().startsWith("Root WebApplicationContext")) {
+			
 			sqlPoolInit.run();
 
 			// 加载excel模板元数据

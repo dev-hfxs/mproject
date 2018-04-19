@@ -1,0 +1,22 @@
+package com.sierotech.mproject.server.service;
+
+import java.util.Map;
+
+import com.sierotech.mproject.common.BusinessException;
+
+public interface IUserService {
+	//
+	public boolean checkUserExist(String userId, String userName) throws BusinessException;
+
+	public void addUser(String adminUser,Map<String,Object> userObj) throws BusinessException;
+	
+	public void updateUser(String adminUser,Map<String,Object> userObj) throws BusinessException;
+
+	public void updateUserPwd(String adminUser,String userId) throws BusinessException;
+	
+	public void updateUserPwd(String userId, String oldPwd,String newPwd) throws BusinessException;
+	
+	public void deleteUser(String adminUser,String userId) throws BusinessException;
+	
+	public void recoverUser(String adminUser,String userId) throws BusinessException;
+}
