@@ -115,6 +115,9 @@ public class OrgServiceImpl implements IOrgService {
 			throw new BusinessException("修改单位错误,当前操作是未知的管理员!");
 		}
 
+		if (null == orgObj.get("orgId")) {
+			throw new BusinessException("修改单位错误,缺少单位ID!");
+		}
 		if (null == orgObj.get("orgName")) {
 			throw new BusinessException("修改单位错误,缺少单位名!");
 		}
@@ -130,6 +133,24 @@ public class OrgServiceImpl implements IOrgService {
 			throw new BusinessException("单位名已存在!");
 		}
 
+		// 先获取单位
+		String preSelectSql = ConfigSQLUtil.getCacheSql("mproject-org-queryOrgById");
+		Map<String, Object> paramsMap = new HashMap<String, Object>();
+		paramsMap.put("orgId", orgObj.get("orgId").toString());
+		String selectSql = ConfigSQLUtil.preProcessSQL(preSelectSql, paramsMap);
+		List<Map<String, Object>> alOrgs;
+		try {
+			alOrgs = springJdbcDao.queryForList(selectSql);
+		} catch (DataAccessException dae) {
+			throw new BusinessException("删除单位错误,获取单位访问数据库异常.");
+		}
+		Map<String, Object> oldOrgObj;
+		if (alOrgs != null && alOrgs.size() > 0) {
+			oldOrgObj = alOrgs.get(0);
+		} else {
+			throw new BusinessException("删除单位错误,未查询到单位.");
+		}
+				
 		String preSql = ConfigSQLUtil.getCacheSql("mproject-org-updateOrg");
 		String sql = ConfigSQLUtil.preProcessSQL(preSql, orgObj);
 		try {
@@ -139,7 +160,7 @@ public class OrgServiceImpl implements IOrgService {
 			throw new BusinessException("修改单位,访问数据库异常.");
 		}
 		// 记录日志
-		LogOperationUtil.logAdminOperation(adminUser, "单位管理", "修改单位:[" + orgObj.get("orgName").toString() + "].");
+		LogOperationUtil.logAdminOperation(adminUser, "单位管理", "修改单位:[" + orgObj.get("orgName").toString() + "];修改前的单位名:"+oldOrgObj.get("org_name").toString());
 	}
 
 	@Override
@@ -166,7 +187,7 @@ public class OrgServiceImpl implements IOrgService {
 		if (alOrgs != null && alOrgs.size() > 0) {
 			orgObj = alOrgs.get(0);
 		} else {
-			throw new BusinessException("删除单位错误,未查询到用户.");
+			throw new BusinessException("删除单位错误,未查询到单位.");
 		}
 
 		// todo 1 检查单位下面是否有施工经理,有在建的项目
@@ -209,7 +230,7 @@ public class OrgServiceImpl implements IOrgService {
 		if (alOrgs != null && alOrgs.size() > 0) {
 			orgObj = alOrgs.get(0);
 		} else {
-			throw new BusinessException("恢复单位错误,未查询到用户.");
+			throw new BusinessException("恢复单位错误,未查询到单位.");
 		}
 
 		String preUpdateSql = ConfigSQLUtil.getCacheSql("mproject-org-recoverOrgById");

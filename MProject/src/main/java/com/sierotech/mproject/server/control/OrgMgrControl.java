@@ -38,7 +38,6 @@ public class OrgMgrControl {
 	@Autowired
 	IOrgService orgService;
 	
-	
 	@RequestMapping(value = "/checkOrg")
 	@ResponseBody
 	public Map<String, String> checkUser(HttpServletRequest request) {

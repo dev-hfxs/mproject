@@ -16,7 +16,7 @@ import com.sierotech.mproject.common.BusinessException;
 * @JDK版本: 1.7
 * @创建人: lwm
 * @创建日期：2018年4月19日
-* @功能描述: 
+* @功能描述: 单位管理接口
  */
 public interface IOrgService {
 	public boolean checkOrgExist(String orgId, String orgName) throws BusinessException;

@@ -27,9 +27,9 @@
 		<thead>
 			<tr>
 				<th data-options="field:'org_code',width:100">单位编码</th>
-				<th data-options="field:'org_name',width:100">单位名称</th>
-				<th data-options="field:'tax_number',width:150">单位税号</th>
-				<th data-options="field:'address',width:100">地址</th>
+				<th data-options="field:'org_name',width:200">单位名称</th>
+				<th data-options="field:'tax_number',width:200">单位税号</th>
+				<th data-options="field:'address',width:250">地址</th>
 				<th data-options="field:'telephone',width:100">电话</th>
 				<th data-options="field:'contacts',width:100,formatter:showStatusName">联系人</th>
 				<th data-options="field:'id',width:150,align:'center',formatter:showButtons">操作</th>

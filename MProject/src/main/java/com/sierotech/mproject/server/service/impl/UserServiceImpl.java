@@ -152,6 +152,24 @@ public class UserServiceImpl implements IUserService {
 			throw new BusinessException("用户名已存在!");
 		}
 
+		// 先获取用户
+		String preSelectSql = ConfigSQLUtil.getCacheSql("mproject-user-getUserById");
+		Map<String, Object> paramsMap = new HashMap<String, Object>();
+		paramsMap.put("userId", userObj.get("id"));
+		String selectSql = ConfigSQLUtil.preProcessSQL(preSelectSql, paramsMap);
+		List<Map<String, Object>> alUsers;
+		try {
+			alUsers = springJdbcDao.queryForList(selectSql);
+		} catch (DataAccessException dae) {
+			throw new BusinessException("恢复用户错误,获取用户数据库访问异常.");
+		}
+		Map<String, Object> oldUserObj;
+		if (alUsers != null && alUsers.size() > 0) {
+			oldUserObj = alUsers.get(0);
+		} else {
+			throw new BusinessException("恢复用户错误,未查询到用户.");
+		}
+				
 		userObj.put("userId", userObj.get("id"));
 		userObj.put("idCard", userObj.get("idNumber"));
 
@@ -164,7 +182,7 @@ public class UserServiceImpl implements IUserService {
 			throw new BusinessException("修改用户,访问数据库异常.");
 		}
 		// 记录日志
-		LogOperationUtil.logAdminOperation(adminUser, "用户管理", "修改用户:[" + userObj.get("userName").toString() + "].");
+		LogOperationUtil.logAdminOperation(adminUser, "用户管理", "修改用户:[" + userObj.get("userName").toString() + "];修改前的用户名:"+oldUserObj.get("user_name").toString()+",姓名:"+oldUserObj.get("full_nme").toString());
 
 	}
 

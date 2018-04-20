@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sqls>
+	<sql id="mproject-project-addProject" name="添加项目">
+		<content>
+		 INSERT INTO t_project(id,project_name,project_number,contract_number,project_desc,project_manager,status,allow_box_num,creator,create_date)
+		 VALUES (':projectId',':projectName',':projectNumber',':contractNumber',':projectDesc',':projectManager','I', :allowBoxNum, ':creator',':createDate') 
+		</content>
+		<description></description>
+	</sql>
+	<sql id="mproject-project-updateProject" name="修改项目">
+		<content>
+		 UPDATE t_project SET project_name=':projectName',project_number=':projectNumber', contract_number=':contractNumber', project_desc=':projectDesc', project_manager=':projectManager', allow_box_num=:allowBoxNum 
+		 WHERE id = ':projectId'  
+		</content>
+		<description></description>
+	</sql>
+	
+	<sql id="mproject-project-queryProjects" name="获取项目列表">
+		<content>
+		SELECT p.id, p.project_name, p.project_number, p.contract_number, p.project_desc, p.project_manager as user_id, p.status, p.allow_box_num, p.create_date, u.user_name as project_manager 
+		FROM t_project p 
+		LEFT JOIN t_user u ON p.project_manager =  u.id 
+		WHERE 1=1 [ AND instr(project_name,':projectName') > 0 ] 
+		ORDER BY create_date DESC 
+		</content>
+		<description></description>
+	</sql>
+	
+	<sql id="mproject-project-queryProjectById" name="根据ID获取项目">
+		<content>
+		SELECT p.id, p.project_name, p.project_number, p.contract_number, p.project_desc, p.project_manager as user_id, p.status, p.allow_box_num, p.create_date, u.user_name as project_manager 
+		FROM t_project p 
+		LEFT JOIN t_user u ON p.project_manager =  u.id 
+		WHERE p.id = ':projectId'  
+		</content>
+		<description></description>
+	</sql>
+	
+	<sql id="mproject-project-checkProjectExistsByName" name="检查项目名是否存在">
+		<content>
+		SELECT COUNT(*) as countNum FROM t_project WHERE id != ':projectId' AND project_name = ':projectName'
+		</content>
+		<description>
+		</description>
+	</sql>
+</sqls>

@@ -1,10 +1,8 @@
 <%@ page pageEncoding="UTF-8"%>
 <% 
 	String path = request.getContextPath();
-	//String pageSize = request.getParameter("pageSize");
-	//String pageNum = request.getParameter("pageNum");
-	String pageSize = "5";
-	String pageNum = "1";
+	String pageSize = request.getParameter("pageSize");
+	String pageNum = request.getParameter("pageNum");
 %>
 <!DOCTYPE html>
 <html>
@@ -22,5 +20,93 @@
 </style>
 </head>
 <body>
+<div id="dgPanel" class="easyui-panel" data-options="fit:true">
+	<table id="dg" class="easyui-datagrid"  
+			data-options="singleSelect:true,rownumbers:true,pageSize:20,fit:true,url:'<%=path%>/comm/queryForPage.do',pagination:true,method:'post',toolbar:'#tb'">
+		<thead>
+			<tr>
+				<th data-options="field:'project_number',width:100">项目编号</th>
+				<th data-options="field:'project_name',width:200">项目名称</th>
+				<th data-options="field:'contract_number',width:100">合同号</th>
+				<th data-options="field:'project_manager',width:200">项目经理</th>
+				<th data-options="field:'creator',width:100">创建人</th>
+				<th data-options="field:'create_date',width:150">创建时间</th>
+				<th data-options="field:'status',width:60,formatter:showStatusName">项目状态</th>
+				<th data-options="field:'id',width:150,align:'center',formatter:showButtons">操作</th>
+			</tr>
+		</thead>
+	</table>
+</div>
+<div id="tb" style="padding:2px 5px;">
+		<input id="inpKey" class="easyui-textbox"  prompt="单位名" style="width:150px">
+		<a href="#" class="easyui-linkbutton" onclick="doSearch()" iconCls="icon-search">查询&nbsp;&nbsp;</a>
+</div>
+<script>
+
+$(function() {
+	var pageNum = "<%=pageNum%>";
+	var pageSize = "<%=pageSize%>";
+	var queryParams = $('#dg').datagrid('options').queryParams;
+	queryParams.sqlId = 'mproject-project-queryProjects';
+	if(pageNum != null && pageNum != 'null' && pageNum != ''){
+		$('#dg').datagrid('options').pageNumber = pageNum;
+	}
+	$('#dg').datagrid('reload');
+	$('.pagination-page-list').hide();
+});
+
+
+function showStatusName(val,row){
+	if (val == 'I'){
+		return '<span>在建</span>';
+	} else if (val =='F'){
+		return '<span>完成</span>';
+	}else{
+		return val;
+	}
+}
+
+function showButtons(val,row){
+	var columnItem = '<span><a href="javascript:void(0)" class="easyui-linkbutton" onclick="javascript:doUpdate(\''+val+'\')" style="width:80px;">修 改</a></span>&nbsp;&nbsp;'
+                   + '<span><a href="javascript:void(0)" class="easyui-linkbutton" onclick="doView(\''+val+'\')" style="width:80px;">查 看</a></span>&nbsp;&nbsp;';
+	return columnItem;
+}
+
+function doUpdate(val){
+	var queryParams = $('#dg').datagrid('options').queryParams;
+	var options = $("#dg" ).datagrid("getPager" ).data("pagination" ).options;
+    var pageNum = options.pageNumber;
+    var pageSize = options.pageSize;
+	var curUrl = "<%=path%>/project/projectEdit.jsp?id="+val+"&pageNum="+pageNum + "&pageSize="+pageSize;
+	parent.loadUrl(curUrl);
+}
+
+function doView(val){
+	var content = '<iframe src="<%=path%>/project/projectView.jsp?id=' + val + '" width="100%" height="80%" frameborder="0" scrolling="no"></iframe>';
+	var boarddiv = '<div id="msgwindow" title="查看项目" ></div>'// style="overflow:hidden;"可以去掉滚动条
+	$(document.body).append(boarddiv);
+	var win = $('#msgwindow').dialog({
+		content : content,
+		width : '640',
+		height : '480',
+		modal : true,
+		title : '查看项目',
+		onClose : function() {
+			$(this).dialog('destroy');// 后面可以关闭后的事件
+		}
+	});
+	win.dialog('open');
+	win.window('center');
+	
+}
+
+function doSearch(){
+	var charKey = $("#inpKey" ).val();
+	var queryParams = $('#dg').datagrid('options').queryParams;
+	queryParams.sqlId = 'mproject-project-queryProjects';
+	queryParams.projectName = charKey;
+	$('#dg').datagrid('reload');
+}
+</script>
 </body>
 </html>
