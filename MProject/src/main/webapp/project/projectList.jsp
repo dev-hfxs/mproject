@@ -22,16 +22,16 @@
 <body>
 <div id="dgPanel" class="easyui-panel" data-options="fit:true">
 	<table id="dg" class="easyui-datagrid"  
-			data-options="singleSelect:true,rownumbers:true,pageSize:20,fit:true,url:'<%=path%>/comm/queryForPage.do',pagination:true,method:'post',toolbar:'#tb'">
+			data-options="singleSelect:true,rownumbers:true,pageSize:20,fit:true,url:'<%=path%>/comm/queryForPage.do',pagination:true,method:'post',toolbar:'#tb',multiSort:true">
 		<thead>
 			<tr>
-				<th data-options="field:'project_number',width:100">项目编号</th>
-				<th data-options="field:'project_name',width:200">项目名称</th>
-				<th data-options="field:'contract_number',width:100">合同号</th>
+				<th data-options="field:'project_number',width:100,sortable:true">项目编号</th>
+				<th data-options="field:'project_name',width:200,sortable:true">项目名称</th>
+				<th data-options="field:'contract_number',width:100,sortable:true">合同号</th>
 				<th data-options="field:'project_manager',width:200">项目经理</th>
 				<th data-options="field:'creator',width:100">创建人</th>
-				<th data-options="field:'create_date',width:150">创建时间</th>
-				<th data-options="field:'status',width:60,formatter:showStatusName">项目状态</th>
+				<th data-options="field:'create_date',width:150,sortable:true">创建时间</th>
+				<th data-options="field:'status',width:60,formatter:showStatusName,sortable:true">项目状态</th>
 				<th data-options="field:'id',width:150,align:'center',formatter:showButtons">操作</th>
 			</tr>
 		</thead>
@@ -53,8 +53,51 @@ $(function() {
 	}
 	$('#dg').datagrid('reload');
 	$('.pagination-page-list').hide();
+	
+	//$('#dg').datagrid('hideColumn', 'status'); 
 });
 
+var cmenu = null;
+function showHeaderMenu(e, field){
+	e.preventDefault();
+	if (!cmenu){
+		cmenu = $('<div/>').appendTo('body');
+		cmenu.menu({
+			onClick: function(item){
+				if (item.iconCls == 'icon-ok'){
+					$('#dg').datagrid('hideColumn', item.name);
+					cmenu.menu('setIcon', {
+						target: item.target,
+						iconCls: 'icon-empty'
+					});
+				} else {
+					$('#dg').datagrid('showColumn', item.name);
+					cmenu.menu('setIcon', {
+						target: item.target,
+						iconCls: 'icon-ok'
+					});
+				}
+			}
+		});
+		var fields = $('#dg').datagrid('getColumnFields');
+		for(var i=0; i<fields.length; i++){
+			var field = fields[i];
+			if(field == 'id'){
+				continue;
+			}
+			var col = $('#dg').datagrid('getColumnOption', field);
+			cmenu.menu('appendItem', {
+				text: col.title,
+				name: field,
+				iconCls: 'icon-ok'
+			});
+		}
+	}
+	cmenu.menu('show', {
+		left:e.pageX,
+		top:e.pageY
+	});
+}
 
 function showStatusName(val,row){
 	if (val == 'I'){

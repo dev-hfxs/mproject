@@ -23,15 +23,15 @@
 <!--  -->
 <div id="dgPanel" class="easyui-panel" data-options="fit:true">
 	<table id="dg" class="easyui-datagrid"  
-			data-options="singleSelect:true,rownumbers:true,pageSize:20,fit:true,url:'<%=path%>/comm/queryForPage.do',pagination:true,method:'get',toolbar:'#tb'">
+			data-options="singleSelect:true,rownumbers:true,pageSize:20,fit:true,url:'<%=path%>/comm/queryForPage.do',pagination:true,method:'post',toolbar:'#tb', multiSort:true">
 		<thead>
 			<tr>
-				<th data-options="field:'user_name',width:200">用户名</th>
-				<th data-options="field:'full_name',width:100">姓名</th>
-				<th data-options="field:'org_name',width:200">所在单位</th>
+				<th data-options="field:'user_name',width:200,sortable:true">用户名</th>
+				<th data-options="field:'full_name',width:100,sortable:true">姓名</th>
+				<th data-options="field:'org_name',width:200,sortable:true">所在单位</th>
 				<th data-options="field:'contact_number',width:100">联系电话</th>
-				<th data-options="field:'role_name',width:100">用户类型</th>
-				<th data-options="field:'status',width:100,formatter:showStatusName">用户状态</th>
+				<th data-options="field:'role_name',width:100,sortable:true">用户类型</th>
+				<th data-options="field:'status',width:100,formatter:showStatusName,sortable:true">用户状态</th>
 				<th data-options="field:'id',width:150,align:'center',formatter:showButtons">操作</th>
 			</tr>
 		</thead>

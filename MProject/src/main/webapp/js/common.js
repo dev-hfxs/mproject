@@ -24,3 +24,4 @@ function showMessageDialog(url, title, width, height, shadow) {
 function closeDialog() {
 	$("#msgwindow").dialog('destroy');
 }
+

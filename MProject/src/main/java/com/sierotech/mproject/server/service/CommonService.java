@@ -59,13 +59,36 @@ public class CommonService {
 		result.put("total", totalRows);
 		result.put("pageNo", pageNo);
 		result.put("pageSize", pageSize);
+		
+		String sortColumns = paramMap.get("sort");
+		String sortOrders = paramMap.get("order");
+		String sqlOrderPart = "";
+		if(sortColumns != null && sortColumns.length() > 0) {
+			String[] arySortColumn = sortColumns.split(",");
+			String[] arySortOrder = sortOrders.split(",");
+			if(arySortColumn != null && arySortOrder != null) {
+				for(int i=0; i<arySortColumn.length;i++ ) {
+					String column = arySortColumn[i];
+					String order = arySortOrder[i];
+					sqlOrderPart = ", " +column + " " + order;
+				}
+				if(null !=sqlOrderPart && sqlOrderPart.length() > 0) {
+					sqlOrderPart = sqlOrderPart.substring(1, sqlOrderPart.length());
+				}				
+			}			
+		}
+		
 		String preSql = ConfigSQLUtil.getCacheSql(sqlId);
 		if (null == preSql || "".equals(preSql)) {
 			return null;
 		}
 		String sql = ConfigSQLUtil.preProcessSQL(preSql, paramMap);
 		String countSql = ConfigSQLUtil.getCountSql(sql);
-
+		//有排序的字段参数，则增加排序
+		if(sqlOrderPart.length() > 0) {
+			sql = " SELECT * FROM (" + sql + ") ttd ORDER BY " + sqlOrderPart;
+		}
+		
 		String sTotalRows = springJdbcDao.queryForMap(countSql).get("totalRows").toString();
 		if (sTotalRows != null) {
 			totalRows = new Integer(sTotalRows);
