@@ -131,4 +131,70 @@ public class ProjectMgrControl {
 		result.put("msg", "");
 		return result;
 	}
+	
+	@RequestMapping(value = "/addProjectPsn")
+	@ResponseBody
+	public Map<String, String> addProjectPsn(HttpServletRequest request) {
+		Map<String, String> result = new HashMap<String, String>();
+		result.put("returnCode", "fail");
+		String projectId = request.getParameter("projectId").toString();
+		String userId = request.getParameter("userId").toString();
+		String strAllowBoxNum = request.getParameter("allowBoxNum").toString();
+		String duty = "S";
+		if(null == projectId) {
+			result.put("msg", "设置项目施工经理错误,缺少项目ID.");
+			return result;
+		}
+		if(null == userId) {
+			result.put("msg", "设置项目施工经理错误,缺少用户ID.");
+			return result;
+		}
+		if(null == strAllowBoxNum) {
+			result.put("msg", "设置项目施工经理错误,缺少用户应建机箱数.");
+			return result;
+		}
+		int allowBoxNum = 0;
+		try {
+			allowBoxNum = Integer.parseInt(strAllowBoxNum);
+			projectService.addProjectPsn(UserTool.getLoginUser(request).get("user_name"), projectId, userId, allowBoxNum, duty);
+		}catch( NumberFormatException ne) {
+			result.put("msg", "应建机箱数错误!");
+			return result;
+		}
+		catch(BusinessException be) {
+			result.put("msg", be.getMessage());
+			return result;
+		}
+		result.put("returnCode", "success");
+		result.put("msg", "");
+		return result;
+	}
+	
+	@RequestMapping(value = "/deleteProjectPsn")
+	@ResponseBody
+	public Map<String, String> deleteProjectPsn(HttpServletRequest request) {
+		Map<String, String> result = new HashMap<String, String>();
+		result.put("returnCode", "fail");
+		String projectId = request.getParameter("projectId").toString();
+		String userId = request.getParameter("userId").toString();
+		String duty = "S";
+		if(null == projectId) {
+			result.put("msg", "删除项目施工经理错误,缺少项目ID.");
+			return result;
+		}
+		if(null == userId) {
+			result.put("msg", "删除项目施工经理错误,缺少用户ID.");
+			return result;
+		}
+		
+		try {
+			projectService.deleteProjectPsn(UserTool.getLoginUser(request).get("user_name"), projectId, userId);
+		}catch(BusinessException be) {
+			result.put("msg", be.getMessage());
+			return result;
+		}
+		result.put("returnCode", "success");
+		result.put("msg", "");
+		return result;
+	}
 }

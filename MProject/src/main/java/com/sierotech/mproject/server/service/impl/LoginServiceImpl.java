@@ -76,6 +76,7 @@ public class LoginServiceImpl implements ILoginService {
 				throw new BusinessException("用户没有关联项目暂不能登录.");
 			}
 		}
+		
 		//验证通过 返回loginUser
 		return loginUser;
 	}

@@ -51,7 +51,7 @@ public class ConfigSQLUtil {
 					int end1 = m.end(1);
 					String str0 = m.group().toUpperCase();
 					boolean isEscape = false;
-					// value = value.replaceAll("'", "''");
+					value = value.replaceAll("'", "''");
 					if (str0.matches(".*\\s+LIKE\\s+.*")) {
 						String s1 = value.replaceAll("([%_/])", "/$1");
 						if (!value.equals(s1)) {

@@ -8,7 +8,7 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>用户列表</title>
+<title>项目工单查询</title>
 <script type="text/javascript" src="<%=path%>/js/jquery/jquery-3.3.1.min.js"></script>
 <link rel="stylesheet" type="text/css" href="<%=path%>/js/easyui/themes/default/easyui.css">
 <link rel="stylesheet" type="text/css" href="<%=path%>/js/easyui/themes/icon.css">
@@ -20,58 +20,51 @@
 </style>
 </head>
 <body>
-<!--  -->
-<div style="text-align:left;padding:5px 0">
-	<a href="javascript:void(0)" class="easyui-linkbutton" onclick="doConfim()" style="width:80px;">确 定</a>
-	<a href="javascript:void(0)" class="easyui-linkbutton" onclick="doCancel()" style="width:80px;">取 消</a>
-</div>
 <div id="dgPanel" class="easyui-panel" data-options="fit:true">
-	<table id="dg" class="easyui-datagrid"  style="height:400px"
-			data-options="singleSelect:true,rownumbers:true,pageSize:20,url:'<%=path%>/comm/queryForPage.do',pagination:true,method:'get'">
+	<table id="dg" class="easyui-datagrid"  
+			data-options="singleSelect:true,rownumbers:true,pageSize:20,fit:true,url:'<%=path%>/comm/queryForPage.do',pagination:true,method:'post',toolbar:'#tb',multiSort:true">
 		<thead>
 			<tr>
-				<th data-options="field:'ck',checkbox:true"></th>
-				<th data-options="field:'user_name',width:150">用户名</th>
-				<th data-options="field:'full_name',width:80">姓名</th>
-				<th data-options="field:'org_name',width:200">所在单位</th>
-				<th data-options="field:'role_name',width:80">用户类型</th>
+				<th data-options="field:'job_status',width:100">工单状态</th>
+				<th data-options="field:'user_name',width:100">工程师</th>
+				<th data-options="field:'work_content',width:250,sortable:true">工作内容</th>
+				<th data-options="field:'project_number',width:100,sortable:true">项目编号</th>
+				<th data-options="field:'project_name',width:200,sortable:true">项目名称</th>
+				<th data-options="field:'box_number',width:100,sortable:true">机箱编号</th>
+				<th data-options="field:'job_create_date',width:120">建立时间</th>
+				<th data-options="field:'job_desc',width:250,sortable:true">描述</th>
 			</tr>
 		</thead>
 	</table>
 </div>
 <div id="tb" style="padding:2px 5px;">
-		<input id="inpKey" class="easyui-textbox"  prompt="用户名" style="width:150px">
+		<input id="inpKey" class="easyui-textbox"  prompt="项目名" style="width:150px">
 		<a href="#" class="easyui-linkbutton" onclick="doSearch()" iconCls="icon-search">查询&nbsp;&nbsp;</a>
 </div>
 <script>
+
 $(function() {
 	var pageNum = "<%=pageNum%>";
 	var pageSize = "<%=pageSize%>";
 	var queryParams = $('#dg').datagrid('options').queryParams;
-	queryParams.sqlId = 'mproject-user-getUsersForEngineer';
+	queryParams.sqlId = 'mproject-project-queryProjects';
 	if(pageNum != null && pageNum != 'null' && pageNum != ''){
-		//var pageList = $('#dg').datagrid('options').pageList;
-		//$('#dg').datagrid('options').pageSize = pageSize;
 		$('#dg').datagrid('options').pageNumber = pageNum;
-		
 	}
 	$('#dg').datagrid('reload');
 	$('.pagination-page-list').hide();
+	
+	//$('#dg').datagrid('hideColumn', 'status'); 
 });
 
-function doConfim(){
-	var row = $('#dg').datagrid('getSelected');
-	if (row){
-		// 返回选择的数据信息
-		var params = {id:row.id,user_name:row.user_name};
-		parent.okResponse(params);
-	}else{
-		$.messager.alert('提示', "未选择数据!");
-	}
-}
 
-function doCancel(){
-	parent.closeDialog();
+function doSearch(){
+	var charKey = $("#inpKey" ).val();
+	var queryParams = $('#dg').datagrid('options').queryParams;
+	queryParams.sqlId = 'mproject-project-queryProjects';
+	queryParams.projectName = charKey;
+	$('#dg').datagrid('loadData',{total:0,rows:[]});
+	$('#dg').datagrid('reload');
 }
 </script>
 </body>

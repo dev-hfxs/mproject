@@ -54,16 +54,17 @@ INSERT INTO  t_menu(id,menu_name,menu_code,menu_url,icon_url,parent_id,order_num
 
 
 INSERT INTO  t_menu(id,menu_name,menu_code,menu_url,icon_url,parent_id,order_num) VALUES ('ma900252694f4bd99fa3e16ce9df3cd5','在建项目管理','m.buildproject.mgr','','','ROOT',5);
-INSERT INTO  t_menu(id,menu_name,menu_code,menu_url,icon_url,parent_id,order_num) VALUES ('ma31605555b54f8fb3895bf8b0c08cbe','人员管理','m.project.psn.mgr','/project/projectPsnList.jsp','','ma900252694f4bd99fa3e16ce9df3cd5',51);
-INSERT INTO  t_menu(id,menu_name,menu_code,menu_url,icon_url,parent_id,order_num) VALUES ('ma31604565b54f8fb3895bf8b0c08cbf','当前项目管理','m.current.project','/project/currentProjectMgr.jsp','','ma900252694f4bd99fa3e16ce9df3cd5',52);
-INSERT INTO  t_menu(id,menu_name,menu_code,menu_url,icon_url,parent_id,order_num) VALUES ('ma31603785b54f8fb3895bf8b0c08cbg','项目工单查询','m.query.project.job','/project/projectJobList.jsp','','ma900252694f4bd99fa3e16ce9df3cd5',53);
-INSERT INTO  t_menu(id,menu_name,menu_code,menu_url,icon_url,parent_id,order_num) VALUES ('ma31603665b54f8fb3895bf8b0c08cbh','待处理工单','m.wait.job','/project/waitingJobList.jsp','','ma900252694f4bd99fa3e16ce9df3cd5',54);
-INSERT INTO  t_menu(id,menu_name,menu_code,menu_url,icon_url,parent_id,order_num) VALUES ('ma31603885b54f8fb3895bf8b0c08cbj','已处理工单','m.processed.job','/project/processedJobList.jsp','','ma900252694f4bd99fa3e16ce9df3cd5',55);
-INSERT INTO  t_menu(id,menu_name,menu_code,menu_url,icon_url,parent_id,order_num) VALUES ('ma31603995b54f8fb3895bf8b0c08cbk','信息查询','m.query.info','/project/infoQuery.jsp','','ma900252694f4bd99fa3e16ce9df3cd5',56);
-INSERT INTO  t_menu(id,menu_name,menu_code,menu_url,icon_url,parent_id,order_num) VALUES ('ma31603995b5bf8fb3895bf8b0c08cbs','信息修改','m.update.info','/project/infoUpdate.jsp','','ma900252694f4bd99fa3e16ce9df3cd5',57);
-INSERT INTO  t_menu(id,menu_name,menu_code,menu_url,icon_url,parent_id,order_num) VALUES ('ma31603115b54f8fb3895bf8b0c08cbl','创建机箱','m.create.box','/project/addMachineBox.jsp','','ma900252694f4bd99fa3e16ce9df3cd5',58);
-INSERT INTO  t_menu(id,menu_name,menu_code,menu_url,icon_url,parent_id,order_num) VALUES ('ma31603225b54f8fb3895bf8b0c08cbn','机箱信息填写及上报','m.write.box','/project/machineBoxWrite.jsp','','ma900252694f4bd99fa3e16ce9df3cd5',59);
-INSERT INTO  t_menu(id,menu_name,menu_code,menu_url,icon_url,parent_id,order_num) VALUES ('ma31603005b54f8fb3895bf8b0c08cbx','机箱验收进度','m.box.progress','/project/machineBoxProgress.jsp','','ma900252694f4bd99fa3e16ce9df3cd5',60);
+INSERT INTO  t_menu(id,menu_name,menu_code,menu_url,icon_url,parent_id,order_num) VALUES ('ma32905855b54f8fb3895sf8b0c08cbg','选择当前项目','m.project.cur.select','/project/selectCurProject.jsp','','ma900252694f4bd99fa3e16ce9df3cd5',51);
+INSERT INTO  t_menu(id,menu_name,menu_code,menu_url,icon_url,parent_id,order_num) VALUES ('ma31605555b54f8fb3895bf8b0c08cbe','人员管理','m.project.psn.mgr','/project/projectPsnList.jsp','','ma900252694f4bd99fa3e16ce9df3cd5',52);
+INSERT INTO  t_menu(id,menu_name,menu_code,menu_url,icon_url,parent_id,order_num) VALUES ('ma31604565b54f8fb3895bf8b0c08cbf','当前项目管理','m.current.project','/project/currentProjectMgr.jsp','','ma900252694f4bd99fa3e16ce9df3cd5',53);
+INSERT INTO  t_menu(id,menu_name,menu_code,menu_url,icon_url,parent_id,order_num) VALUES ('ma31603785b54f8fb3895bf8b0c08cbg','项目工单查询','m.query.project.job','/project/projectJobList.jsp','','ma900252694f4bd99fa3e16ce9df3cd5',54);
+INSERT INTO  t_menu(id,menu_name,menu_code,menu_url,icon_url,parent_id,order_num) VALUES ('ma31603665b54f8fb3895bf8b0c08cbh','待处理工单','m.wait.job','/project/waitingJobList.jsp','','ma900252694f4bd99fa3e16ce9df3cd5',55);
+INSERT INTO  t_menu(id,menu_name,menu_code,menu_url,icon_url,parent_id,order_num) VALUES ('ma31603885b54f8fb3895bf8b0c08cbj','已处理工单','m.processed.job','/project/processedJobList.jsp','','ma900252694f4bd99fa3e16ce9df3cd5',56);
+INSERT INTO  t_menu(id,menu_name,menu_code,menu_url,icon_url,parent_id,order_num) VALUES ('ma31603995b54f8fb3895bf8b0c08cbk','信息查询','m.query.info','/project/infoQuery.jsp','','ma900252694f4bd99fa3e16ce9df3cd5',57);
+INSERT INTO  t_menu(id,menu_name,menu_code,menu_url,icon_url,parent_id,order_num) VALUES ('ma31603995b5bf8fb3895bf8b0c08cbs','信息修改','m.update.info','/project/infoUpdate.jsp','','ma900252694f4bd99fa3e16ce9df3cd5',58);
+INSERT INTO  t_menu(id,menu_name,menu_code,menu_url,icon_url,parent_id,order_num) VALUES ('ma31603115b54f8fb3895bf8b0c08cbl','创建机箱','m.create.box','/project/addMachineBox.jsp','','ma900252694f4bd99fa3e16ce9df3cd5',59);
+INSERT INTO  t_menu(id,menu_name,menu_code,menu_url,icon_url,parent_id,order_num) VALUES ('ma31603225b54f8fb3895bf8b0c08cbn','机箱信息填写及上报','m.write.box','/project/machineBoxWrite.jsp','','ma900252694f4bd99fa3e16ce9df3cd5',595);
+INSERT INTO  t_menu(id,menu_name,menu_code,menu_url,icon_url,parent_id,order_num) VALUES ('ma31603005b54f8fb3895bf8b0c08cbx','机箱验收进度','m.box.progress','/project/machineBoxProgress.jsp','','ma900252694f4bd99fa3e16ce9df3cd5',596);
 
 
 /* 初始角色权限 */
@@ -103,7 +104,7 @@ INSERT INTO  t_role_res(id,role_id,res_type,res_id) VALUES ('rr5abe33b3ae4f459cf
 
 
 /* 系统工程师拥有的菜单 */
-
+INSERT INTO  t_role_res(id,role_id,res_type,res_id) VALUES ('rr5abe33b3ae4f459cf504859d9d1az1','r9f16963cd27441594bb8fc6de9738a1','M','ma32905855b54f8fb3895sf8b0c08cbg');
 INSERT INTO  t_role_res(id,role_id,res_type,res_id) VALUES ('rr5abe33b3ae4f459cf554859d9d1azc','r9f16963cd27441594bb8fc6de9738a1','M','ma900252694f4bd99fa3e16ce9df3cd5');
 INSERT INTO  t_role_res(id,role_id,res_type,res_id) VALUES ('rr5abe33b3ae4f459cf554859d9d11bc','r9f16963cd27441594bb8fc6de9738a1','M','ma31605555b54f8fb3895bf8b0c08cbe');
 INSERT INTO  t_role_res(id,role_id,res_type,res_id) VALUES ('rr5abe33b3ae4f459cf554859d9d12bc','r9f16963cd27441594bb8fc6de9738a1','M','ma31604565b54f8fb3895bf8b0c08cbf');
@@ -115,6 +116,7 @@ INSERT INTO  t_role_res(id,role_id,res_type,res_id) VALUES ('rr5abe33b3ae4f459cf
 
 
 /* 施工经理拥有的菜单 */
+INSERT INTO  t_role_res(id,role_id,res_type,res_id) VALUES ('rr3abe33b3ae4f459cf50485xd0d11z9','re0957cb47484ae8b0647300c0f7fac7','M','ma32905855b54f8fb3895sf8b0c08cbg');
 INSERT INTO  t_role_res(id,role_id,res_type,res_id) VALUES ('rr5abe33b3ae4f459cf554859d9d1ub5','re0957cb47484ae8b0647300c0f7fac7','M','ma900252694f4bd99fa3e16ce9df3cd5');
 INSERT INTO  t_role_res(id,role_id,res_type,res_id) VALUES ('rr5abe33b3ae4f459cf554859d9d1cba','re0957cb47484ae8b0647300c0f7fac7','M','ma31603115b54f8fb3895bf8b0c08cbl');
 INSERT INTO  t_role_res(id,role_id,res_type,res_id) VALUES ('rr5abe33b3ae4f459cf554859d9d1cbf','re0957cb47484ae8b0647300c0f7fac7','M','ma31603225b54f8fb3895bf8b0c08cbn');

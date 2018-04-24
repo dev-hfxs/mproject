@@ -114,6 +114,7 @@
 		var queryParams = $('#dg').datagrid('options').queryParams;
 		queryParams.sqlId = 'mproject-org-queryValidOrgs';
 		queryParams.orgName = charKey;
+		$('#dg').datagrid('loadData',{total:0,rows:[]});
 		$('#dg').datagrid('reload');
 	}
 </script>

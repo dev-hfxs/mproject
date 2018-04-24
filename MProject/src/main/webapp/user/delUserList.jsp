@@ -105,7 +105,7 @@ function doSearch(){
 	var queryParams = $('#dg').datagrid('options').queryParams;
 	queryParams.sqlId = 'mproject-user-getNotValidUsers';
 	queryParams.userName = charKey;
-	
+	$('#dg').datagrid('loadData',{total:0,rows:[]});
 	$('#dg').datagrid('reload');
 }
 </script>

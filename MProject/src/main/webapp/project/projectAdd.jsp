@@ -38,11 +38,11 @@
 			</div>
 			<div style="margin-bottom: 20px">
 				<input class="easyui-numberbox" id="allowBoxNum" name="allowBoxNum" style="width: 100%"
-					data-options="label:'应建机箱数 :',required:true">
+					data-options="label:'应建机箱数 :',required:true,validType:'length[1,8]'">
 			</div>
 			<div style="margin-bottom: 20px">
 				<input class="easyui-textbox" id="projectDesc" name="projectDesc" multiline="true" style="width: 100%;height:60px;"
-					data-options="label:'项目描述 :'">
+					data-options="label:'项目描述 :',validType:'length[0,80]'">
 			</div>
 		</form>
 		<!-- -->

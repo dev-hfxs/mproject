@@ -309,8 +309,8 @@ public class UserServiceImpl implements IUserService {
 			throw new BusinessException("删除用户错误,未查询到用户.");
 		}
 
-		// todo 1 将未处理的工单设置为未完成
-		// todo 2 施工经理未提交的机箱及下属信息将被删除
+		// TODO 1 将未处理的工单设置为未完成
+		// TODO 2 施工经理未提交的机箱及下属信息将被删除
 
 		String preUpdateSql = ConfigSQLUtil.getCacheSql("mproject-user-deleteUserByUsrId");
 		paramsMap.clear();

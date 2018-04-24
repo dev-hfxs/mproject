@@ -190,7 +190,7 @@ public class OrgServiceImpl implements IOrgService {
 			throw new BusinessException("删除单位错误,未查询到单位.");
 		}
 
-		// todo 1 检查单位下面是否有施工经理,有在建的项目
+		// TODO 1 检查单位下面是否有施工经理,有在建的项目
 
 		String preUpdateSql = ConfigSQLUtil.getCacheSql("mproject-org-deleteOrgById");
 		paramsMap.clear();

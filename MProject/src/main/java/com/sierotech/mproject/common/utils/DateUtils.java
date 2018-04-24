@@ -248,7 +248,6 @@ public final class DateUtils {
 	 * @return
 	 */
 	public static Date getCurrDay() {
-		// TODO Auto-generated method stub
 		return new Date();
 	}
 

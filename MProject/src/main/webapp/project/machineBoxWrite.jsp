@@ -22,24 +22,18 @@
 <body>
 <div id="dgPanel" class="easyui-panel" data-options="fit:true">
 	<table id="dg" class="easyui-datagrid"  
-			data-options="singleSelect:true,rownumbers:true,pageSize:20,fit:true,url:'<%=path%>/comm/queryForPage.do',pagination:true,method:'post',toolbar:'#tb',multiSort:true">
+			data-options="singleSelect:true,rownumbers:true,pageSize:20,fit:true,url:'<%=path%>/comm/queryForPage.do',pagination:true,method:'post',multiSort:true">
 		<thead>
 			<tr>
-				<th data-options="field:'project_number',width:100,sortable:true">项目编号</th>
-				<th data-options="field:'project_name',width:200,sortable:true">项目名称</th>
-				<th data-options="field:'contract_number',width:100,sortable:true">合同号</th>
-				<th data-options="field:'project_manager',width:200">项目经理</th>
-				<th data-options="field:'creator',width:100">创建人</th>
-				<th data-options="field:'create_date',width:150,sortable:true">创建时间</th>
-				<th data-options="field:'status',width:60,formatter:showStatusName,sortable:true">项目状态</th>
-				<th data-options="field:'id',width:150,align:'center',formatter:showButtons">操作</th>
+				<th data-options="field:'project_number',width:100,sortable:true">机箱编号</th>
+				<th data-options="field:'project_name',width:200,sortable:true">经度</th>
+				<th data-options="field:'contract_number',width:100,sortable:true">纬度</th>
+				<th data-options="field:'project_manager',width:200">包含处理器数量</th>
+				<th data-options="field:'creator',width:100">提交次数</th>
+				<th data-options="field:'id',width:250,align:'center',formatter:showButtons">操作</th>
 			</tr>
 		</thead>
 	</table>
-</div>
-<div id="tb" style="padding:2px 5px;">
-		<input id="inpKey" class="easyui-textbox"  prompt="项目名" style="width:150px">
-		<a href="#" class="easyui-linkbutton" onclick="doSearch()" iconCls="icon-search">查询&nbsp;&nbsp;</a>
 </div>
 <script>
 
@@ -110,8 +104,9 @@ function showStatusName(val,row){
 }
 
 function showButtons(val,row){
-	var columnItem = '<span><a href="javascript:void(0)" class="easyui-linkbutton" onclick="javascript:doUpdate(\''+val+'\')" style="width:80px;">修 改</a></span>&nbsp;&nbsp;'
-                   + '<span><a href="javascript:void(0)" class="easyui-linkbutton" onclick="doView(\''+val+'\')" style="width:80px;">查 看</a></span>&nbsp;&nbsp;';
+	var columnItem = '<span><a href="javascript:void(0)" class="easyui-linkbutton" onclick="javascript:doUpdate(\''+val+'\')" style="width:80px;">修改信息</a></span>&nbsp;&nbsp;'
+                   + '<span><a href="javascript:void(0)" class="easyui-linkbutton" onclick="doView(\''+val+'\')" style="width:80px;">提交信息</a></span>&nbsp;&nbsp;'
+                   + '<span><a href="javascript:void(0)" class="easyui-linkbutton" onclick="doView(\''+val+'\')" style="width:80px;">删除信息</a></span>&nbsp;&nbsp;';
 	return columnItem;
 }
 

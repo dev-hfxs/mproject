@@ -53,10 +53,8 @@ private static final String KEY_ALGORITHM = "AES";
 			outputStream.write(keyencode.getBytes());
 			outputStream.close();
 		} catch (FileNotFoundException e) {
-			// TODO 自动生成的 catch 块
 			e.printStackTrace();
 		} catch (Exception e) {
-			// TODO: handle exception
 			e.printStackTrace();
 		}
 	}

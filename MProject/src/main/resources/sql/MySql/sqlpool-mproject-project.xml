@@ -43,4 +43,90 @@
 		<description>
 		</description>
 	</sql>
+	
+	<sql id="mproject-project-getEngineerUserProjects" name="获取项目经理相关的项目">
+		<content>
+		SELECT id,project_name FROM t_project 
+		WHERE project_manager = ':userId' AND status = 'I'  
+		</content>
+		<description>
+		</description>
+	</sql>
+	
+	<sql id="mproject-project-getManagerUserProjects" name="获取施工经理相关的项目">
+		<content>
+		SELECT id,project_name FROM t_project 
+		WHERE id IN (SELECT project_id FROM t_project_personnel WHERE  user_id = ':userId') AND status = 'I' 
+		</content>
+		<description>
+		</description>
+	</sql>
+	
+	<sql id="mproject-project-addProjectPsn" name="添加项目施工经理">
+		<content>
+		INSERT INTO t_project_personnel(id, project_id, user_id, duty, allow_box_num) values(':id',':projectId',':userId',':duty',':allowBoxNum')
+		</content>
+		<description>
+		</description>
+	</sql>
+	
+	<sql id="mproject-project-delBoxSubmitRecord" name="删除机箱提交的记录">
+		<content>
+		DELETE FROM t_machine_box_submit where machine_box_id IN ( SELECT id FROM t_machine_box WHERE project_id =':projectId' AND build_manager = ':userId' )
+		</content>
+		<description>
+		</description>
+	</sql>
+	
+	<sql id="mproject-project-delBuildManagerBoxs" name="删除项目施工经理创建的机箱">
+		<content>
+		DELETE FROM t_machine_box WHERE project_id =':projectId' AND build_manager = ':userId' 
+		</content>
+		<description>
+		</description>
+	</sql>
+	
+	<sql id="mproject-project-deleteProjectPsn" name="删除项目施工经理">
+		<content>
+		DELETE FROM t_project_personnel WHERE project_id =':projectId' AND user_id = ':userId' 
+		</content>
+		<description>
+		</description>
+	</sql>
+	
+	<sql id="mproject-project-getProjectPsnList" name="获取项目人员列表">
+		<content>
+		SELECT pp.id, pp.project_id, pp.user_id, pp.duty, pp.allow_box_num, u.full_name, u.contact_number,o.org_name, 
+		( SELECT COUNT(*) FROM t_machine_box b WHERE b.project_id = pp.project_id AND b.build_manager = pp.user_id AND b.pm_confirm_date=null 
+		  AND exists (SELECT machine_box_id FROM t_machine_box_submit bs WHERE bs.machine_box_id  = b.id ) 
+		) as submit_box_num, 
+		( SELECT COUNT(*) FROM t_machine_box b WHERE b.project_id = pp.project_id AND b.build_manager = pp.user_id AND b.pm_confirm_date!=null 
+		  AND exists (SELECT machine_box_id FROM t_machine_box_submit bs WHERE bs.machine_box_id  = b.id ) 
+		) as accept_box_num 
+		FROM t_project_personnel pp 
+		LEFT JOIN t_user u ON pp.user_id = u.id 
+		LEFT JOIN t_org o  ON u.org_id = o.id 
+		WHERE pp.project_id = ':projectId' 
+		</content>
+		<description>
+		</description>
+	</sql>
+	
+	<sql id="mproject-project-getBuildManagerAcceptNum" name="获取施工经理提交机箱的验收数">
+		<content>
+		SELECT COUNT(*) AS countNum FROM t_machine_box b WHERE b.project_id = ':projectId' AND b.build_manager = ':userId' AND b.pm_confirm_date!=null 
+		  AND exists (SELECT machine_box_id FROM t_machine_box_submit bs WHERE bs.machine_box_id  = b.id ) 
+		</content>
+		<description>
+		</description>
+	</sql>
+	
+	<sql id="mproject-project-getProjectHadAllotBoxNum" name="获取项目已分配完的机箱数">
+		<content>
+		SELECT  sum(allow_box_num) AS allot_box_num FROM t_project_personnel WHERE project_id = ':projectId' 
+		</content>
+		<description>
+		</description>
+	</sql>
+	
 </sqls>

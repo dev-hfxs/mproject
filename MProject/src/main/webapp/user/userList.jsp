@@ -72,7 +72,7 @@ function showStatusName(val,row){
 function showButtons(val,row){
 	var columnItem = '<span><a href="javascript:void(0)" class="easyui-linkbutton" onclick="javascript:doUpdate(\''+val+'\')" style="width:80px;">修 改</a></span>&nbsp;&nbsp;'
                       + '<span><a href="javascript:void(0)" class="easyui-linkbutton" onclick="doDelete(\''+val+'\')" style="width:80px;">删 除</a></span>&nbsp;&nbsp;'
-                      + '<span><a href="javascript:void(0)" class="easyui-linkbutton" onclick="doSetPwd(\''+val+'\')" style="width:80px;">重置密码</a></span>'
+                      + '<span><a href="javascript:void(0)" class="easyui-linkbutton" onclick="doSetPwd(\''+val+'\')" style="width:80px;">重置密码</a></span>';
 	return columnItem;
 }
 
@@ -142,7 +142,7 @@ function doSearch(){
 	var queryParams = $('#dg').datagrid('options').queryParams;
 	queryParams.sqlId = 'mproject-user-getValidUsers';
 	queryParams.userName = charKey;
-	
+	$('#dg').datagrid('loadData',{total:0,rows:[]});
 	$('#dg').datagrid('reload');
 }
 </script>

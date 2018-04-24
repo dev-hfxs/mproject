@@ -27,4 +27,8 @@ public interface IProjectService {
 	
 	public void updateStatus(String adminUser,String projectId,String oldStatus,String newStatus) throws BusinessException;
 	
+	public void addProjectPsn(String adminUser,String projectId,String userId,int allowBoxNum,String duty) throws BusinessException;
+	
+	public void deleteProjectPsn(String adminUser,String projectId,String userId) throws BusinessException;
+	
 }
