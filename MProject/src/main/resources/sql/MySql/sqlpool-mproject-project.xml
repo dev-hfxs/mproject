@@ -129,4 +129,18 @@
 		</description>
 	</sql>
 	
+	<sql id="mproject-project-getCurProjectBoxList4Engineer" name="获取项目项目经理当前项目下的机箱">
+		<content>
+		SELECT b.id, b.box_number, b.create_date, b.longitude, b.latitude, b.pos_desc, b.processor_num, b.build_manager,b.project_id,u.user_name,
+		(SELECT COUNT(*) FROM t_machine_box_submit t1 where machine_box_id = b.id ) AS submit_num,
+		(SELECT max(submit_date) FROM t_machine_box_submit t0 where machine_box_id = b.id ) AS new_submit_date,
+		pm_confirm_date 
+		FROM t_machine_box b 
+		LEFT JOIN t_user u ON b.build_manager = u.id 
+		WHERE b.project_id = ':projectId' 
+		</content>
+		<description>
+		</description>
+	</sql>
+	
 </sqls>

@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sqls>
+	<sql id="mproject-job-addJob" name="添加工单">
+		<content>
+		 INSERT INTO t_job(id, project_id, machine_box_id, process_person, work_content, status, job_type, creator, create_date) 
+		 VALUES(':jobId', ':projectId', ':machineBoxId',':processPerson', ':workContent', ':status', ':jobType', ':creator', ':createDate') 
+		</content>
+		<description></description>
+	</sql>
+	
+	
+</sqls>

@@ -25,16 +25,15 @@
 			data-options="singleSelect:true,rownumbers:true,pageSize:20,fit:true,url:'<%=path%>/comm/queryForPage.do',pagination:true,method:'post',toolbar:'#tb',multiSort:true">
 		<thead>
 			<tr>
-				<th data-options="field:'full_name',width:100,sortable:true">机箱编号</th>
-				<th data-options="field:'org_name',width:100,sortable:true">机箱状态</th>
-				<th data-options="field:'org_name',width:180,sortable:true">创建时间</th>
-				<th data-options="field:'contract_number',width:100">经度</th>
-				<th data-options="field:'allow_box_num',width:100">纬度</th>
-				<th data-options="field:'submit_box_num',width:200">位置描述</th>
-				<th data-options="field:'accept_box_num',width:120">包含处理器数量</th>
-				<th data-options="field:'accept_box_num',width:100">施工经理</th>
-				<th data-options="field:'accept_box_num',width:120">施工经理提交次数</th>
-				<th data-options="field:'accept_box_num',width:120,sortable:true">最新提交时间</th>
+				<th data-options="field:'box_number',width:100,sortable:true">机箱编号</th>
+				<th data-options="field:'create_date',width:180,sortable:true">创建时间</th>
+				<th data-options="field:'longitude',width:100">经度</th>
+				<th data-options="field:'latitude',width:100">纬度</th>
+				<th data-options="field:'pos_desc',width:200">位置描述</th>
+				<th data-options="field:'processor_num',width:120">包含处理器数量</th>
+				<th data-options="field:'user_name',width:100">施工经理</th>
+				<th data-options="field:'submit_num',width:120">施工经理提交次数</th>
+				<th data-options="field:'new_submit_date',width:120,sortable:true">最新提交时间</th>
 				<th data-options="field:'id',width:250,align:'center',formatter:showButtons">操作</th>
 			</tr>
 		</thead>
@@ -45,26 +44,42 @@
 		<a href="#" class="easyui-linkbutton" onclick="doSearch()" iconCls="icon-search">查询&nbsp;&nbsp;</a>
 </div>
 <script>
-
 $(function() {
 	var pageNum = "<%=pageNum%>";
 	var pageSize = "<%=pageSize%>";
 	var queryParams = $('#dg').datagrid('options').queryParams;
-	queryParams.sqlId = 'mproject-project-queryProjects';
-	if(pageNum != null && pageNum != 'null' && pageNum != ''){
+	queryParams.sqlId = 'mproject-project-getCurProjectBoxList4Engineer';
+	queryParams.projectId = '${curProjectId}';
+	if(pageNum != null && pageNum != 'null' && pageNum != '') {
 		$('#dg').datagrid('options').pageNumber = pageNum;
 	}
 	$('#dg').datagrid('reload');
 	$('.pagination-page-list').hide();
 	
-	//$('#dg').datagrid('hideColumn', 'status'); 
 });
 
 function showButtons(val,row){
-	var columnItem = '<span><a href="javascript:void(0)" class="easyui-linkbutton" onclick="doEnableEdit(\''+val+'\')" style="width:80px;">允许修改</a></span>&nbsp;&nbsp;'
-	               + '<span><a href="javascript:void(0)" class="easyui-linkbutton" onclick="publishJob(\''+val+'\')" style="width:80px;">发布工单</a></span>&nbsp;&nbsp;'
-	               + '<span><a href="javascript:void(0)" class="easyui-linkbutton" onclick="doAccept(\''+val+'\')" style="width:80px;">确认验收</a></span>&nbsp;&nbsp;';
+	var columnItem = '';
+	if(row.pm_confirm_date != null){
+		//已验收
+	}else{
+		if(row.submit_num > 0){
+			//未验收且提交过
+			columnItem = columnItem + '<span><a href="javascript:void(0)" class="easyui-linkbutton" onclick="publishJob(\''+row.project_id+'\',\''+ row.id + '\')" style="width:80px;">发布工单</a></span>&nbsp;&nbsp;'
+			columnItem = columnItem + '<span><a href="javascript:void(0)" class="easyui-linkbutton" onclick="doEnableEdit(\''+row.project_id+'\',\''+ row.id + '\')" style="width:80px;">允许修改</a></span>&nbsp;&nbsp;';
+			columnItem = columnItem + '<span><a href="javascript:void(0)" class="easyui-linkbutton" onclick="doAccept(\''+row.project_id+'\',\''+ row.id + '\')" style="width:80px;">确认验收</a></span>&nbsp;&nbsp;';
+		}
+	}
+	//TODO测试先放开发布工单
+	if(columnItem == ''){
+		columnItem = columnItem + '<span><a href="javascript:void(0)" class="easyui-linkbutton" onclick="publishJob(\''+row.project_id+'\',\''+ row.id + '\')" style="width:80px;">发布工单</a></span>&nbsp;&nbsp;'
+	}
+	
 	return columnItem;
+}
+
+function publishJob(projectId,boxId){
+	parent.loadUrl("<%=path%>/job/publishJob.jsp?projectId=" + projectId + "&boxId=" + boxId);
 }
 
 function doDelete(val){
