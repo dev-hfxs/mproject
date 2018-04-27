@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sqls>
+	<sql id="mproject-box-add" name="添加机箱">
+		<content>
+		 INSERT INTO t_machine_box(id, box_number, longitude, latitude,processor_num, install_space,org_id,build_manager,project_id, create_date) 
+		 VALUES (':boxId', ':boxNumber', ':longitude', ':latitude', ':processorNum', ':installSpace', ':orgId', ':buildManager', ':projectId', ':createDate')  
+		</content>
+		<description></description>
+	</sql>
+	
+	<sql id="mproject-box-checkBoxNumberExist" name="检查机箱编号是否存在">
+		<content>
+		 SELECT count(*) as countNum FROM t_machine_box 
+		 WHERE id = ':boxId' AND box_number = ':boxNumber' 
+		</content>
+		<description></description>
+	</sql>
+	
+	<sql id="mproject-box-getUserBoxsList" name="获取用户当前项目的机箱列表">
+		<content>
+		 SELECT id, box_number, longitude, latitude, processor_num, enable_edit, 
+		 (SELECT count(*) FROM t_machine_box_submit t2 WHERE t2.machine_box_id = b.id) AS submit_num
+		 FROM t_machine_box b
+		 WHERE b.project_id = ':projectId' AND b.build_manager = ':userId' 
+		</content>
+		<description></description>
+	</sql>
+	
+</sqls>

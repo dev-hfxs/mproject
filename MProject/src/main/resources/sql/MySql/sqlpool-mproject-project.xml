@@ -137,7 +137,7 @@
 		pm_confirm_date 
 		FROM t_machine_box b 
 		LEFT JOIN t_user u ON b.build_manager = u.id 
-		WHERE b.project_id = ':projectId' 
+		WHERE b.project_id = ':projectId' [ AND instr(b.box_number,':boxNumber') > 0 ]
 		</content>
 		<description>
 		</description>

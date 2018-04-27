@@ -20,20 +20,24 @@
 		style="width: 100%; max-width: 460px; padding: 30px 60px; border-width:0" >
 		<form id="ff" method="post" >
 			<div style="margin-bottom: 20px;width: 100%">
-						<input class="easyui-textbox" id="projectNumber" name="projectNumber" style="width: 100%"
-							data-options="label:'机箱编号 :',required:true,validType:['charCheck','length[8,20]']">
+						<input class="easyui-textbox" id="boxNumber" name="boxNumber" style="width: 100%"
+							data-options="label:'机箱编号 :',required:true,validType:'length[12,12]'">
 			</div>
 			<div style="margin-bottom: 20px">
-				<input class="easyui-numberbox" id="allowBoxNum" name="allowBoxNum" style="width: 100%"
-					data-options="label:'经度 :',required:true,validType:'length[1,8]'">
+				<input class="easyui-numberbox" id="longitude" name="longitude" style="width: 100%"
+					data-options="label:'经度 :',required:true,precision:6,validType:'length[10,10]'">
 			</div>
 			<div style="margin-bottom: 20px">
-				<input class="easyui-numberbox" id="allowBoxNum" name="allowBoxNum" style="width: 100%"
-					data-options="label:'纬度 :',required:true,validType:'length[1,8]'">
+				<input class="easyui-numberbox" id="latitude" name="latitude" style="width: 100%"
+					data-options="label:'纬度 :',required:true,precision:6,validType:'length[10,10]'">
 			</div>
 			<div style="margin-bottom: 20px">
-				<input class="easyui-numberbox" id="allowBoxNum" name="allowBoxNum" style="width: 100%"
-					data-options="label:'处理器数量 :',required:true,validType:'length[1,8]'">
+				<input class="easyui-numberbox" id="processorNum" name="processorNum" style="width: 100%"
+					data-options="label:'处理器数量 :',required:true,validType:'length[1,2]'">
+			</div>
+			<div style="margin-bottom: 20px">
+				<input class="easyui-numberbox" id="installSpace" name="installSpace" style="width: 100%"
+					data-options="label:'安装间距 :',precision:2,validType:'length[0,5]'">
 			</div>
 		</form>
 		<!-- -->
@@ -50,25 +54,25 @@
 				return false;
 			}
 						
-			//检查用户名是否已存在
-			var projectNameExist = false;
-			var projectName = $("#projectName").val();
+			//检查机箱编号是否存在
+			var boxNumberExist = false;
+			var boxNumber = $("#boxNumber").val();
 			
 			$.ajax( {
-			    url:'<%=path%>/project/mgr/checkName.do',
+			    url:'<%=path%>/box/mgr/checkNumber.do',
 			    data:{
 			    	'id':'',
-			    	'projectName':projectName
+			    	'boxNumber':boxNumber
 			    },
 			    type:'post',
 			    async:false,
 			    dataType:'json',
 			    success:function(data) {
-			    	if(data.projectExist != null && data.projectExist !='true'){
-			    		projectNameExist = false;
+			    	if(data.exist != null && data.exist !='true'){
+			    		boxNumberExist = false;
 			    	}else{
-			    		projectNameExist = true;
-			    		$.messager.alert('提示','项目名已存在，请修改项目名!');
+			    		boxNumberExist = true;
+			    		$.messager.alert('提示','机箱编号已存在,请检查!');
 			    		return;
 			    	}
 			    },
@@ -76,27 +80,31 @@
 			    	$.messager.alert('异常',data.responseText);
 		        }
 			});
-			if(projectNameExist == true){
+			if(boxNumberExist == true){
 				return;
 			}
 			
 			// 提交保存
 			$.ajax( {
-			    url:'<%=path%>/project/mgr/add.do',
+			    url:'<%=path%>/box/mgr/add.do',
 			    data:{
-			    	'projectName':$("#projectName").val(),
-			    	'projectNumber':$("#projectNumber").val(),
-			    	'contractNumber':$("#contractNumber").val(),
+			    	'boxId':'',
+			    	'buildManager':'${loginUser.id}',
+			    	'orgId':'${loginUser.orgId}',
+			    	'projectId':'${curProjectId}',
+			    	'boxNumber':$("#boxNumber").val(),
 			    	'allowBoxNum':$("#allowBoxNum").val(),
-			    	'projectManager':$("#userId").val(),
-			    	'projectDesc':$("#projectDesc").val()
+			    	'longitude':$("#longitude").val(),
+			    	'latitude':$("#latitude").val(),
+			    	'processorNum':$("#processorNum").val(),
+			    	'installSpace':$("#installSpace").val()			    	
 			    },
 			    type:'post',
 			    async:false,
 			    dataType:'json',
 			    success:function(data) {
 			    	if(data.returnCode == "success"){
-			    		parent.loadUrl("<%=path%>/project/projectList.jsp");
+			    		$.messager.alert('提示','添加成功!');
 			    	}else{
 			    		$.messager.alert('提示',data.msg);
 			    	}
@@ -109,23 +117,6 @@
 
 		function clearForm() {
 			$("#ff").form('clear');
-		}
-		
-		$(function() {
-			$("#projectManager").next("span").click(function(){  
-            	showMessageDialog("<%=path%>/user/userSelect.jsp","选择项目经理",640,480,true);
-            });
-		});
-		
-		
-		function okResponse(params){
-			if(params == null || params.id == null || params.user_name == null){
-				return;
-			}
-			$("#userId").val(params.id);
-			$("#projectManager").val(params.user_name);	
-			$("#projectManager").next("span").children('input').eq(0).val(params.user_name);
-			closeDialog();
 		}
 		
 	</script>

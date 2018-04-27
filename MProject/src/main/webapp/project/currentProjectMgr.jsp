@@ -89,8 +89,9 @@ function doDelete(val){
 function doSearch(){
 	var charKey = $("#inpKey" ).val();
 	var queryParams = $('#dg').datagrid('options').queryParams;
-	queryParams.sqlId = 'mproject-project-queryProjects';
-	queryParams.projectName = charKey;
+	queryParams.sqlId = 'mproject-project-getCurProjectBoxList4Engineer';
+	queryParams.projectId = '${curProjectId}';
+	queryParams.boxNumber = charKey;
 	$('#dg').datagrid('loadData',{total:0,rows:[]});
 	$('#dg').datagrid('reload');
 }

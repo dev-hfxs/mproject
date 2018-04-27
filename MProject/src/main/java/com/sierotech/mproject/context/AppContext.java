@@ -38,10 +38,16 @@ public class AppContext {
 
 	private static String uploadDir = ConfigFactory.getPropertyConfig("mproject.properties").getString("upload.dir");
 
+	private static String uploadTempDir = ConfigFactory.getPropertyConfig("mproject.properties").getString("upload.temp.dir");
+
 	public static String getUploadDir() {
 		return uploadDir;
 	}
 
+	public static String getUploadTempDir() {
+		return uploadTempDir;
+	}
+	
 	public static ExcelDataTemplateMeta getExcelTemplateMeta(String dataName) {
 		return edtmMap.get(dataName);
 	}

@@ -8,6 +8,7 @@
  */
 package com.sierotech.mproject.server.service;
 
+import java.util.List;
 import java.util.Map;
 
 import com.sierotech.mproject.common.BusinessException;
@@ -20,4 +21,11 @@ import com.sierotech.mproject.common.BusinessException;
  */
 public interface IJobService {
 	public void addJob(String adminUser,Map<String,Object> jobObj) throws BusinessException;
+	
+	public void updateJob(String jobId, String jobStatus, String jobDesc);
+	
+	public void updateJob(String jobId, String jobStatus, String jobDesc, String boxPos,Map<String,String> installOptions, List<Map> processIpList, List<Map> detectorPosList);
+	
+	public void updateJob(String jobId, String jobStatus, String jobDesc,  List<Map> configInfoList,  List<Map> detectorInfoList);
+	
 }

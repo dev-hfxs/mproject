@@ -55,7 +55,7 @@ var currentModuleText;
 		$.ajax( {
 		    url:'<%=path%>/comm/queryForList.do',
 		    data:{
-		    	'sqlId':'mproject-user-getUserProjects',
+		    	'sqlId':'mproject-user-getUserMenus',
 		    	'roleId':'${loginUser.role_id}'
 		    },
 		    type:'post',

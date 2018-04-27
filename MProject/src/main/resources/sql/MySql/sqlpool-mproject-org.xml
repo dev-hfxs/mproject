@@ -28,7 +28,7 @@
 	
 	<sql id="mproject-org-updateOrg" name="修改单位">
 		<content>
-		UPDATE t_org SET id=':id', org_name=':orgName', org_code=':orgCode', tax_number=':taxNumber', address=':address', area_code=':areaCode', telephone=':telephone', open_bank=':openBank', account=':account', contacts=':contacts', contact_position=':contactPosition', email=':email', contact_phone=':contactPhone' WHERE id = ':orgId' 
+		UPDATE t_org SET id=':orgId', org_name=':orgName', org_code=':orgCode', tax_number=':taxNumber', address=':address', area_code=':areaCode', telephone=':telephone', open_bank=':openBank', account=':account', contacts=':contacts', contact_position=':contactPosition', email=':email', contact_phone=':contactPhone' WHERE id = ':orgId' 
 		</content>
 		<description>
 		</description>

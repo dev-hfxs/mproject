@@ -122,7 +122,7 @@ create table t_machine_box
    latitude             decimal(9,6)                   null comment '纬度' ,
    pos_desc             varchar(128)                   null comment '位置描述' ,
    processor_num        int(4)                         null comment '处理器数量' ,
-   install_space        decimal(9,6)                   null comment '安装间距' ,
+   install_space        varchar(20)                    null comment '安装间距' ,
    org_id               varchar(32)                    null comment '施工单位id' ,
    build_manager        varchar(32)                    null comment '施工经理' ,
    install_engineer     varchar(32)                    null comment '安装工程师' ,
@@ -165,6 +165,8 @@ create table t_processor
    detector_num         int(4)                         null comment '下属探测器数量' ,
    creator              varchar(32)                    null ,
    create_date          varchar(19)                    null ,
+   config_file          varchar(128)                   null  comment '配置文件路径' ,
+   detector_file        varchar(128)                   null  comment '探测器信息文件路径' ,
    constraint pk_t_processor_id primary key (id)
 );
 

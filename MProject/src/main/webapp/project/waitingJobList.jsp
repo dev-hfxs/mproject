@@ -8,7 +8,7 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>项目工单查询</title>
+<title>待处理工单</title>
 <script type="text/javascript" src="<%=path%>/js/jquery/jquery-3.3.1.min.js"></script>
 <link rel="stylesheet" type="text/css" href="<%=path%>/js/easyui/themes/default/easyui.css">
 <link rel="stylesheet" type="text/css" href="<%=path%>/js/easyui/themes/icon.css">
@@ -25,13 +25,13 @@
 			data-options="singleSelect:true,rownumbers:true,pageSize:20,fit:true,url:'<%=path%>/comm/queryForPage.do',pagination:true,method:'post',toolbar:'#tb',multiSort:true">
 		<thead>
 			<tr>
-				<th data-options="field:'job_status',width:100">工单状态</th>
-				<th data-options="field:'user_name',width:100">工程师</th>
+				<th data-options="field:'status',width:100,formatter:showStatusName">工单状态</th>
+				<th data-options="field:'user_name',width:150">工程师</th>
 				<th data-options="field:'work_content',width:250,sortable:true">工作内容</th>
 				<th data-options="field:'project_number',width:100,sortable:true">项目编号</th>
 				<th data-options="field:'project_name',width:200,sortable:true">项目名称</th>
 				<th data-options="field:'box_number',width:100,sortable:true">机箱编号</th>
-				<th data-options="field:'job_create_date',width:120">建立时间</th>
+				<th data-options="field:'create_date',width:150">建立时间</th>
 				<th data-options="field:'job_desc',width:250,sortable:true">描述</th>
 				<th data-options="field:'id',width:150,align:'center',formatter:showButtons">操作</th>
 			</tr>
@@ -48,29 +48,69 @@ $(function() {
 	var pageNum = "<%=pageNum%>";
 	var pageSize = "<%=pageSize%>";
 	var queryParams = $('#dg').datagrid('options').queryParams;
-	queryParams.sqlId = 'mproject-project-queryProjects';
+	queryParams.sqlId = 'mproject-job-getWaitingJobList';
+	queryParams.projectId = '${curProjectId}';
 	if(pageNum != null && pageNum != 'null' && pageNum != ''){
 		$('#dg').datagrid('options').pageNumber = pageNum;
 	}
 	$('#dg').datagrid('reload');
 	$('.pagination-page-list').hide();
-	
 	//$('#dg').datagrid('hideColumn', 'status'); 
 });
 
+function showStatusName(val,row){
+	if (val == 'I'){
+		return '<span>待处理</span>';
+	} else if (val =='F'){
+		return '<span>完成</span>';
+	} else if (val =='N'){
+		return '<span>未完成</span>';
+	} else if (val =='Q'){
+		return '<span>问题工单</span>';
+	}else{
+		return val;
+	}
+}
+
 function showButtons(val,row){
-	var columnItem = '<span><a href="javascript:void(0)" class="easyui-linkbutton" onclick="processJob(\''+val+'\')" style="width:80px;">处理工单</a></span>&nbsp;&nbsp;';
+	var columnItem = '<span><a href="javascript:void(0)" class="easyui-linkbutton" onclick="processJob(\''+row.id+'\',\''+ row.job_type + '\')" style="width:80px;">处理工单</a></span>&nbsp;&nbsp;';
 	return columnItem;
 }
 
-function processJob(val){
+function processJob(jobId,jobType){
+	//parent.loadUrl("<%=path%>/job/processJob.jsp?jobId="+jobId+"&jobType="+jobType);
 	
+	var content = '<iframe src="<%=path%>/job/processJob.jsp?jobId='+jobId+'&jobType='+jobType + '" width="100%" height="100%" frameborder="0" scrolling="no"></iframe>';
+	var boarddiv = '<div id="msgwindow" title="处理工单" style="overflow:hidden;" ></div>'// style="overflow:hidden;"可以去掉滚动条
+	$(document.body).append(boarddiv);
+	var win = $('#msgwindow').dialog({
+		content : content,
+		width : '720',
+		height : '560',
+		modal : true,
+		title : '处理工单',
+		onClose : function() {
+			$(this).dialog('destroy');// 后面可以关闭后的事件
+		}
+	});
+	win.dialog('open');
+	win.window('center');
+}
+
+function okResponse(){
+	$('#msgwindow').dialog('close');
+	$('#dg').datagrid('reload');
+	$.messager.alert('提示','处理成功!');
+}
+
+function closeDialog(){
+	$('#msgwindow').dialog('close');
 }
 
 function doSearch(){
 	var charKey = $("#inpKey" ).val();
 	var queryParams = $('#dg').datagrid('options').queryParams;
-	queryParams.sqlId = 'mproject-project-queryProjects';
+	queryParams.sqlId = 'mproject-job-getWaitingJobList';
 	queryParams.projectName = charKey;
 	$('#dg').datagrid('loadData',{total:0,rows:[]});
 	$('#dg').datagrid('reload');

@@ -109,7 +109,7 @@
 		</description>
 	</sql>
 	
-	<sql id="mproject-user-getUserProjects" name="获取用户的菜单">
+	<sql id="mproject-user-getUserMenus" name="获取用户的菜单">
 		<content>
 		SELECT id, menu_name,menu_code,menu_url,icon_url,parent_id 
 		FROM t_menu m 

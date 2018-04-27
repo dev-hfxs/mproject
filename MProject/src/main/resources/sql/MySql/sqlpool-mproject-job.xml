@@ -8,5 +8,93 @@
 		<description></description>
 	</sql>
 	
+	<sql id="mproject-job-getWaitingJobList" name="获取未处理工单列表">
+		<content>
+		 SELECT j.id, p.project_number, p.project_name, b.box_number, j.create_date, j.process_person, j.work_content, j.status, j.job_desc, j.job_type, u.user_name  
+		 FROM t_job j 
+		 LEFT JOIN t_project p ON j.project_id = p.id 
+		 LEFT JOIN t_machine_box b ON j.machine_box_id = b.id 
+		 LEFT JOIN t_user u ON j.process_person = u.id 
+		 WHERE j.status = 'I' AND j.project_id = ':projectId' 
+		</content>
+		<description></description>
+	</sql>
 	
+	<sql id="mproject-job-getProcessedJobList" name="获取未处理工单列表">
+		<content>
+		 SELECT j.id, p.project_number, p.project_name, b.box_number, j.create_date, j.process_person, j.work_content, j.status, j.job_desc, j.job_type, u.user_name  
+		 FROM t_job j 
+		 LEFT JOIN t_project p ON j.project_id = p.id 
+		 LEFT JOIN t_machine_box b ON j.machine_box_id = b.id 
+		 LEFT JOIN t_user u ON j.process_person = u.id 
+		 WHERE j.status IN('N','F','Q') AND j.project_id = ':projectId' 
+		</content>
+		<description></description>
+	</sql>
+	
+	<sql id="mproject-job-getInstallJob4Device" name="安装工单处理获取处理器和探测器">
+		<content>
+		 select p.id, concat('处理器(P)[', p.moxa_number, ']IP地址:') AS device_desc, 'P' AS device_type from t_processor p where exists (select machine_box_id from t_job j where j.machine_box_id = p.machine_box_id AND j.id = ':jobId')
+		 union 
+         select d.id, concat('P[', t0.moxa_number, ']-探测器ID[', d.detector_id, ']位置描述:') AS device_desc, 'D' AS device_type from t_detector d 
+         LEFT JOIN t_processor t0 on d.processor_id = t0.id 
+         where d.processor_id IN (select id from t_processor t2 where exists (select machine_box_id from t_job j where j.machine_box_id = t2.machine_box_id AND j.id = ':jobId') )
+		</content>
+		<description></description>
+	</sql>
+	<sql id="mproject-job-getDebugJob4Device" name="调试工单处理获取处理器">
+		<content>
+		 select p.id, p.moxa_number from t_processor p where exists (select machine_box_id from t_job j where j.machine_box_id = p.machine_box_id AND j.id = ':jobId')
+		</content>
+		<description></description>
+	</sql>
+	
+	<sql id="mproject-job-updateJobStatus" name="更新工单状态">
+		<content>
+		update t_job set status = ':status', job_desc = ':jobDesc' where id = ':jobId'
+		</content>
+		<description></description>
+	</sql>
+	
+	<sql id="mproject-job-updateProcessorIpById" name="更新处理器IP">
+		<content>
+		update t_processor set ip = ':ip' where id = ':processorId'
+		</content>
+		<description></description>
+	</sql>
+	
+	<sql id="mproject-job-updateDetectorPosById" name="更新探测器位置描述">
+		<content>
+		update t_detector set pos_desc = ':posDesc' where id = ':detectorId'
+		</content>
+		<description></description>
+	</sql>
+	
+	<sql id="mproject-job-updateProcessConfigById" name="更新处理器配置文件">
+		<content>
+		update t_processor set config_file = ':configFile' where id = ':processorId'
+		</content>
+		<description></description>
+	</sql>
+	
+	<sql id="mproject-job-updateProcessDetectorFileById" name="更新处理器探测器信息">
+		<content>
+		update t_processor set detector_file = ':detectorFile' where id = ':processorId'
+		</content>
+		<description></description>
+	</sql>
+	
+	<sql id="mproject-job-deleteInstallOptionByJobId" name="删除工单的安装选项">
+		<content>
+		delete from t_job_option where job_id = ':jobId'
+		</content>
+		<description></description>
+	</sql>
+	
+	<sql id="mproject-job-addInstallOption" name="添加工单的安装选项">
+		<content>
+		insert into t_job_option(id, job_id, option_name, option_value) values(':id', ':jobId', ':optionName', ':optionValue')
+		</content>
+		<description></description>
+	</sql>	
 </sqls>

@@ -10,11 +10,13 @@ package com.hfxs.test;
 
 import java.io.FileInputStream;
 import java.io.InputStream;
+import java.util.List;
 import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.sierotech.mproject.common.utils.JsonUtil;
 import com.sierotech.mproject.common.utils.excel.ParseExcelData;
 import com.sierotech.mproject.context.AppContext;
 
@@ -28,7 +30,7 @@ public class TestExcel {
 	static final Logger log = LoggerFactory.getLogger(TestExcel.class);
 
 	public static void main(String[] args) {
-		
+
 		try {
 			InputStream fileIn = new FileInputStream("D:\\downloads\\处理器.xlsx");
 			AppContext.loadExcelMeta();
@@ -40,4 +42,5 @@ public class TestExcel {
 		}
 
 	}
+	
 }
