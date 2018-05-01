@@ -325,4 +325,82 @@ public class ProjectServiceImpl implements IProjectService {
 		LogOperationUtil.logAdminOperation(adminUser, "在建项目管理", "删除项目施工经理:[" + projectObj.get("project_name").toString() + "].");
 	}
 
+	@Override
+	public void updateProjectPsnBoxNum(String curUser, String projectId, String userId,int oldAllowBoxNum,int allowBoxNum) throws BusinessException {
+		if (null == curUser) {
+			throw new BusinessException("修改施工经理应建机箱数错误,当前操作是未知的用户!");
+		}
+
+		if (null == projectId) {
+			throw new BusinessException("修改施工经理应建机箱数错误,缺少项目ID!");
+		}
+		if (null == userId) {
+			throw new BusinessException("修改施工经理应建机箱数错误,缺少用户ID!");
+		}
+		// 先获取项目
+		String preSelectSql = ConfigSQLUtil.getCacheSql("mproject-project-queryProjectById");
+		Map<String, Object> paramsMap = new HashMap<String, Object>();
+		paramsMap.put("projectId", projectId);
+		String selectSql = ConfigSQLUtil.preProcessSQL(preSelectSql, paramsMap);
+		List<Map<String, Object>> alProjects;
+		try {
+			alProjects = springJdbcDao.queryForList(selectSql);
+		} catch (DataAccessException dae) {
+			throw new BusinessException("修改施工经理应建机箱数错误,查找对应的项目错误.");
+		}
+		Map<String, Object> projectObj;
+		if (alProjects != null && alProjects.size() > 0) {
+			projectObj = alProjects.get(0);
+		} else {
+			throw new BusinessException("修改施工经理应建机箱数错误,未找到对应的项目.");
+		}
+		
+		// 获取项目的应建机箱数
+		int projectBoxNum = 0;
+		try {
+			projectBoxNum = Integer.parseInt(projectObj.get("allow_box_num").toString());			
+		}catch(NumberFormatException ne) {
+			throw new BusinessException("修改施工经理应建机箱数错误,项目应建机箱数未设置正确.");
+		}
+		//获取项目已分配(其他施工经理)的机箱数
+		String allotBoxNumPreSql = ConfigSQLUtil.getCacheSql("mproject-project-getProjectHadAllotBoxNum");
+		Map<String,Object> paramMap = new HashMap<String,Object>();
+		paramMap.put("projectId", projectId);
+		String allotBoxNumSql = ConfigSQLUtil.preProcessSQL(allotBoxNumPreSql, paramMap);
+		List<Map<String, Object>> alProjectAllotBoxs;
+		try {
+			alProjectAllotBoxs = springJdbcDao.queryForList(allotBoxNumSql);
+		}
+		catch (DataAccessException dae) {
+			throw new BusinessException("修改施工经理应建机箱数错误,获取项目已分配的机箱数错误.");
+		}
+		int allotBoxNum = 0;
+		if(alProjectAllotBoxs != null && alProjectAllotBoxs.size() > 0 && alProjectAllotBoxs.get(0).get("allot_box_num") !=null) {
+			String strAllotBoxNum = alProjectAllotBoxs.get(0).get("allot_box_num").toString();
+			try {
+				allotBoxNum = Integer.parseInt(strAllotBoxNum);	
+			}catch(NumberFormatException ne) {
+				//
+			}
+		}
+		int oddBoxNum  =  projectBoxNum - allotBoxNum - oldAllowBoxNum;
+		// 验证设置的机箱数是否超出该项目机箱数的范围
+		if(allowBoxNum > oddBoxNum) {
+			throw new BusinessException("修改施工经理应建机箱数错误,分配的机箱数已超出项目应建的机箱数.");
+		}
+		
+		paramMap.clear();
+		paramMap.put("projectId", projectId);
+		paramMap.put("userId", userId);
+		paramMap.put("allowBoxNum", allowBoxNum);
+	
+		String preSql = ConfigSQLUtil.getCacheSql("mproject-project-updateProjectPsnAllowBoxNum");
+		String sql = ConfigSQLUtil.preProcessSQL(preSql, paramMap);
+		try {
+			springJdbcDao.update(sql);
+		} catch (DataAccessException dae) {
+			log.info(dae.toString());
+			throw new BusinessException("修改施工经理应建机箱数错误,数据存储异常.");
+		}
+	}
 }

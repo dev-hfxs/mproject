@@ -182,7 +182,7 @@ public class UserServiceImpl implements IUserService {
 			throw new BusinessException("修改用户,访问数据库异常.");
 		}
 		// 记录日志
-		LogOperationUtil.logAdminOperation(adminUser, "用户管理", "修改用户:[" + userObj.get("userName").toString() + "];修改前的用户名:"+oldUserObj.get("user_name").toString()+",姓名:"+oldUserObj.get("full_nme").toString());
+		LogOperationUtil.logAdminOperation(adminUser, "用户管理", "修改用户:[" + userObj.get("userName").toString() + "];修改前的用户名:"+oldUserObj.get("user_name").toString()+",姓名:"+oldUserObj.get("full_name").toString());
 
 	}
 

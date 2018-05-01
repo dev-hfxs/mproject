@@ -107,10 +107,68 @@ function showStatusName(val,row){
 }
 
 function showButtons(val,row){
-	var columnItem = '<span><a href="javascript:void(0)" class="easyui-linkbutton" onclick="javascript:doUpdate(\''+val+'\')" style="width:80px;">修改信息</a></span>&nbsp;&nbsp;'
-                   + '<span><a href="javascript:void(0)" class="easyui-linkbutton" onclick="doView(\''+val+'\')" style="width:80px;">提交信息</a></span>&nbsp;&nbsp;'
-                   + '<span><a href="javascript:void(0)" class="easyui-linkbutton" onclick="doView(\''+val+'\')" style="width:80px;">删除信息</a></span>&nbsp;&nbsp;';
+	var columnItem = '<span><a href="javascript:void(0)" class="easyui-linkbutton" onclick="javascript:configProcessor(\''+row.id+'\',\'' + row.box_number +'\')" style="width:80px;">修改信息</a></span>&nbsp;&nbsp;'
+                   + '<span><a href="javascript:void(0)" class="easyui-linkbutton" onclick="submitBox(\''+val+'\')" style="width:80px;">提交信息</a></span>&nbsp;&nbsp;'
+                   + '<span><a href="javascript:void(0)" class="easyui-linkbutton" onclick="deleteBox(\''+val+'\')" style="width:80px;">删除信息</a></span>&nbsp;&nbsp;';
 	return columnItem;
+}
+
+function configProcessor(boxId,boxNumber){
+	parent.loadUrl("<%=path%>/processor/processorList.jsp?boxId=" + boxId + "&boxNumber=" + boxNumber);
+}
+
+function submitBox(boxId){
+	$.messager.confirm('确认', '确认提交该机箱?', function(r){
+		if(r){
+			$.ajax( {
+			    url:'<%=path%>/box/mgr/submit.do',
+			    data:{
+			    	'id':boxId
+			    },
+			    type:'post',
+			    async:false,
+			    dataType:'json',
+			    success:function(data) {
+			    	if(data.returnCode == "success"){
+			    		$('#dg').datagrid('loadData',{total:0,rows:[]});
+			    		$('#dg').datagrid('reload');
+			    	}else{
+			    		$.messager.alert('提示',data.msg);
+			    	}
+			    },
+			    error : function(data) {
+			    	$.messager.alert('异常',data.responseText);
+		        }
+			});
+		}
+	});
+}
+
+function deleteBox(boxId){
+	$.messager.confirm('确认', '确认删除该机箱?', function(r){
+		if(r){
+			$.ajax( {
+			    url:'<%=path%>/box/mgr/delete.do',
+			    data:{
+			    	'id':boxId
+			    },
+			    type:'post',
+			    async:false,
+			    dataType:'json',
+			    success:function(data) {
+			    	if(data.returnCode == "success"){
+			    		$('#dg').datagrid('loadData',{total:0,rows:[]});
+			    		$('#dg').datagrid('reload');
+			    	}else{
+			    		$.messager.alert('提示',data.msg);
+			    	}
+			    },
+			    error : function(data) {
+			    	$.messager.alert('异常',data.responseText);
+		        }
+			});
+		}
+	});
 }
 
 function doSearch(){

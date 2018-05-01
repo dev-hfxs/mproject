@@ -20,7 +20,7 @@ INSERT INTO t_user(id,user_name,full_name,id_number,org_id,contact_number,role_i
 
 INSERT INTO t_user(id,user_name,full_name,id_number,org_id,contact_number,role_id,status,password,init_password,sex) VALUES ('u8952c8666964e07a9a285b10d706a63','emily.yuan@sierotech.com','袁春会','000000000000000000','o3f25612335a4d188020d617801ea7bf','00000000000','rc106393c9f649e393d7c5d1a52c6105','N','0000000','Y','F');
 
-INSERT INTO t_user(id,user_name,full_name,id_number,org_id,contact_number,role_id,status,password,init_password,sex) VALUES ('u8952c8666964e07a9a285b10d706a64','kerry.kou@sierotech.com','寇宝龙','000000000000000000','o3f25612335a4d188020d617801ea7bf','00000000000','r9f16963cd27441594bb8fc6de9738a1','N','0000000','Y','M');
+INSERT INTO t_user(id,user_name,full_name,id_number,org_id,contact_number,role_id,status,password,init_password,sex) VALUES ('u8952c8666964e07a9a285b10d706a64','jianli.yin@sierotech.com','尹建利','000000000000000000','o3f25612335a4d188020d617801ea7bf','00000000000','r9f16963cd27441594bb8fc6de9738a1','N','0000000','Y','M');
 
 INSERT INTO t_user(id,user_name,full_name,id_number,org_id,contact_number,role_id,status,password,init_password,sex) VALUES ('u8952c8666964e07a9a285b10d706a65','shuai.chang@sierotech.com','常帅','000000000000000000','o3f25612335a4d188020d617801ea7bf','00000000000','r9f16963cd27441594bb8fc6de9738a1','N','0000000','Y','M');
 

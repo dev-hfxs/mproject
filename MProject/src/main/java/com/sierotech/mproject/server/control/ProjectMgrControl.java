@@ -197,4 +197,46 @@ public class ProjectMgrControl {
 		result.put("msg", "");
 		return result;
 	}
+	
+	@RequestMapping(value = "/projectPsnBoxnumReset")
+	@ResponseBody
+	public Map<String, String> updateProjectPsnBoxNum(HttpServletRequest request) {
+		Map<String, String> result = new HashMap<String, String>();
+		result.put("returnCode", "fail");
+		String projectId = request.getParameter("projectId").toString();
+		String userId = request.getParameter("userId").toString();
+		String oldAllowBoxNum = request.getParameter("oldAllowBoxNum").toString();
+		String allowBoxNum = request.getParameter("allowBoxNum").toString();
+		if(null == projectId) {
+			result.put("msg", "修改施工经理应建机箱数错误,缺少项目ID.");
+			return result;
+		}
+		if(null == userId) {
+			result.put("msg", "修改施工经理应建机箱数错误,缺少用户ID.");
+			return result;
+		}
+		if(null == userId) {
+			result.put("msg", "修改施工经理应建机箱数错误,缺少用户ID.");
+			return result;
+		}
+		int iOldAllowBoxNum = 0;
+		int iAllowBoxNum = 0;
+		try {
+			iOldAllowBoxNum = Integer.parseInt(oldAllowBoxNum);
+			iAllowBoxNum = Integer.parseInt(allowBoxNum);
+		}catch(NumberFormatException ne) {
+			result.put("msg", "修改施工经理应建机箱数错误,机箱数应为数字.");
+			return result;
+		}
+		try {
+			projectService.updateProjectPsnBoxNum(UserTool.getLoginUser(request).get("user_name"), projectId, userId, iOldAllowBoxNum, iAllowBoxNum);
+		}catch(BusinessException be) {
+			result.put("msg", be.getMessage());
+			return result;
+		}
+		result.put("returnCode", "success");
+		result.put("msg", "");
+		return result;
+	}
+	
 }

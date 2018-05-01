@@ -22,6 +22,10 @@
 .icon-ok{
 	background:url('icons/ok.png') no-repeat center center;
 }
+.icon-import{
+	background:url('icons/table_import.png') no-repeat center center;
+}
+
 .icon-no{
 	background:url('icons/no.png') no-repeat center center;
 }

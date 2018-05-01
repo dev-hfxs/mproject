@@ -80,8 +80,9 @@ $(function() {
 function doConfim(){
 	var row = $('#dg').datagrid('getSelected');
 	if (row){
+		var userName = row.user_name + "/" + row.full_name;
 		// 返回选择的人员
-		var params = {id:row.id,user_name:row.user_name};
+		var params = {id:row.id,user_name:userName};
 		parent.okResponse(params);
 	}else{
 		$.messager.alert('提示', "未选择数据!");

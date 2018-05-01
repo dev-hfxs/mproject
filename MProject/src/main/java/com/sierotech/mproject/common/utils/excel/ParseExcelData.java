@@ -112,7 +112,8 @@ public class ParseExcelData {
 
 			for (int i = dataBeginRow; i <= sheetRows; i++) {
 				Row dataRow = sheet.getRow(i);
-				if (null == dataRow || dataRow.getFirstCellNum() == -1 || dataRow.getLastCellNum() < columns) {
+				//if (null == dataRow || dataRow.getFirstCellNum() == -1 || dataRow.getLastCellNum() < columns) {
+				if (null == dataRow || dataRow.getFirstCellNum() == -1) {
 					// 这一行是空行，不读取
 					continue;
 				}
@@ -135,14 +136,14 @@ public class ParseExcelData {
 						if (null == cellValue || "".equals(cellValue)) {
 							rowDataIsValid = false;
 						}
-						if (columnType.startsWith("int") || columnType.startsWith("float")
-								|| columnType.startsWith("double")) {
-							// 校验是否数字类型
-							try {
-								Double.valueOf(cellValue);
-							} catch (NumberFormatException ne) {
-								rowDataIsValid = false;
-							}
+					}
+					
+					if (columnType.startsWith("int") || columnType.startsWith("float") || columnType.startsWith("double")) {
+						// 校验是否数字类型
+						try {
+							Double.valueOf(cellValue);
+						} catch (NumberFormatException ne) {
+							rowDataIsValid = false;
 						}
 					}
 					dataMap.put(columnName, cellValue);

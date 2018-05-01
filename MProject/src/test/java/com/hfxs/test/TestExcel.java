@@ -10,13 +10,11 @@ package com.hfxs.test;
 
 import java.io.FileInputStream;
 import java.io.InputStream;
-import java.util.List;
 import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.sierotech.mproject.common.utils.JsonUtil;
 import com.sierotech.mproject.common.utils.excel.ParseExcelData;
 import com.sierotech.mproject.context.AppContext;
 
@@ -30,17 +28,19 @@ public class TestExcel {
 	static final Logger log = LoggerFactory.getLogger(TestExcel.class);
 
 	public static void main(String[] args) {
-
 		try {
-			InputStream fileIn = new FileInputStream("D:\\downloads\\处理器.xlsx");
+//			InputStream fileIn = new FileInputStream("D:\\downloads\\处理器.xlsx");
+			InputStream fileIn = new FileInputStream("D:\\downloads\\探测器.xls");
 			AppContext.loadExcelMeta();
-			Map<String, Object> datasMap = ParseExcelData.getInstance().readFile(fileIn, "D:\\downloads\\处理器.xlsx",
-					AppContext.getExcelTemplateMeta("processor"));
-			log.info(datasMap.toString());
+			Map<String, Object> datasMap = ParseExcelData.getInstance().readFile(fileIn, "D:\\downloads\\探测器.xls",
+					AppContext.getExcelTemplateMeta("detector"));
+			//log.info(datasMap.toString());
+			System.out.println(datasMap);
 		} catch (Exception e) {
 
 		}
 
 	}
+	
 	
 }

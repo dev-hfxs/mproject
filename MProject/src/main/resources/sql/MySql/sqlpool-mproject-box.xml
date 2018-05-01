@@ -2,8 +2,8 @@
 <sqls>
 	<sql id="mproject-box-add" name="添加机箱">
 		<content>
-		 INSERT INTO t_machine_box(id, box_number, longitude, latitude,processor_num, install_space,org_id,build_manager,project_id, create_date) 
-		 VALUES (':boxId', ':boxNumber', ':longitude', ':latitude', ':processorNum', ':installSpace', ':orgId', ':buildManager', ':projectId', ':createDate')  
+		 INSERT INTO t_machine_box(id, box_number, longitude, latitude, processor_num, install_space,org_id,build_manager,project_id, create_date) 
+		 VALUES (':boxId', ':boxNumber', :longitude, :latitude, ':processorNum', ':installSpace', ':orgId', ':userId', ':projectId', ':createDate')  
 		</content>
 		<description></description>
 	</sql>
@@ -19,9 +19,95 @@
 	<sql id="mproject-box-getUserBoxsList" name="获取用户当前项目的机箱列表">
 		<content>
 		 SELECT id, box_number, longitude, latitude, processor_num, enable_edit, 
+		 0 AS submit_num
+		 FROM t_machine_box b
+		 WHERE b.project_id = ':projectId' AND b.build_manager = ':userId' 
+		 AND not exists (select machine_box_id from t_machine_box_submit s where s.machine_box_id = b.id )
+		 UNION 
+		 SELECT id, box_number, longitude, latitude, processor_num, enable_edit, 
 		 (SELECT count(*) FROM t_machine_box_submit t2 WHERE t2.machine_box_id = b.id) AS submit_num
 		 FROM t_machine_box b
 		 WHERE b.project_id = ':projectId' AND b.build_manager = ':userId' 
+		 AND exists (select machine_box_id from t_machine_box_submit s where s.machine_box_id = b.id )
+		 AND b.enable_edit = 'Y' 
+		</content>
+		<description></description>
+	</sql>
+	
+	<sql id="mproject-box-getUserBoxsProgessList" name="获取用户当前项目提交机箱验收进度">
+		<content>
+		 SELECT b.id, b.box_number, b.longitude, b.latitude, b.processor_num ,  
+		 (SELECT count(*) FROM t_machine_box_submit t2 WHERE t2.machine_box_id = b.id) AS submit_num, 
+		 confirm_install_date, confirm_debug_date, pm_confirm_date
+		 FROM t_machine_box b
+		 WHERE b.project_id = ':projectId' AND b.build_manager = ':userId' and (b.enable_edit = 'N' or b.enable_edit is null)  
+		 and exists (select id from t_machine_box_submit t4 where t4.machine_box_id = b.id)
+		</content> 
+		<description></description> 
+	</sql>
+	
+	<sql id="mproject-box-deleteBoxById" name="根据ID删除机箱">
+		<content>
+		DELETE FROM t_machine_box WHERE id = ':boxId'  
+		</content>
+		<description></description>
+	</sql>
+	
+	<sql id="mproject-box-deleteBoxProcessorById" name="根据ID删除机箱下的处理器">
+		<content>
+		DELETE FROM t_processor WHERE machine_box_id = ':boxId' 
+		</content>
+		<description></description>
+	</sql>
+	
+	<sql id="mproject-box-deleteBoxDetectorById" name="根据ID删除机箱下的探测器">
+		<content>
+		DELETE FROM t_detector WHERE processor_id IN (SELECT id FROM t_processor WHERE machine_box_id = ':boxId' ) 
+		</content>
+		<description></description>
+	</sql>
+	
+	<sql id="mproject-box-getBoxBelowInfo" name="根据机箱ID获取机箱下属处理器|探测器信息">
+		<content>
+		SELECT p.id, (select count(*) from t_detector d where d.processor_id = p.id) AS detector_num 
+		FROM t_processor p WHERE p.machine_box_id = ':boxId' 
+		</content>
+		<description></description>
+	</sql>
+	
+	<sql id="mproject-box-logSubmitInfo" name="记录机箱提交信息">
+		<content>
+		INSERT INTO t_machine_box_submit(id,machine_box_id,submit_date,remark) VALUES(':id', ':boxId',':submitDate','') 
+		</content>
+		<description></description>
+	</sql>
+	
+	<sql id="mproject-box-updateBoxStatus" name="更改机箱状态">
+		<content>
+		UPDATE t_machine_box SET enable_edit = ':status' WHERE id = ':boxId'  
+		</content>
+		<description></description>
+	</sql>
+	
+	<sql id="mproject-box-getBoxById" name="根据ID获取机箱">
+		<content>
+		SELECT id, box_number, longitude, latitude, processor_num, enable_edit, pm_confirm_date
+		FROM t_machine_box WHERE id = ':boxId' 
+		</content>
+		<description></description>
+	</sql>
+	
+	<sql id="mproject-box-updateBox4Accept" name="设置机箱为验收">
+		<content>
+		UPDATE t_machine_box SET pm_confirm_date = ':curDate' WHERE id = ':boxId' 
+		</content>
+		<description></description>
+	</sql>
+	
+	<sql id="mproject-box-getBoxProcessor4IpIsEmpty" name="获取机箱下IP为空的处理器列表">
+		<content>
+		SELECT id, nfc_number, moxa_number, processor_id, ip FROM t_processor 
+		WHERE machine_box_id = ':boxId' AND (ip IS NULL OR ip = '0.0.0.0' OR ip = '' ) 
 		</content>
 		<description></description>
 	</sql>

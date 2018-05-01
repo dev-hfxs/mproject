@@ -16,6 +16,7 @@ import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.stereotype.Component;
 
 import com.sierotech.mproject.common.utils.SQLPoolInitializor;
+import com.sierotech.mproject.context.AppContext;
 
 /**
 * @JDK版本: 1.7
@@ -41,6 +42,7 @@ public class ContextLoadFinishHandle implements ApplicationListener<ContextRefre
 			sqlPoolInit.run();
 
 			// 加载excel模板元数据
+			AppContext.loadExcelMeta();
 		}
 	}
 }

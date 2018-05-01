@@ -1,5 +1,6 @@
 <%@ page pageEncoding="UTF-8"%>
-<% 
+<%
+	// no use 
 	String path = request.getContextPath();
 	String pageSize = request.getParameter("pageSize");
 	String pageNum = request.getParameter("pageNum");

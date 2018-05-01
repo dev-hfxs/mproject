@@ -48,8 +48,9 @@ $(function() {
 	var pageNum = "<%=pageNum%>";
 	var pageSize = "<%=pageSize%>";
 	var queryParams = $('#dg').datagrid('options').queryParams;
-	queryParams.sqlId = 'mproject-job-getWaitingJobList';
+	queryParams.sqlId = 'mproject-job-getWaitingJobListByUser';
 	queryParams.projectId = '${curProjectId}';
+	queryParams.userId = '${loginUser.id}';
 	if(pageNum != null && pageNum != 'null' && pageNum != ''){
 		$('#dg').datagrid('options').pageNumber = pageNum;
 	}
@@ -110,7 +111,9 @@ function closeDialog(){
 function doSearch(){
 	var charKey = $("#inpKey" ).val();
 	var queryParams = $('#dg').datagrid('options').queryParams;
-	queryParams.sqlId = 'mproject-job-getWaitingJobList';
+	queryParams.sqlId = 'mproject-job-getWaitingJobListByUser';
+	queryParams.projectId = '${curProjectId}';
+	queryParams.userId = '${loginUser.id}';
 	queryParams.projectName = charKey;
 	$('#dg').datagrid('loadData',{total:0,rows:[]});
 	$('#dg').datagrid('reload');

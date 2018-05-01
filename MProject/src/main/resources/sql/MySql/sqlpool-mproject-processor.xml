@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sqls>
+	<sql id="mproject-processor-add" name="添加处理器">
+		<content>
+		INSERT INTO t_processor(id, machine_box_id, nfc_number, processor_id, moxa_number, ip, detector_num, creator, create_date) 
+		VAlUES (':id', ':boxId', ':nfcNumber', ':processorId', ':moxaNumber', ':ip', :detectorNUm, ':creator', ':createDate')
+		</content>
+		<description></description>
+	</sql>
+	
+	<sql id="mproject-processor-getProcessorListByBoxId" name="通过机箱ID获取处理器列表">
+		<content>
+		SELECT p.id, p.machine_box_id, p.nfc_number, p.moxa_number, p.processor_id, p.ip, p.detector_num, p.create_date, m.box_number
+		FROM t_processor p
+		LEFT JOIN t_machine_box m on m.id = p.machine_box_id 
+		WHERE p.machine_box_id = ':boxId' 
+		ORDER BY create_date DESC 
+		</content>
+		<description></description>
+	</sql>
+	
+	<sql id="mproject-processor-getProcessorById" name="通过机箱ID获取处理器">
+		<content>
+		SELECT p.id, p.machine_box_id, p.nfc_number, p.moxa_number, p.processor_id, p.ip, p.detector_num, p.create_date, m.box_number
+		FROM t_processor p 
+		LEFT JOIN t_machine_box m on m.id = p.machine_box_id 
+		WHERE p.id = ':id' 
+		</content>
+		<description></description>
+	</sql>
+	
+	<sql id="mproject-processor-updateProcessorById" name="根据ID修改处理器">
+		<content>
+		UPDATE t_processor SET nfc_number=':nfcNumber', moxa_number=':moxaNumber', processor_id = ':processorId', ip=':ip', detector_num=:detectorNum
+		WHERE id = ':id' 
+		</content>
+		<description></description>
+	</sql>
+	
+	<sql id="mproject-processor-deleteProcessorById" name="根据ID删除处理器">
+		<content>
+		DELETE FROM t_processor WHERE id = ':id' 
+		</content>
+		<description></description>
+	</sql>
+	
+	<sql id="mproject-processor-deleteDetectorByProcessorId" name="根据处理器ID删除探测器">
+		<content>
+		DELETE FROM t_detector WHERE processor_id = ':processorId' 
+		</content>
+		<description></description>
+	</sql>
+</sqls>

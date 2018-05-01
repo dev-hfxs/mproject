@@ -121,12 +121,12 @@ public class JobServiceImpl implements IJobService {
 	 * 
 	 * */
 	@Override
-	public void updateJob(String jobId, String jobStatus, String jobDesc, String boxPos, Map<String, String> installOptionMap, List<Map> processIpList, List<Map> detectorPosList) {
+	public void updateJob(String curUser, String jobId, String jobStatus, String jobDesc, String boxPos, Map<String, String> installOptionMap, List<Map> processIpList, List<Map> detectorPosList) {
 		if(null == jobId) {
 			throw new BusinessException("处理安装工单错误,缺少工单ID.");
 		}
 		if(null == jobStatus) {
-			throw new BusinessException("处理安装工单错误,缺少工单状态.");			
+			throw new BusinessException("处理安装工单错误,缺少工单状态.");		
 		}
 		
 		Map<String, Object> paramsMap = new HashMap<String, Object>();
@@ -148,7 +148,7 @@ public class JobServiceImpl implements IJobService {
 			for(Map processIpMap : processIpList) {
 				paramsMap.clear();
 				paramsMap.put("processorId", processIpMap.get("id"));
-				paramsMap.put("ip", processIpMap.get("id"));
+				paramsMap.put("ip", processIpMap.get("ip"));
 				String updateProcessIpSql = ConfigSQLUtil.preProcessSQL(updateProcessIpPreSql, paramsMap);
 				batchSql.append(updateProcessIpSql).append(";\n");
 			}
@@ -209,7 +209,20 @@ public class JobServiceImpl implements IJobService {
 					throw new BusinessException("处理安装工单错误,更新探测器位置错误.");
 				}
 			}
-		}		
+		}
+		//更新工单对应机箱的安装工程师
+		String installJobUpdateBoxPreSql = ConfigSQLUtil.getCacheSql("mproject-job-updateInstallJobBoxConfirm");
+		paramsMap.clear();
+		paramsMap.put("jobId", jobId);
+		paramsMap.put("userId", curUser);
+		paramsMap.put("curDate", DateUtils.getNow(DateUtils.FORMAT_LONG));		
+		String installJobUpdateBoxSql =  ConfigSQLUtil.preProcessSQL(installJobUpdateBoxPreSql, paramsMap);
+		try {
+			springJdbcDao.update(installJobUpdateBoxSql);
+		} catch (DataAccessException dae) {
+			log.info(dae.toString());
+			throw new BusinessException("处理安装工单错误,更新机箱的安装工程师错误.");
+		}
 	}
 
 	/*
@@ -217,7 +230,7 @@ public class JobServiceImpl implements IJobService {
 	 * 
 	 * */
 	@Override
-	public void updateJob(String jobId, String jobStatus, String jobDesc,  List<Map> configInfoList,  List<Map> detectorInfoList) {
+	public void updateJob(String curUser, String jobId, String jobStatus, String jobDesc,  List<Map> configInfoList,  List<Map> detectorInfoList) {
 		
 		if(null == jobId) {
 			throw new BusinessException("处理调试工单错误,缺少工单ID.");
@@ -306,6 +319,19 @@ public class JobServiceImpl implements IJobService {
 				log.info(dae.toString());
 				throw new BusinessException("处理调试工单错误,更新处理器配置、探测器信息附件错误.");
 			}
-		}		
+		}
+		//更新工单对应机箱的调试工程师
+		String debugJobUpdateBoxPreSql = ConfigSQLUtil.getCacheSql("mproject-job-updateDebugJobBoxConfirm");
+		paramsMap.clear();
+		paramsMap.put("jobId", jobId);
+		paramsMap.put("userId", curUser);
+		paramsMap.put("curDate", DateUtils.getNow(DateUtils.FORMAT_LONG));
+		String debugJobUpdateBoxSql =  ConfigSQLUtil.preProcessSQL(debugJobUpdateBoxPreSql, paramsMap);
+		try {
+			springJdbcDao.update(debugJobUpdateBoxSql);
+		} catch (DataAccessException dae) {
+			log.info(dae.toString());
+			throw new BusinessException("处理调试工单错误,更新机箱的调试工程师错误.");
+		}
 	}
 }

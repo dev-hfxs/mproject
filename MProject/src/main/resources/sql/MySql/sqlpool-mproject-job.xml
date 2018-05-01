@@ -8,30 +8,45 @@
 		<description></description>
 	</sql>
 	
-	<sql id="mproject-job-getWaitingJobList" name="获取未处理工单列表">
+	<sql id="mproject-job-getWaitingJobListByUser" name="获取未处理工单列表">
 		<content>
 		 SELECT j.id, p.project_number, p.project_name, b.box_number, j.create_date, j.process_person, j.work_content, j.status, j.job_desc, j.job_type, u.user_name  
 		 FROM t_job j 
 		 LEFT JOIN t_project p ON j.project_id = p.id 
 		 LEFT JOIN t_machine_box b ON j.machine_box_id = b.id 
 		 LEFT JOIN t_user u ON j.process_person = u.id 
-		 WHERE j.status = 'I' AND j.project_id = ':projectId' 
+		 WHERE j.status = 'I' AND j.process_person = ':userId' 
 		</content>
+		<!-- AND j.project_id = ':projectId' -->
 		<description></description>
 	</sql>
 	
-	<sql id="mproject-job-getProcessedJobList" name="获取未处理工单列表">
+	<sql id="mproject-job-getProcessedJobListByUser" name="获取处理工单列表">
 		<content>
 		 SELECT j.id, p.project_number, p.project_name, b.box_number, j.create_date, j.process_person, j.work_content, j.status, j.job_desc, j.job_type, u.user_name  
 		 FROM t_job j 
 		 LEFT JOIN t_project p ON j.project_id = p.id 
 		 LEFT JOIN t_machine_box b ON j.machine_box_id = b.id 
 		 LEFT JOIN t_user u ON j.process_person = u.id 
-		 WHERE j.status IN('N','F','Q') AND j.project_id = ':projectId' 
+		 WHERE j.status IN('N','F','Q') AND j.process_person = ':userId' 
 		</content>
+		<!-- AND j.project_id = ':projectId' -->
 		<description></description>
 	</sql>
-	
+
+	<sql id="mproject-job-getProjectJobListByUser" name="获取项目下用户的工单">
+		<content>
+		 SELECT j.id, p.project_number, p.project_name, b.box_number, j.create_date, j.process_person, j.work_content, j.status, j.job_desc, j.job_type, u.user_name  
+		 FROM t_job j 
+		 LEFT JOIN t_project p ON j.project_id = p.id 
+		 LEFT JOIN t_machine_box b ON j.machine_box_id = b.id 
+		 LEFT JOIN t_user u ON j.process_person = u.id 
+		 WHERE j.project_id = ':projectId' 
+		</content>
+		<!-- AND j.process_person = ':userId'  -->
+		<description></description>
+	</sql>
+		
 	<sql id="mproject-job-getInstallJob4Device" name="安装工单处理获取处理器和探测器">
 		<content>
 		 select p.id, concat('处理器(P)[', p.moxa_number, ']IP地址:') AS device_desc, 'P' AS device_type from t_processor p where exists (select machine_box_id from t_job j where j.machine_box_id = p.machine_box_id AND j.id = ':jobId')
@@ -96,5 +111,21 @@
 		insert into t_job_option(id, job_id, option_name, option_value) values(':id', ':jobId', ':optionName', ':optionValue')
 		</content>
 		<description></description>
-	</sql>	
+	</sql>
+	
+	<sql id="mproject-job-updateInstallJobBoxConfirm" name="工单完成修改安装工程师确认信息">
+		<content>
+		UPDATE t_machine_box m SET m.install_engineer = ':userId', m.confirm_install_date = ':curDate' 
+		WHERE EXISTS (SELECT machine_box_id FROM t_job j WHERE j.id = ':jobId' AND j.machine_box_id = m.id)
+		</content>
+		<description></description>
+	</sql>
+	
+	<sql id="mproject-job-updateDebugJobBoxConfirm" name="工单完成修改安装工程师确认信息">
+		<content>
+		UPDATE t_machine_box m SET m.debug_engineer = ':userId', m.confirm_debug_date = ':curDate' 
+		WHERE EXISTS (SELECT machine_box_id FROM t_job j WHERE j.id = ':jobId' AND j.machine_box_id = m.id) 
+		</content>
+		<description></description>
+	</sql>
 </sqls>

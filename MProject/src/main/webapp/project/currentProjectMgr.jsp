@@ -66,14 +66,17 @@ function showButtons(val,row){
 		if(row.submit_num > 0){
 			//未验收且提交过
 			columnItem = columnItem + '<span><a href="javascript:void(0)" class="easyui-linkbutton" onclick="publishJob(\''+row.project_id+'\',\''+ row.id + '\')" style="width:80px;">发布工单</a></span>&nbsp;&nbsp;'
-			columnItem = columnItem + '<span><a href="javascript:void(0)" class="easyui-linkbutton" onclick="doEnableEdit(\''+row.project_id+'\',\''+ row.id + '\')" style="width:80px;">允许修改</a></span>&nbsp;&nbsp;';
-			columnItem = columnItem + '<span><a href="javascript:void(0)" class="easyui-linkbutton" onclick="doAccept(\''+row.project_id+'\',\''+ row.id + '\')" style="width:80px;">确认验收</a></span>&nbsp;&nbsp;';
+			if(row.enable_edit =='N'){
+				//提交过且没有验收可允许修改
+				columnItem = columnItem + '<span><a href="javascript:void(0)" class="easyui-linkbutton" onclick="doEnableEdit(\''+row.project_id+'\',\''+ row.id + '\')" style="width:80px;">允许修改</a></span>&nbsp;&nbsp;';
+				columnItem = columnItem + '<span><a href="javascript:void(0)" class="easyui-linkbutton" onclick="doAccept(\''+row.project_id+'\',\''+ row.id + '\')" style="width:80px;">确认验收</a></span>&nbsp;&nbsp;';
+			}			
 		}
 	}
 	//TODO测试先放开发布工单
-	if(columnItem == ''){
-		columnItem = columnItem + '<span><a href="javascript:void(0)" class="easyui-linkbutton" onclick="publishJob(\''+row.project_id+'\',\''+ row.id + '\')" style="width:80px;">发布工单</a></span>&nbsp;&nbsp;'
-	}
+	//if(columnItem == ''){
+	//	columnItem = columnItem + '<span><a href="javascript:void(0)" class="easyui-linkbutton" onclick="publishJob(\''+row.project_id+'\',\''+ row.id + '\')" style="width:80px;">发布工单</a></span>&nbsp;&nbsp;'
+	//}
 	
 	return columnItem;
 }
@@ -82,9 +85,65 @@ function publishJob(projectId,boxId){
 	parent.loadUrl("<%=path%>/job/publishJob.jsp?projectId=" + projectId + "&boxId=" + boxId);
 }
 
-function doDelete(val){
-	
+
+function doEnableEdit(projectId,boxId){
+	$.messager.confirm('确认', '确认允许修改?', function(r){
+		if(r){
+			$.ajax( {
+			    url:'<%=path%>/box/mgr/reset/status.do',
+			    data:{
+			    	'projectId':projectId,
+			    	'boxId':boxId
+			    },
+			    type:'post',
+			    async:false,
+			    dataType:'json',
+			    success:function(data) {
+			    	if(data.returnCode == "success"){
+			    		$.messager.alert('提示','操作成功','info',function(){
+			    			$('#dg').datagrid('reload');
+			    		});
+			    	}else{
+			    		$.messager.alert('提示',data.msg);
+			    	}
+			    },
+			    error : function(data) {
+			    	$.messager.alert('异常',data.responseText);
+		        }
+			});
+		}
+	});
 }
+
+function doAccept(projectId,boxId){
+	$.messager.confirm('确认', '确认验收?', function(r){
+		if(r){
+			$.ajax( {
+			    url:'<%=path%>/box/mgr/accept.do',
+			    data:{
+			    	'projectId':projectId,
+			    	'boxId':boxId
+			    },
+			    type:'post',
+			    async:false,
+			    dataType:'json',
+			    success:function(data) {
+			    	if(data.returnCode == "success"){
+			    		$.messager.alert('提示','操作成功','info',function(){
+			    			$('#dg').datagrid('reload');
+			    		});
+			    	}else{
+			    		$.messager.alert('提示',data.msg);
+			    	}
+			    },
+			    error : function(data) {
+			    	$.messager.alert('异常',data.responseText);
+		        }
+			});
+		}
+	});
+}
+
 
 function doSearch(){
 	var charKey = $("#inpKey" ).val();

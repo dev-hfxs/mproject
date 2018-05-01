@@ -21,5 +21,14 @@ import com.sierotech.mproject.common.BusinessException;
 public interface IBoxService {
 	public boolean checkBoxNumber(String boxId, String boxNumber) throws BusinessException;
 	
-	public void addBox(String adminUser,Map<String,Object> boxObj) throws BusinessException;
+	public void addBox(String curUser, Map<String,Object> boxObj) throws BusinessException;
+	
+	public void deleteBox(String curUser, String boxId) throws BusinessException;
+	
+	public void updateBox4Submit(String curUser, String boxId) throws BusinessException;
+	
+	public void updateBox4Edit(String curUser, String boxId) throws BusinessException;
+	
+	public void updateBox4Accept(String curUser, String boxId) throws BusinessException;
+	
 }

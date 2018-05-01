@@ -63,7 +63,8 @@ function doConfim(){
 	var row = $('#dg').datagrid('getSelected');
 	if (row){
 		// 返回选择的数据信息
-		var params = {id:row.id,user_name:row.user_name};
+		var userName = row.user_name + "/" + row.full_name;
+		var params = {id:row.id,user_name:userName};
 		parent.okResponse(params);
 	}else{
 		$.messager.alert('提示', "未选择数据!");

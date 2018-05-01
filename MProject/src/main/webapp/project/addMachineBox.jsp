@@ -25,11 +25,11 @@
 			</div>
 			<div style="margin-bottom: 20px">
 				<input class="easyui-numberbox" id="longitude" name="longitude" style="width: 100%"
-					data-options="label:'经度 :',required:true,precision:6,validType:'length[10,10]'">
+					data-options="label:'经度 :',required:true,precision:6,validType:'length[8,10]'">
 			</div>
 			<div style="margin-bottom: 20px">
 				<input class="easyui-numberbox" id="latitude" name="latitude" style="width: 100%"
-					data-options="label:'纬度 :',required:true,precision:6,validType:'length[10,10]'">
+					data-options="label:'纬度 :',required:true,precision:6,validType:'length[8,10]'">
 			</div>
 			<div style="margin-bottom: 20px">
 				<input class="easyui-numberbox" id="processorNum" name="processorNum" style="width: 100%"
@@ -59,9 +59,9 @@
 			var boxNumber = $("#boxNumber").val();
 			
 			$.ajax( {
-			    url:'<%=path%>/box/mgr/checkNumber.do',
+			    url:'<%=path%>/box/mgr/checkBoxNumber.do',
 			    data:{
-			    	'id':'',
+			    	'boxId':'',
 			    	'boxNumber':boxNumber
 			    },
 			    type:'post',
@@ -89,7 +89,7 @@
 			    url:'<%=path%>/box/mgr/add.do',
 			    data:{
 			    	'boxId':'',
-			    	'buildManager':'${loginUser.id}',
+			    	'userId':'${loginUser.id}',
 			    	'orgId':'${loginUser.orgId}',
 			    	'projectId':'${curProjectId}',
 			    	'boxNumber':$("#boxNumber").val(),
@@ -104,7 +104,12 @@
 			    dataType:'json',
 			    success:function(data) {
 			    	if(data.returnCode == "success"){
-			    		$.messager.alert('提示','添加成功!');
+			    		$.messager.alert('提示','添加成功!','info',
+			    			function(){
+								//
+								parent.loadUrl('<%=path%>/project/machineBoxWrite.jsp');
+			    			}
+			    		);
 			    	}else{
 			    		$.messager.alert('提示',data.msg);
 			    	}

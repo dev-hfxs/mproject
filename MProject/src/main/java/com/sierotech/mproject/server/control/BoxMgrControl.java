@@ -73,7 +73,7 @@ public class BoxMgrControl {
 	
 	@RequestMapping(value = "/add")
 	@ResponseBody
-	public Map<String, String> addOrg(HttpServletRequest request) {	
+	public Map<String, String> addBox(HttpServletRequest request) {	
 		Map<String, String> result = new HashMap<String, String>();
 		result.put("returnCode", "fail");
 		Map boxObj = ControllerUtils.toMap(request);
@@ -112,6 +112,90 @@ public class BoxMgrControl {
 			result.put("msg", be.getMessage());
 			return result;
 		}		
+		result.put("returnCode", "success");
+		result.put("msg", "");
+		return result;
+	}
+	
+	@RequestMapping(value = "/delete")
+	@ResponseBody
+	public Map<String, String> deleteBox(HttpServletRequest request) {		
+		Map<String, String> result = new HashMap<String, String>();
+		result.put("returnCode", "fail");	
+		if(null == request.getParameter("id")) {
+			result.put("msg", "删除机箱错误,缺少ID.");
+			return result;
+		}
+		try {
+			boxService.deleteBox(UserTool.getLoginUser(request).get("user_name"), request.getParameter("id"));
+		}catch(BusinessException be) {
+			result.put("msg", be.getMessage());
+			return result;
+		}
+		
+		result.put("returnCode", "success");
+		result.put("msg", "");
+		return result;
+	}
+	
+	@RequestMapping(value = "/submit")
+	@ResponseBody
+	public Map<String, String> submitBox(HttpServletRequest request) {		
+		Map<String, String> result = new HashMap<String, String>();
+		result.put("returnCode", "fail");	
+		if(null == request.getParameter("id")) {
+			result.put("msg", "提交机箱错误,缺少ID.");
+			return result;
+		}
+		try {
+			boxService.updateBox4Submit(UserTool.getLoginUser(request).get("user_name"), request.getParameter("id"));
+		}catch(BusinessException be) {
+			result.put("msg", be.getMessage());
+			return result;
+		}
+		
+		result.put("returnCode", "success");
+		result.put("msg", "");
+		return result;
+	}
+	
+	@RequestMapping(value = "/reset/status")
+	@ResponseBody
+	public Map<String, String> resetBoxStatus(HttpServletRequest request) {
+		Map<String, String> result = new HashMap<String, String>();
+		result.put("returnCode", "fail");
+		if(null == request.getParameter("boxId")) {
+			result.put("msg", "设置机箱允许修改错误,缺少机箱ID.");
+			return result;
+		}
+		try {
+			boxService.updateBox4Edit(UserTool.getLoginUser(request).get("user_name"), request.getParameter("boxId"));
+		}catch(BusinessException be) {
+			result.put("msg", be.getMessage());
+			return result;
+		}
+		
+		result.put("returnCode", "success");
+		result.put("msg", "");
+		return result;
+	}
+	
+	@RequestMapping(value = "/accept")
+	@ResponseBody
+	public Map<String, String> acceptBox(HttpServletRequest request) {
+		Map<String, String> result = new HashMap<String, String>();
+		result.put("returnCode", "fail");
+		if(null == request.getParameter("boxId")) {
+			result.put("msg", "确认验收机箱错误,缺少机箱ID.");
+			return result;
+		}
+		try {
+			boxService.updateBox4Accept(UserTool.getLoginUser(request).get("user_name"), request.getParameter("boxId"));
+		}catch(BusinessException be) {
+			result.put("msg", be.getMessage());
+			return result;
+		}
+		
 		result.put("returnCode", "success");
 		result.put("msg", "");
 		return result;

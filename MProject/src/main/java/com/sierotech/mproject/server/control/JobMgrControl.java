@@ -146,7 +146,8 @@ public class JobMgrControl {
 			}
 			
 			try {
-				jobService.updateJob(jobId, jobStatus, "", boxPos, installOptionMap, processorIpList, detectorPosList);
+				String curUserId = UserTool.getLoginUser(request).get("id");
+				jobService.updateJob(curUserId, jobId, jobStatus, "", boxPos, installOptionMap, processorIpList, detectorPosList);
 			}catch(BusinessException be) {
 				result.put("msg", be.getMessage());
 				return result;
@@ -209,7 +210,8 @@ public class JobMgrControl {
 				return result;
 			}
 			try {
-				jobService.updateJob(jobId, jobStatus, "",  configFileList, detectorInfoList);
+				String curUserId = UserTool.getLoginUser(request).get("id");
+				jobService.updateJob(curUserId, jobId, jobStatus, "",  configFileList, detectorInfoList);
 			}catch(BusinessException be) {
 				result.put("msg", be.getMessage());
 				return result;

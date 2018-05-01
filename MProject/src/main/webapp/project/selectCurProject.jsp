@@ -26,6 +26,32 @@
 		</div>
 	</div>
 	
+	<div class="easyui-panel"
+		style="width: 100%; max-width: 460px; padding: 30px 60px; border-width:0" >
+		<table>
+			<tr>
+				<td width="100px" height="40">项目名称:</td>
+				<td><span id="spanPName"></span></td>
+			</tr>
+			<tr>
+				<td width="100px" height="40">项目编号:</td>
+				<td><span id="spanPNumber"></span></td>
+			</tr>
+			<tr>
+				<td width="100px" height="40">项目经理:</td>
+				<td><span id="spanPManager"></span></td>
+			</tr>
+			<tr>
+				<td width="100px" height="40">项目应建机箱数:</td>
+				<td><span id="spanPAllowBoxNum"></span></td>
+			</tr>
+			<tr>
+				<td width="100px" height="40">项目创建时间:</td>
+				<td><span id="spanPCreateDate"></span></td>
+			</tr>
+		</table>
+	</div>
+	
 	<script>
 	
 	$(function() {
@@ -40,18 +66,38 @@
 		}
 		
 		$('#curProjectId').combobox({onChange: function(newValue,oldValue){
-			$.ajax( {
-			    url:'<%=path%>/auth/changeCurProject.do',
-			    data:{
-			    	'projectId':newValue
-			    },
-			    type:'post',
-			    async:false,
-			    dataType:'json',
-			    success:function(data) {
-			    	
-			    }
-			});
+				$.ajax( {
+				    url:'<%=path%>/auth/changeCurProject.do',
+				    data:{
+				    	'projectId':newValue
+				    },
+				    type:'post',
+				    async:false,
+				    dataType:'json',
+				    success:function(data) {
+				    	
+				    }
+				});
+				$.ajax( {
+					url:'<%=path%>/comm/queryForList.do',
+				    data:{
+				    	'sqlId':'mproject-project-queryProjectById',
+				    	'projectId':newValue
+				    },
+				    type:'post',
+				    async:false,
+				    dataType:'json',
+				    success:function(data) {
+				    	if(data !=null && data.length >0){
+				    		var item = data[0];
+					    	$('#spanPName').text(item.project_name);
+		    				$('#spanPNumber').text(item.project_number);
+		    				$('#spanPManager').text(item.full_name);
+		    				$('#spanPAllowBoxNum').text(item.allow_box_num);
+		    				$('#spanPCreateDate').text(item.create_date);
+				    	}
+				    }
+				});
 			}
 		});
 		
@@ -71,6 +117,11 @@
 		    		$.each(data,function(i,item){
 		    			if(item.id == curProjectId){
 		    				item['selected'] = true;
+		    				$('#spanPName').text(item.project_name);
+		    				$('#spanPNumber').text(item.project_number);
+		    				$('#spanPManager').text(item.full_name);
+		    				$('#spanPAllowBoxNum').text(item.allow_box_num);
+		    				$('#spanPCreateDate').text(item.create_date);
 		    			}
 		    			newData[i] = item;
 		    		});
@@ -80,8 +131,7 @@
 		    		$.messager.alert('提示','当前还没有关联的项目!');
 		    	}
 		    }
-		});		
-		
+		});
 	});
 	</script>
 </body>

@@ -28,7 +28,7 @@
 				<th data-options="field:'full_name',width:100,sortable:true">姓名</th>
 				<th data-options="field:'org_name',width:200,sortable:true">所在单位</th>
 				<th data-options="field:'contract_number',width:100,sortable:true">联系电话</th>
-				<th data-options="field:'allow_box_num',width:200">在建机箱数量</th>
+				<th data-options="field:'allow_box_num',width:200">应建机箱数量</th>
 				<th data-options="field:'submit_box_num',width:100,formatter:formatNumber">提交机箱数量</th>
 				<th data-options="field:'accept_box_num',width:150,formatter:formatNumber,sortable:true">验收机箱数量</th>
 				<th data-options="field:'id',width:150,align:'center',formatter:showButtons">操作</th>
@@ -67,7 +67,26 @@ function formatNumber(val,row){
 
 function showButtons(val,row){
 	var columnItem = '<span><a href="javascript:void(0)" class="easyui-linkbutton" onclick="doDelete(\''+row.project_id+'\',\'' + row.user_id+'\')" style="width:80px;">删 除</a></span>&nbsp;&nbsp;';
+	columnItem =  columnItem + '<span><a href="javascript:void(0)" class="easyui-linkbutton" onclick="resetNum(\''+row.project_id+'\',\'' + row.user_id+'\','+row.allow_box_num+')" style="width:80px;">应建机箱数量调整</a></span>&nbsp;&nbsp;';
 	return columnItem;
+}
+
+function resetNum(projectId,userId,allowBoxNum){
+	var content = '<iframe src="<%=path%>/project/projectPsnBoxNumSet.jsp?projectId='+projectId+'&userId='+userId +'&allowBoxNum='+ allowBoxNum + '"width="100%" height="100%" frameborder="0" scrolling="no"></iframe>';
+	var boarddiv = '<div id="msgwindow" title="修改应建机箱数量" style="overflow:hidden;"></div>'// style="overflow:hidden;"可以去掉滚动条
+	$(document.body).append(boarddiv);
+	var win = $('#msgwindow').dialog({
+		content : content,
+		width : '320',
+		height : '180',
+		modal : true,
+		title : '修改应建机箱数量',
+		onClose : function() {
+			$(this).dialog('destroy');// 后面可以关闭后的事件
+		}
+	});
+	win.dialog('open');
+	win.window('center');
 }
 
 function doAdd(){
@@ -102,7 +121,7 @@ function doDelete(projectId,userId){
 			    dataType:'json',
 			    success:function(data) {
 			    	if(data.returnCode == "success"){
-			    		$('#dg').datagrid('reload');
+			    		refreshDataGrid();
 			    	}else{
 			    		$.messager.alert('提示',data.msg);
 			    	}
@@ -113,6 +132,12 @@ function doDelete(projectId,userId){
 			});
 		}
 	});
+}
+
+
+function refreshDataGrid(){
+	$('#dg').datagrid('loadData',{total:0,rows:[]});
+	$('#dg').datagrid('reload');
 }
 
 function okResponse(result){

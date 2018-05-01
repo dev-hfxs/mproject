@@ -132,7 +132,7 @@
 				return;
 			}
 			$("#userId").val(params.id);
-			$("#projectManager").val(params.user_name);	
+			$("#projectManager").val(params.user_name);
 			$("#projectManager").next("span").children('input').eq(0).val(params.user_name);
 			closeDialog();
 		}

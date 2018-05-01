@@ -8,6 +8,7 @@
  */
 package com.sierotech.mproject.common.utils;
 
+import java.util.HashMap;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
@@ -20,7 +21,13 @@ import javax.servlet.http.HttpServletRequest;
  */
 public class UserTool {
 	public static Map<String, String> getLoginUser(HttpServletRequest request) {
-
-		return (Map<String, String>) request.getSession().getAttribute("loginUser");
+		Map<String, String> loginUser;
+		if(request.getSession().getAttribute("loginUser") == null) {
+			loginUser = new HashMap<String,String>();
+		}else {
+			loginUser = (Map<String, String>) request.getSession().getAttribute("loginUser");
+		}
+		
+		return loginUser;
 	}
 }
