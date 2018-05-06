@@ -30,8 +30,8 @@
 				<th data-options="field:'contract_number',width:100,sortable:true">探测器ID</th>
 				<th data-options="field:'project_manager',width:200">经度</th>
 				<th data-options="field:'creator',width:100">纬度</th>
-				<th data-options="field:'creator',width:100">起点</th>
-				<th data-options="field:'creator',width:100">终点</th>
+				<th data-options="field:'creator',width:100,formatter:showStatus">起点</th>
+				<th data-options="field:'creator',width:100,formatter:showStatus">终点</th>
 				<th data-options="field:'id',width:150,align:'center',formatter:showButtons">操作</th>
 			</tr>
 		</thead>
@@ -95,11 +95,11 @@ function showHeaderMenu(e, field){
 	});
 }
 
-function showStatusName(val,row){
-	if (val == 'I'){
-		return '<span>在建</span>';
-	} else if (val =='F'){
-		return '<span>完成</span>';
+function showStatus(val,row){
+	if (val == 'Y'){
+		return '<span>是</span>';
+	} else if (val =='N'){
+		return '<span>否</span>';
 	}else{
 		return val;
 	}

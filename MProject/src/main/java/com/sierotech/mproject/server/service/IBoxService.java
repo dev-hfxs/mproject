@@ -25,6 +25,8 @@ public interface IBoxService {
 	
 	public void deleteBox(String curUser, String boxId) throws BusinessException;
 	
+	public void updateBox(String curUser, Map<String,Object> boxObj) throws BusinessException;
+	
 	public void updateBox4Submit(String curUser, String boxId) throws BusinessException;
 	
 	public void updateBox4Edit(String curUser, String boxId) throws BusinessException;

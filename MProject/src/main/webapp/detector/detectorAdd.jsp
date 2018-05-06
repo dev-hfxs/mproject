@@ -8,70 +8,106 @@
 <head>
 <meta charset="UTF-8">
 <title>添加探测器</title>
-<script type="text/javascript"	src="<%=path%>/js/jquery/jquery-3.3.1.min.js"></script>
+<script type="text/javascript"	src="<%=path%>/js/jquery/jquery.min.js"></script>
 <link rel="stylesheet" type="text/css"	href="<%=path%>/js/easyui/themes/default/easyui.css">
 <link rel="stylesheet" type="text/css"	href="<%=path%>/js/easyui/themes/icon.css">
 <script type="text/javascript"	src="<%=path%>/js/easyui/jquery.easyui.min.js"></script>
 <script type="text/javascript"	src="<%=path%>/js/easyui/locale/easyui-lang-zh_CN.js"></script>
 <script type="text/javascript"	src="<%=path%>/js/common.js"></script>
+<style>
+.textbox-label{
+	width:120px;
+}
+</style>
 </head>
 <body>
 <div style="margin: 20px 0;"></div>
 <div class="easyui-panel"
-	style="width: 100%; max-width: 500px; padding: 30px 60px; border-width:0" >
+	style="width: 100%; max-width: 480px; padding: 30px 30px; border-width:0" >
 	<form id="ff" method="post" >
 		<div style="margin-bottom: 20px;width: 100%">
-			<input class="easyui-textbox" id="nfcNumber" name="nfcNumber" style="width: 100%"
-				data-options="label:'NFC序列号:',required:true,validType:'length[1,20]'">
+			<input class="easyui-textbox" id="detectorSeq" name="detectorSeq" style="width: 90%"
+				data-options="label:'探测器编号:',required:true,validType:'checkDCode'">
 		</div>
+		<div style="margin-bottom: 20px;width: 100%">
+			<input class="easyui-textbox" id="nfcNumber" name="nfcNumber" style="width: 90%"
+				data-options="label:'探测器NFC序列号:',required:true,validType:'length[14,14]'">
+		</div>
+		<!-- 
 		<div style="margin-bottom: 20px">
-			<input class="easyui-textbox" id="detectorId" name="detectorId" style="width: 100%"
+			<input class="easyui-textbox" id="detectorId" name="detectorId" style="width: 90%"
 				data-options="label:'探测器ID:',required:true,validType:'length[1,20]'">
 		</div>
+		-->
 		<div style="margin-bottom: 20px">
-			<input class="easyui-numberbox" id="longitude" name="longitude" style="width: 100%"
-				data-options="label:'经度 :',required:true,precision:6,validType:'length[8,10]'">
+			<input class="easyui-textbox" id="longitude" name="longitude" style="width: 90%"
+				data-options="label:'经度 :',required:true,validType:'checkLng'">
 		</div>
 		<div style="margin-bottom: 20px">
-			<input class="easyui-numberbox" id="latitude" name="latitude" style="width: 100%"
-				data-options="label:'纬度 :',required:true,precision:6,validType:'length[8,10]'">
+			<input class="easyui-textbox" id="latitude" name="latitude" style="width: 90%"
+				data-options="label:'纬度 :',required:true,validType:'checkLat'">
 		</div>
 		<div style="margin-bottom: 20px">
-			<input class="easyui-numberbox" id="startPoint" name="startPoint" style="width: 100%"
-				data-options="label:'起点 :',precision:6,validType:'length[8,10]'">
-		</div>
-		<div style="margin-bottom: 20px">
-			<input class="easyui-numberbox" id="endPoint" name="endPoint" style="width: 100%"
-				data-options="label:'终点 :',precision:6,validType:'length[8,10]'">
+			<div>一个处理器下的探测器只能有一个起点和终点.</div>
+			<div>
+				<input id="chkStartPoint" type="checkbox" name="startPoint"><span id="spanStart">起点</span>&nbsp;&nbsp;&nbsp;&nbsp;<span id="spanStartPointTip"></span>
+			</div>
+			<div>
+				<input id="chkEndPoint" type="checkbox" name="endPoint" ><span id="spanEnd">终点</span>&nbsp;&nbsp;&nbsp;&nbsp;<span  id="spanEndPointTip"></span>
+			</div>
 		</div>
 	</form>
 	<!-- -->
 	<div style="text-align: center; padding: 5px 0">
+		<br><br>
 		<a href="javascript:void(0)" class="easyui-linkbutton"	onclick="submitForm()" style="width: 80px">确认</a> &nbsp;&nbsp;
 		<a href="javascript:void(0)" class="easyui-linkbutton" 	onclick="doCancel()" style="width: 80px">取消</a>
 	</div>
-
-
 </div>
 	
 <script>
+var hadStartPoint = false;
+var hadEndPoint = false;
+var nfcCodeValid = false;
+var dictNfcCodeSeq = '';
+
 function submitForm() {
+	
 	if($("#ff").form('validate') == false){
 		$.messager.alert('输入错误','请检查输入项!');
 		return false;
 	}
+	if(nfcCodeValid == false){
+		$("#nfcNumber").next("span").addClass("textbox-invalid");
+		$.messager.alert('提示','机箱NFC序列号未通过验证,不能提交!');
+		return false;
+	}
+	var inDetectorSeq = $("#detectorSeq").val();
+	if(inDetectorSeq != dictNfcCodeSeq){
+		$.messager.alert('提示','探测器NFC序列号['+$("#nfcNumber").val()+']在系统中的探测器编号与输入的探测器编号不一致,不能提交!');
+		return;
+	}
+	var isStart = 'N';
+	var isEnd = 'N';
+	if($("#chkStartPoint").is(":checked")){
+		isStart = 'Y';
+	};
+	if($("#chkEndPoint").is(":checked")){
+		isEnd = 'Y';
+	};
 	
 	// 提交保存
 	$.ajax( {
 	    url:'<%=path%>/detector/mgr/add.do',
 	    data:{
-	    	'detectorId':$("#detectorId").val(),
+	    	'detectorId':'',
 	    	'processorId':'<%=processorId%>',
+	    	'detectorSeq':$("#detectorSeq").val(),
 	    	'nfcNumber':$("#nfcNumber").val(),
 	    	'longitude':$("#longitude").val(),
 	    	'latitude':$("#latitude").val(),
-	    	'startPoint':$("#startPoint").val(),
-	    	'endPoint':$("#endPoint").val()
+	    	'startPoint':isStart,
+	    	'endPoint':isEnd
 	    },
 	    type:'post',
 	    async:false,
@@ -96,9 +132,113 @@ function doCancel(){
 
 $(function() {
 	
+	$("#spanStart").click(function(){
+		$("#chkStartPoint").trigger("click");
+	});
+	$("#spanEnd").click(function(){
+		$("#chkEndPoint").trigger("click");
+	});
+	$("#chkStartPoint").change(function(){
+		if($(this).is(":checked")){
+			$("#chkEndPoint").removeAttr("checked");
+		}
+	});
+	$("#chkEndPoint").change(function(){
+		if($(this).is(":checked")){
+			$("#chkStartPoint").removeAttr("checked");
+		}
+	});
 	
+	//if(hadStartPoint){
+	//	$("#chkStartPoint").attr("disabled",true);
+	//	$("#spanStartPointTip").text("已有探测器设置为起点");
+	//}
+	
+	//if(hadEndPoint){
+	//	$("#chkEndPoint").attr("disabled",true);
+	//	$("#spanEndPointTip").text("已有探测器设置为终点");
+	//}
+	
+	//获取已分配的起点终点
+	$.ajax( {
+	    url:'<%=path%>/comm/queryForList.do',
+	    data:{
+	    	'sqlId':'mproject-detector-getStartAndPointByProcessorId',
+	    	'processorId':'<%=processorId%>'
+	    },
+	    type:'post',
+	    async:false,
+	    dataType:'json',
+	    success:function(data) {
+	    	if(data!=null && data.length > 0){
+	    		var item = data[0];
+	    		if(item.start_point_id != null && item.start_point_id !=''){
+	    			//启点探测器已分配
+	    			$("#chkStartPoint").attr("disabled",true);
+	    			$("#spanStartPointTip").text("已有探测器设置为起点.");
+	    		}
+	    		if(item.end_point_id != null && item.end_point_id !=''){
+	    			//终点探测器已分配
+	    			$("#chkEndPoint").attr("disabled",true);
+	    			$("#spanEndPointTip").text("已有探测器设置为终点.");
+	    		}
+	    	}
+	    },
+	    error : function(data) {
+	    	$.messager.alert('异常',data.responseText);
+        }
+	});
+	
+	$("#nfcNumber").textbox({  
+	    onChange: function(value) {
+	    	var objValue = $(this).val();
+	    	if(objValue.length == 14){
+	    		$.ajax( {
+				    url:'<%=path%>/dict/mgr/checkNfcNum.do',
+				    data:{codeName:'detector',codeValue:objValue,id:''},
+		    		type:'post',
+				    async:false,
+				    dataType:'json',
+				    success:function(data) {
+				    	if(data.returnCode == "success"){
+				    		dictNfcCodeSeq = data.number;
+				    		nfcCodeValid =  true;
+				    		$("#nfcNumber").next("span").removeClass("textbox-invalid");
+				    	}else{
+				    		nfcCodeValid =  false;
+				    		$("#nfcNumber").next("span").addClass("textbox-invalid");
+				    		$.messager.alert('提示',data.msg);
+				    	}
+				    },
+				    error : function(data) {
+				    	$.messager.alert('异常',data.responseText);
+			        }
+				});
+	    	}
+	    }
+	});
 });
 
+$.extend($.fn.validatebox.defaults.rules, {
+    checkLng: { //验证经度
+        validator: function(value, param){
+         return  /^-?(((\d|[1-9]\d|1[1-7]\d|0)\.\d{7})|0|180)$/.test(value);
+        },
+        message: '经度整数部分为0-180,小数位保留7位!'
+    },
+    checkLat: { //验证纬度
+        validator: function(value, param){
+         return  /^-?([0-8]?\d{1}\.\d{7}|0|([0-8]?\d{1})\.\d{7}|90)$/.test(value);
+        },
+        message: '纬度整数部分为0-90,小数位保留7位!'
+    },
+    checkDCode: { //验证探测器编号
+        validator: function(value, param){
+         return  /^((00[1-9])|(0[1-9][1-9])|(1[0-1][1-9])|(12[0-8])){1}$/.test(value);
+        },
+        message: '探测器编号为001-128的数字组成!'
+    }
+});
 </script>
 </body>
 </html>

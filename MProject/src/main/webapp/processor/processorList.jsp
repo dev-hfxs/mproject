@@ -31,18 +31,16 @@
 			data-options="singleSelect:true,rownumbers:true,pageSize:20,fit:true,url:'<%=path%>/comm/queryForPage.do',pagination:true,method:'post',multiSort:true,toolbar:'#tb'">
 			<thead>
 				<tr>
-					<th data-options="field:'nfc_number',width:100,sortable:true">NFC序列号</th>
-					<th data-options="field:'box_number',width:200,sortable:true">机箱编号</th>
-					<th data-options="field:'processor_id',width:100,sortable:true">处理器ID</th>
-					<th data-options="field:'moxa_number',width:200">MOXA序列号</th>
-					<th data-options="field:'ip',width:100">IP地址</th>
+					<th data-options="field:'nfc_number',width:200,sortable:true">处理器NFC序列号</th>
+					<th data-options="field:'box_number',width:200,sortable:true">所属机箱编号</th>
+					<th data-options="field:'moxa_number',width:200">MOXA-NFC序列号</th>
 					<th data-options="field:'detector_num',width:100">下属探测器数量</th>
 					<th data-options="field:'id',width:150,align:'center',formatter:showProcessorButtons">操作</th>
 				</tr>
 			</thead>
 		</table>
 		<div id="tb" style="padding:2px 5px;">
-			<a href="#" class="easyui-linkbutton" onclick="addProcessor()" iconCls="icon-add">添加处理器</a>
+			<a href="#" class="easyui-linkbutton" onclick="addProcessor()" iconCls="icon-edit">添加处理器</a>
 			<a href="#" class="easyui-linkbutton" onclick="doBack()" iconCls="icon-back">返回</a>
 		</div>
 	</div>
@@ -51,12 +49,12 @@
 			data-options="singleSelect:true,rownumbers:true,pageSize:20,fit:true,url:'<%=path%>/comm/queryForPage.do',pagination:true,method:'post',multiSort:true,toolbar:'#tb2'">
 			<thead>
 				<tr>
-					<th data-options="field:'nfc_number',width:100,sortable:true">NFC序列号</th>
-					<th data-options="field:'detector_id',width:200,sortable:true">探测器ID</th>
+					<th data-options="field:'nfc_number',width:200,sortable:true">探测器NFC序列号</th>
+					<th data-options="field:'detector_seq',width:200,sortable:true">探测器编号</th>
 					<th data-options="field:'longitude',width:100,sortable:true">经度</th>
 					<th data-options="field:'latitude',width:200">纬度</th>
-					<th data-options="field:'start_point',width:100">起点</th>
-					<th data-options="field:'end_point',width:100">终点</th>
+					<th data-options="field:'start_point',width:100,formatter:showStatus">起点</th>
+					<th data-options="field:'end_point',width:100,formatter:showStatus">终点</th>
 					<th data-options="field:'id',width:150,align:'center',formatter:showDetectorButtons">操作</th>
 				</tr>
 			</thead>
@@ -139,7 +137,7 @@ function addDetector(){
 		$.messager.alert('提示','没有选择处理器,请先选择!');
 		return;
 	}
-	var content = '<iframe src="<%=path%>/detector/detectorAdd.jsp?processorId='+curProcessorId+'" width="100%" height="80%" frameborder="0" scrolling="no"></iframe>';
+	var content = '<iframe src="<%=path%>/detector/detectorAdd.jsp?processorId='+curProcessorId+'" width="100%" height="90%" frameborder="0" scrolling="no"></iframe>';
 	var boarddiv = '<div id="msgwindow" title="添加探测器" ></div>'// style="overflow:hidden;"可以去掉滚动条
 	$(document.body).append(boarddiv);
 	var win = $('#msgwindow').dialog({
@@ -176,7 +174,7 @@ function updateProcesor(id){
 }
 
 function updateDetector(id){
-	var content = '<iframe src="<%=path%>/detector/detectorEdit.jsp?id=' + id + '" width="100%" height="80%" frameborder="0" scrolling="no"></iframe>';
+	var content = '<iframe src="<%=path%>/detector/detectorEdit.jsp?id=' + id + '&processorId=' + curProcessorId + '" width="100%" height="90%" frameborder="0" scrolling="no"></iframe>';
 	var boarddiv = '<div id="msgwindow" title="修改探测器" ></div>'// style="overflow:hidden;"可以去掉滚动条
 	$(document.body).append(boarddiv);
 	var win = $('#msgwindow').dialog({
@@ -293,6 +291,15 @@ function refreshDetector(){
 }
 
 
+function showStatus(val,row){
+	if (val == 'Y'){
+		return '<span>是</span>';
+	} else if (val =='N'){
+		return '<span>否</span>';
+	}else{
+		return val;
+	}
+}
 </script>
 </body>
 </html>

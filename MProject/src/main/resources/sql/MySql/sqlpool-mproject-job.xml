@@ -51,7 +51,7 @@
 		<content>
 		 select p.id, concat('处理器(P)[', p.moxa_number, ']IP地址:') AS device_desc, 'P' AS device_type from t_processor p where exists (select machine_box_id from t_job j where j.machine_box_id = p.machine_box_id AND j.id = ':jobId')
 		 union 
-         select d.id, concat('P[', t0.moxa_number, ']-探测器ID[', d.detector_id, ']位置描述:') AS device_desc, 'D' AS device_type from t_detector d 
+         select d.id, concat('P[', t0.moxa_number, ']-探测器NFC号[', d.nfc_number, ']位置描述:') AS device_desc, 'D' AS device_type from t_detector d 
          LEFT JOIN t_processor t0 on d.processor_id = t0.id 
          where d.processor_id IN (select id from t_processor t2 where exists (select machine_box_id from t_job j where j.machine_box_id = t2.machine_box_id AND j.id = ':jobId') )
 		</content>

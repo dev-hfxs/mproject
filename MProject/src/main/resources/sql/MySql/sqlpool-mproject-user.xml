@@ -85,7 +85,19 @@
 		<description>
 		</description>
 	</sql>
-	
+
+	<sql id="mproject-user-getUsersForUseCode" name="获取验证码的使用用户">
+		<content>
+		SELECT u.id, u.user_name, u.full_name, u.org_id, o.org_name, u.contact_number, u.role_id, r.role_name, u.status 
+		FROM t_user u 
+		LEFT JOIN t_org o ON u.org_id = o.id 
+		LEFT JOIN t_role r ON u.role_id = r.id 
+		WHERE u.status IN ('N','R') [ AND instr(u.user_name,':userName') > 0 ] ORDER BY u.create_date DESC
+		</content>
+		<description>
+		</description>
+	</sql>
+		
 	<sql id="mproject-user-getUsersForBuildManager" name="获取施工经理的用户列表">
 		<content>
 		SELECT u.id, u.user_name, u.full_name, u.org_id, o.org_name, u.contact_number, u.role_id, r.role_name, u.status 

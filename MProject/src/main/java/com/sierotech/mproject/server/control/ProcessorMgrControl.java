@@ -52,20 +52,13 @@ public class ProcessorMgrControl {
 			result.put("msg", "添加处理器错误,缺少NFC序列号!");
 			return result;
 		}
-		if (null == processorObj.get("processorId")) {
-			result.put("msg", "添加处理器错误,缺少处理器ID!");
-			return result;
-		}
 		if (null == processorObj.get("moxaNumber")) {
-			result.put("msg", "添加处理器错误,缺少MOXA序列号!");
+			result.put("msg", "添加处理器错误,缺少MOXA-NFC序列号!");
 			return result;
 		}
 		if (null == processorObj.get("detectorNum")) {
 			result.put("msg", "添加处理器错误,探测器数量!");
 			return result;
-		}
-		if (null == processorObj.get("ip")) {
-			processorObj.put("ip", "");
 		}
 		try {			
 			processorService.addProcessor(UserTool.getLoginUser(request).get("user_name"), processorObj);
@@ -92,21 +85,15 @@ public class ProcessorMgrControl {
 			result.put("msg", "修改处理器错误,缺少NFC序列号!");
 			return result;
 		}
-		if (null == processorObj.get("processorId")) {
-			result.put("msg", "修改处理器错误,缺少处理器ID!");
-			return result;
-		}
 		if (null == processorObj.get("moxaNumber")) {
-			result.put("msg", "修改处理器错误,缺少MOXA序列号!");
+			result.put("msg", "修改处理器错误,缺少MOXA-NFC序列号!");
 			return result;
 		}
 		if (null == processorObj.get("detectorNum")) {
 			result.put("msg", "修改处理器错误,探测器数量!");
 			return result;
 		}
-		if (null == processorObj.get("ip")) {
-			processorObj.put("ip", "");
-		}
+		
 		try {			
 			processorService.updateProcessor(UserTool.getLoginUser(request).get("user_name"), processorObj);
 		}catch(BusinessException be) {

@@ -121,7 +121,7 @@ public class JobServiceImpl implements IJobService {
 	 * 
 	 * */
 	@Override
-	public void updateJob(String curUser, String jobId, String jobStatus, String jobDesc, String boxPos, Map<String, String> installOptionMap, List<Map> processIpList, List<Map> detectorPosList) {
+	public void updateJob(String curUser, String jobId, String jobStatus, String jobDesc, String boxPos, Map<String, String> installOptionMap, List<Map> detectorPosList) {
 		if(null == jobId) {
 			throw new BusinessException("处理安装工单错误,缺少工单ID.");
 		}
@@ -141,27 +141,7 @@ public class JobServiceImpl implements IJobService {
 			log.info(dae.toString());
 			throw new BusinessException("处理安装工单错误,访问数据库异常.");
 		}
-		//更新处理器IP
-		if(processIpList != null && processIpList.size() > 0) {
-			String updateProcessIpPreSql = ConfigSQLUtil.getCacheSql("mproject-job-updateProcessorIpById");
-			StringBuffer batchSql = new StringBuffer();
-			for(Map processIpMap : processIpList) {
-				paramsMap.clear();
-				paramsMap.put("processorId", processIpMap.get("id"));
-				paramsMap.put("ip", processIpMap.get("ip"));
-				String updateProcessIpSql = ConfigSQLUtil.preProcessSQL(updateProcessIpPreSql, paramsMap);
-				batchSql.append(updateProcessIpSql).append(";\n");
-			}
-			if(batchSql.length() > 0 ) {
-				try {
-					// springJdbcDao.update(batchSql.toString());
-					springJdbcDao.batchUpdate(batchSql.toString().split("\n"));
-				} catch (DataAccessException dae) {
-					log.info(dae.toString());
-					throw new BusinessException("处理安装工单错误,更新处理器IP错误.");
-				}
-			}
-		}
+		
 		//更新探测器位置描述
 		if(detectorPosList != null && detectorPosList.size() > 0) {
 			String updateDetectorPreSql = ConfigSQLUtil.getCacheSql("mproject-job-updateDetectorPosById");
@@ -230,7 +210,7 @@ public class JobServiceImpl implements IJobService {
 	 * 
 	 * */
 	@Override
-	public void updateJob(String curUser, String jobId, String jobStatus, String jobDesc,  List<Map> configInfoList,  List<Map> detectorInfoList) {
+	public void updateJob(String curUser, String jobId, String jobStatus, String jobDesc, List<Map> processIpList,  List<Map> configInfoList,  List<Map> detectorInfoList) {
 		
 		if(null == jobId) {
 			throw new BusinessException("处理调试工单错误,缺少工单ID.");
@@ -257,6 +237,28 @@ public class JobServiceImpl implements IJobService {
 		String uploadDir = AppContext.getUploadDir();
 		String curDate = DateUtils.getNow(DateUtils.FORMAT_SHORT);
 		
+		//更新处理器IP
+		if(processIpList != null && processIpList.size() > 0) {
+			String updateProcessIpPreSql = ConfigSQLUtil.getCacheSql("mproject-job-updateProcessorIpById");
+			StringBuffer updateIpBatchSql = new StringBuffer();
+			for(Map processIpMap : processIpList) {
+				paramsMap.clear();
+				paramsMap.put("processorId", processIpMap.get("id"));
+				paramsMap.put("ip", processIpMap.get("ip"));
+				String updateProcessIpSql = ConfigSQLUtil.preProcessSQL(updateProcessIpPreSql, paramsMap);
+				updateIpBatchSql.append(updateProcessIpSql).append(";\n");
+			}
+			if(updateIpBatchSql.length() > 0 ) {
+				try {
+					// springJdbcDao.update(batchSql.toString());
+					springJdbcDao.batchUpdate(updateIpBatchSql.toString().split("\n"));
+				} catch (DataAccessException dae) {
+					log.info(dae.toString());
+					throw new BusinessException("处理调试工单错误,更新处理器IP错误.");
+				}
+			}
+		}
+		
 		// 更新处理器配置文件、探测器信息
 		if(configInfoList!=null && configInfoList.size() > 0) {
 			String updateConfigPreSql = ConfigSQLUtil.getCacheSql("mproject-job-updateProcessConfigById");
@@ -281,7 +283,11 @@ public class JobServiceImpl implements IJobService {
 				// 生成修改的 sql
 				paramsMap.clear();
 				paramsMap.put("processorId", id);
+				if(configFilePath != null  && configFilePath.indexOf("\\\\") < 1) {
+					configFilePath = configFilePath.replace("\\", "\\\\");
+				}
 				paramsMap.put("configFile", configFilePath);
+				
 				String updateConfigSql = ConfigSQLUtil.preProcessSQL(updateConfigPreSql, paramsMap);
 				batchSql.append(updateConfigSql).append(";\n");				
 			}
@@ -307,7 +313,11 @@ public class JobServiceImpl implements IJobService {
 				// 生成修改的 sql
 				paramsMap.clear();
 				paramsMap.put("processorId", id);
+				if(configFilePath != null && configFilePath.indexOf("\\\\") < 1) {
+					configFilePath = configFilePath.replace("\\", "\\\\");
+				}
 				paramsMap.put("detectorFile", configFilePath);
+				
 				String updateDetectorSql = ConfigSQLUtil.preProcessSQL(updateDetectorPreSql, paramsMap);
 				batchSql.append(updateDetectorSql).append(";\n");
 			}

@@ -46,11 +46,8 @@ public class ProcessorServiceImpl implements IProcessorService {
 		if (null == processorObj.get("nfcNumber")) {
 			throw new BusinessException("添加处理器错误,缺少NFC序列号!");
 		}
-		if (null == processorObj.get("processorId")) {
-			throw new BusinessException("添加处理器错误,缺少处理器ID!");
-		}
 		if (null == processorObj.get("moxaNumber")) {
-			throw new BusinessException("添加处理器错误,缺少MOXA序列号!");
+			throw new BusinessException("添加处理器错误,缺少MOXA-NFC序列号!");
 		}
 		if (null == processorObj.get("detectorNum")) {
 			throw new BusinessException("添加处理器错误,探测器数量!");
@@ -80,18 +77,14 @@ public class ProcessorServiceImpl implements IProcessorService {
 		if (null == processorObj.get("nfcNumber")) {
 			throw new BusinessException("修改处理器错误,缺少NFC序列号!");
 		}
-		if (null == processorObj.get("processorId")) {
-			throw new BusinessException("修改处理器错误,缺少处理器ID!");
-		}
 		if (null == processorObj.get("moxaNumber")) {
-			throw new BusinessException("修改处理器错误,缺少MOXA序列号!");
+			throw new BusinessException("修改处理器错误,缺少MOXA-NFC序列号!");
 		}
 		if (null == processorObj.get("detectorNum")) {
 			throw new BusinessException("修改处理器错误,探测器数量!");
 		}
-		// TODO检查 NFC序列号、处理器ID、MOXA序列号是否重复
+		// TODO检查 NFC序列号、MOXA序列号是否重复
 		// TODO检查探测器数量是否超出范围
-		
 		
 		String preSql = ConfigSQLUtil.getCacheSql("mproject-processor-updateProcessorById");
 		String sql = ConfigSQLUtil.preProcessSQL(preSql, processorObj);

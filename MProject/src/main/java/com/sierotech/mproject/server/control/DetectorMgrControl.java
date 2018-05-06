@@ -54,10 +54,10 @@ public class DetectorMgrControl {
 			result.put("msg", "添加探测器错误,缺少处理器ID!");
 			return result;
 		}
-		if (null == detectorObj.get("detectorId")) {
-			result.put("msg", "添加探测器错误,缺少探测器ID!");
-			return result;
-		}
+//		if (null == detectorObj.get("detectorId")) {
+//			result.put("msg", "添加探测器错误,缺少探测器ID!");
+//			return result;
+//		}
 		if (null == detectorObj.get("nfcNumber")) {
 			result.put("msg", "添加探测器错误,缺少探测器序列号!");
 			return result;
@@ -98,8 +98,12 @@ public class DetectorMgrControl {
 			result.put("msg", "修改探测器错误,缺少ID!");
 			return result;
 		}
-		if (null == detectorObj.get("detectorId")) {
-			result.put("msg", "修改探测器错误,缺少探测器ID!");
+//		if (null == detectorObj.get("detectorId")) {
+//			result.put("msg", "修改探测器错误,缺少探测器ID!");
+//			return result;
+//		}
+		if (null == detectorObj.get("detectorSeq")) {
+			result.put("msg", "修改探测器错误,缺少探测器编号!");
 			return result;
 		}
 		if (null == detectorObj.get("nfcNumber")) {

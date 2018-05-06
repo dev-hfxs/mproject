@@ -26,6 +26,7 @@
 		<thead>
 			<tr>
 				<th data-options="field:'status',width:100,formatter:showStatusName">工单状态</th>
+				<th data-options="field:'job_type',width:120,formatter:showTypeName">工单类型</th>
 				<th data-options="field:'user_name',width:150">工程师</th>
 				<th data-options="field:'work_content',width:250,sortable:true">工作内容</th>
 				<th data-options="field:'project_number',width:100,sortable:true">项目编号</th>
@@ -70,6 +71,18 @@ function showStatusName(val,row){
 		return '<span>问题工单</span>';
 	}else{
 		return val;
+	}
+}
+
+function showTypeName(val,row){
+	if (val == 'A'){
+		return '<span>安装工单</span>';
+	} else if (val =='T'){
+		return '<span>调试工单</span>';
+	} else if (val =='Q'){
+		return '<span>其他工单</span>';
+	}else{
+		return '';
 	}
 }
 

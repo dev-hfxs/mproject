@@ -82,7 +82,7 @@ function showStatusName(val,row){
 function showTypeName(val,row){
 	if (val == 'A'){
 		return '<span>安装工单</span>';
-	} else if (val =='D'){
+	} else if (val =='T'){
 		return '<span>调试工单</span>';
 	} else if (val =='Q'){
 		return '<span>其他工单</span>';

@@ -55,33 +55,35 @@
 					<td><input type="checkbox" name="installOption" value="BangZha"><span>所有绑扎完好</span></td>
 					<td>&nbsp;&nbsp;&nbsp;&nbsp;</td>
 					<td><input type="checkbox" name="installOption" value="LuoSiJinGu"><span>螺丝紧固程度良好</span></td>
-					<td></td><td></td><td></td><td></td>
+					<td>&nbsp;&nbsp;&nbsp;&nbsp;</td>
+					<td><input type="checkbox" name="installOption" value="TanCeQiShangXian"><span>所有探测器上线</span></td>
+					<td></td><td></td>
 				</tr>
 				<tr><td>&nbsp;</td><td></td><td></td></tr>
 			</table>
-			<div style="margin-bottom: 10px;width:auto;height:350px;overflow-x: auto;overflow-y: auto;">
-			<table id="installOptionTb" class="datagrid-btable">
-				<!-- 
-				<tr>
-					<td style="width:120ppx">输入项描述</td>
-					<td style="width:250ppx">值</td>
-					<td style="width:100ppx">是否分配IP</td>
-				</tr>
-				<tr>
-					<td style="width:120ppx">机箱位置描述:</td>
-					<td style="width:220ppx"><input type="text" style="width:320px" name="inp2"></td>
-					<td style="width:220ppx"><input type="checkbox" value="1" name="c1">是否分配IP</td>
-				</tr>
-				-->
+			<table id="boxAndDetectorOptionTb" class="datagrid-btable">
+					<!-- 
+					<tr>
+						<td style="width:120ppx">输入项描述</td>
+						<td style="width:250ppx">值</td>
+						<td style="width:100ppx">是否分配IP</td>
+					</tr>
+					<tr>
+						<td style="width:120ppx">机箱位置描述:</td>
+						<td style="width:220ppx"><input type="text" style="width:320px" name="inp2"></td>
+						<td style="width:220ppx"><input type="checkbox" value="1" name="c1">是否分配IP</td>
+					</tr>
+					-->
 			</table>
-			</div>
 		</div>
 		<div id="debugOptionPanel" class="datagrid-body" style="margin-bottom: 5px;height:250px;overflow-x:auto;overflow-y: auto;display:none">
+			
 			<table id="debugOptionTb" class="datagrid-btable">
 				<tr>
-					<td style="width:120px">处理器MOXA编号&nbsp;</td>
-					<td style="width:220px">&nbsp配置文件</td>
-					<td style="width:220px">探测器信息</td>
+					<td style="width:140px">处理器MOXA-NFC号&nbsp;</td>
+					<td style="width:140px">处理器IP&nbsp;</td>
+					<td style="width:200px">&nbsp配置文件</td>
+					<td style="width:200px">探测器信息</td>
 				</tr>
 				<!--
 				<tr>
@@ -107,18 +109,17 @@
 	var checkErrorMsgMap = new Map();
 	var jobId = '<%=jobId%>';
 	var jobType = '<%=jobType%>';
-	//var jobType = 'D';
 	
 	$(function() {
 		if(jobType == 'A'){
 			$("#debugOptionPanel").hide();
 			$("#jobDescPanel").hide();
 			$("#installOptionPanel").show();
-			var tableHtml = '';
-			tableHtml = tableHtml + '<tr><td style="width:250px;">机箱位置描述:</td><td style="width:250px"><input style="width:320px" type="text" class="textbox-text" intype="boxPos"></td><td style="width:100px"></td></tr>';
-			$('#installOptionTb').append(tableHtml);
-						
-			//加载安装工单完成需要设置的项目, 获取工单对应机箱下的处理器、探测器
+			
+			var tableHtml = tableHtml + '<tr><td style="width:250px;">机箱位置描述:</td><td style="width:250px"><input style="width:320px" type="text" class="textbox-text" intype="boxPos"></td><td style="width:100px"></td></tr>';
+			$('#boxAndDetectorOptionTb').append(tableHtml);
+			tableHtml = '';
+			// 获取工单对应机箱下的处理器、探测器,用于设置处理器IP、探测器位置
 			$.ajax({
 				url:'<%=path%>/comm/queryForList.do',
 			    data:{
@@ -133,11 +134,11 @@
 			    	if(data != null){
 			    		$.each(data,function(i,item){
 			    			if(item.device_type == 'P'){
-			    				tableHtml = '<tr><td style="width:250px">' + item.device_desc + '</td><td style="width:250px"><input style="width:320px" type="text" class="textbox-text" intype="ip" id="input_'+item.id+'" name="'+item.device_type+'#' + item.id + '" value="0.0.0.0" readonly="readonly" onchange="maskIp(this)"></td><td style="width:100px"><input type="checkbox" linkId="'+item.id+'" name="chkHadIP">是否分配IP</td></tr>';
+			    				//tableHtml = '<tr><td style="width:250px">' + item.device_desc + '</td><td style="width:250px"><input style="width:320px" type="text" class="textbox-text" intype="ip" id="input_'+item.id+'" name="'+item.device_type+'#' + item.id + '" value="0.0.0.0" readonly="readonly" onchange="maskIp(this)"></td><td style="width:100px"><input type="checkbox" linkId="'+item.id+'" name="chkHadIP">是否分配IP</td></tr>';
 			    			}else{
 			    				tableHtml = '<tr><td style="width:250px">' + item.device_desc + '</td><td style="width:250px"><input style="width:320px" type="text" class="textbox-text" intype="detectorPos" id="input_'+item.id+'" name="'+item.device_type+'#' + item.id + '"></td><td style="width:100px"></td></tr>';
 			    			}
-			    			$('#installOptionTb').append(tableHtml);
+			    			$('#boxAndDetectorOptionTb').append(tableHtml);
 			    		});
 			    	}
 			    },
@@ -147,10 +148,11 @@
 			});
 		}
 		
-		if(jobType == 'D'){
+		if(jobType == 'T'){
 			$("#installOptionPanel").hide();
 			$("#jobDescPanel").hide();
 			$("#debugOptionPanel").show();
+			
 			//加载调试工单完成需要设置的项目
 			var tableHtml = '';
 			$.ajax({
@@ -165,7 +167,9 @@
 			    success:function(data) {
 					if(data != null){
 			    		$.each(data,function(i,item){
-			    			tableHtml = '<tr><td></td><td><form id="f_configFile_'+item.id+'"><input type="hidden" name="file-id" value="configfile_'+item.id+'"><input intype="file" type="text" name="configFile_' + item.id + '" style="width:100%"></form></td><td><form id="f_detectorFile_'+item.id+'"><input type="hidden" name="file-id" value="detectorfile_'+item.id+'"><input intype="file" type="text" name="detectorFile_'+item.id+'" style="width:100%"></form></td></tr>';
+			    			tableHtml = '';
+			    			tableHtml = '<tr><td>' + item.moxa_number + '</td><td><input style="width:80%" type="text" class="textbox-text" intype="ip" id="input_'+item.id+'" value="0.0.0.0" readonly="readonly" onchange="maskIp(this)"><input type="checkbox" linkId="'+item.id+'" name="chkHadIP" title="是否分配IP"></td>';
+			    			tableHtml = tableHtml + '<td><form id="f_configFile_'+item.id+'"><input type="hidden" name="file-id" value="configfile_'+item.id+'"><input intype="file" type="text" name="configFile_' + item.id + '" style="width:100%"></form></td><td><form id="f_detectorFile_'+item.id+'"><input type="hidden" name="file-id" value="detectorfile_'+item.id+'"><input intype="file" type="text" name="detectorFile_'+item.id+'" style="width:100%"></form></td></tr>';
 							$('#debugOptionTb').append(tableHtml);
 			    		});
 					}
@@ -226,7 +230,7 @@
 				}
 			});
 		}
-		
+
 		if(jobType == 'Q'){
 			$("#debugOptionPanel").hide();
 			$("#installOptionPanel").hide();
@@ -251,12 +255,6 @@
 				$("#input_"+linkId).attr("readonly","readonly");
 			}
 		});
-
-		$("#jobDescPanel").hide();
-		
-		$("[type='radio']").change(function(){
-			//状态改变时处理
-		});
 		
 		$("[type='radio']").click(function(){
 			var v = $(this).val();
@@ -273,7 +271,7 @@
 					$("#installOptionPanel").show();
 					$("#jobDescPanel").hide();
 					$("#debugOptionPanel").hide();
-				}else if(jobType == 'D'){
+				}else if(jobType == 'T'){
 					$("#installOptionPanel").hide();
 					$("#jobDescPanel").hide();
 					$("#debugOptionPanel").show();
@@ -292,21 +290,73 @@
 			$.messager.alert('提示','请选择工单完成状态.');
 			return;
 		}
-		if(checkErrorMsgMap.size() > 0){
-			$.messager.alert('提示','红色输入框有误,请检查.');
-			return;
-		}
+		
+		var jobDesc=$("#jobDesc").val();
 		var submitUrl = '';
 		var submitData = {};
 		submitData['jobId'] = jobId;
 		submitData['jobStatus'] = jobStatus;
 		submitData['jobType'] = jobType;
-		var jobDesc=$("#jobDesc").val();
+		
 		var checkInputOk = true;
 		if(jobType == 'A'){
 			if(jobStatus == 'F'){
+				//获取安装选项
+				var installOptionObj = {};
+				var optionOk = true;
+				$("[type='checkbox'][name='installOption']").each(function(i,item){
+					if($(this).is(":checked") == false){
+						optionOk = false;
+						return false;
+					}
+					installOptionObj[item.value] = $(this).is(":checked");
+				});
+				if(optionOk == false){
+					$.messager.alert('提示','完成安装工单,安装选项需要确认且勾选为是.');
+					return;
+				}
+				var boxPos = $("[intype='boxPos']").val();
+				if(boxPos == null || boxPos == ""){
+					$.messager.alert('提示','请填写机箱位置描述.');
+					return;
+				}
+				//获取探测器位置输入项
+				var detectorPosArr = [];
+				var detectorOk = true;
+				$("input[intype='detectorPos']").each(function(i,item){
+					if(item.value == null || item.value == ''){
+						detectorOk = false;
+						return false;
+					}
+					var detectorPos = {};
+					var itemId = item.id;
+					detectorPos['id'] = itemId.split("_")[1];
+					detectorPos['posDesc'] = item.value;
+				});
+				if(detectorOk ==  false){
+					$.messager.alert('提示','有探测器位置描述为空,请填写完整.');
+					return;
+				}
+				submitData['installOption'] = JSON.stringify(installOptionObj);
+				submitData['machineBoxPos'] = boxPos;
+				//submitData['processorInfo'] = JSON.stringify(processorInfoArr);
+				submitData['detectorPos'] = JSON.stringify(detectorPosArr);
+			}else{
+				if(jobDesc !=null && jobDesc.length > 0){
+					submitData['jobDesc']=jobDesc;
+				}else{
+					checkInputOk = false;
+				}	
+			}
+			submitUrl = '<%=path%>/job/mgr/process/install.do';
+		}else if(jobType == 'T'){
+			if(jobStatus == 'F'){
+				//检查IP输入输入是否正确
+				if(checkErrorMsgMap.size() > 0){
+					$.messager.alert('提示','IP输入有误,请检查.');
+					return;
+				}
 				//获取处理器ip输入项
-				//检查IP是否输入
 				var ipHasNull = false;
 				var processorInfoArr = [];
 				$("input[intype='ip']").each(function(i,item){
@@ -325,35 +375,6 @@
 					$.messager.alert('提示','有处理器IP项未填写.');
 					return;
 				}
-				//获取探测器位置输入项
-				var detectorPosArr = [];
-				$("input[intype='detectorPos']").each(function(i,item){
-					var detectorPos = {};
-					var itemId = item.id;
-					detectorPos['id'] = itemId.split("_")[1];
-					detectorPos['posDesc'] = item.value;					
-				});
-				
-				//获取安装选项
-				var installOptionObj = {};
-				$("[type='checkbox'][name='installOption']").each(function(i,item){
-					installOptionObj[item.value] = $(this).is(":checked");
-				});
-				
-				submitData['installOption'] = JSON.stringify(installOptionObj);
-				submitData['machineBoxPos'] = $("[intype='boxPos']").val();
-				submitData['processorInfo'] = JSON.stringify(processorInfoArr);
-				submitData['detectorPos'] = JSON.stringify(detectorPosArr);
-			}else{
-				if(jobDesc !=null && jobDesc.length > 0){
-					submitData['jobDesc']=jobDesc;
-				}else{
-					checkInputOk = false;
-				}	
-			}
-			submitUrl = '<%=path%>/job/mgr/process/install.do';
-		}else if(jobType == 'D'){
-			if(jobStatus == 'F'){
 				//处理器配置文件
 				var processorConfigs = [];
 				//探测器信息文件
@@ -387,6 +408,7 @@
 					$.messager.alert('提示','未选择文件.');
 					return;
 				}
+				submitData['processorInfo'] = JSON.stringify(processorInfoArr);
 				submitData['configFile'] = JSON.stringify(processorConfigs);
 				submitData['detectorInfo'] = JSON.stringify(detectorInfos);
 			}else{

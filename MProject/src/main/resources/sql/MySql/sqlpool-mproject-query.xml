@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sqls>
+	<sql id="mproject-query-addcode" name="生成验证码">
+		<content>
+		 INSERT INTO t_verification_code (id, project_id, code_type, code_value, target_user, valid_time, used, creator, create_date) 
+		 VALUES (':codeId', ':projectId', ':codeType', ':codeValue', ':targetUser', :validTime, 'N', ':userName', ':createDate')  
+		</content>
+		<description></description>
+	</sql>
+</sqls>

@@ -308,4 +308,39 @@ public class BoxServiceImpl implements IBoxService{
 			throw new BusinessException("确认验收机箱错误，访问数据库异常.");
 		}
 	}
+
+
+	@Override
+	public void updateBox(String curUser, Map<String, Object> boxObj) throws BusinessException {
+		
+		if (null == boxObj.get("boxId")) {
+			throw new BusinessException("修改机箱错误,缺少机箱ID!");
+		}
+		if (null == boxObj.get("boxNumber")) {
+			throw new BusinessException("修改机箱错误,缺少机箱编号!");
+		}
+		if (null == boxObj.get("longitude")) {
+			throw new BusinessException("修改机箱错误,缺少经度!");
+		}
+		if (null == boxObj.get("latitude")) {
+			throw new BusinessException("修改机箱错误,缺少纬度!");
+		}
+		if (null == boxObj.get("processorNum")) {
+			throw new BusinessException("修改机箱错误,处理器数量!");
+		}
+		// 检查机箱编号是否重复
+		boolean boxExists = checkBoxNumber(boxObj.get("boxId").toString(), boxObj.get("boxNumber").toString());
+		if (boxExists) {
+			throw new BusinessException("机箱编号已存在!");
+		}
+		
+		String preSql = ConfigSQLUtil.getCacheSql("mproject-box-updateById");
+		String sql = ConfigSQLUtil.preProcessSQL(preSql, boxObj);
+		try {
+			springJdbcDao.update(sql);
+		} catch (DataAccessException dae) {
+			log.info(dae.toString());
+			throw new BusinessException("修改机箱错误,访问数据库异常.");
+		}
+	}
 }

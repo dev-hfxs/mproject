@@ -66,6 +66,13 @@ INSERT INTO  t_menu(id,menu_name,menu_code,menu_url,icon_url,parent_id,order_num
 INSERT INTO  t_menu(id,menu_name,menu_code,menu_url,icon_url,parent_id,order_num) VALUES ('ma31603225b54f8fb3895bf8b0c08cbn','机箱信息填写及上报','m.write.box','/project/machineBoxWrite.jsp','','ma900252694f4bd99fa3e16ce9df3cd5',595);
 INSERT INTO  t_menu(id,menu_name,menu_code,menu_url,icon_url,parent_id,order_num) VALUES ('ma31603005b54f8fb3895bf8b0c08cbx','机箱验收进度','m.box.progress','/project/machineBoxProgress.jsp','','ma900252694f4bd99fa3e16ce9df3cd5',596);
 
+INSERT INTO  t_menu(id,menu_name,menu_code,menu_url,icon_url,parent_id,order_num) VALUES ('mf900252694f4bd99fa3e16ce9df3e5n','字典管理','m.nfc.dict.mgr','','','ROOT',6);
+INSERT INTO  t_menu(id,menu_name,menu_code,menu_url,icon_url,parent_id,order_num) VALUES ('mf900252694f4bd99fa3e16ce9dm201a','机箱NFC序列号','m.box.nfc.dict','/dict/nfcCode4Box.jsp','','mf900252694f4bd99fa3e16ce9df3e5n',61);
+INSERT INTO  t_menu(id,menu_name,menu_code,menu_url,icon_url,parent_id,order_num) VALUES ('mf910252694f4bd99fa3e16ce9dm201b','处理器NFC序列号','m.processor.nfc.dict','/dict/nfcCode4Processor.jsp','','mf900252694f4bd99fa3e16ce9df3e5n',62);
+INSERT INTO  t_menu(id,menu_name,menu_code,menu_url,icon_url,parent_id,order_num) VALUES ('mf9c0252694f4bd99fa3e16ce9dm201c','MOXA-NFC序列号','m.moxa.nfc.dict','/dict/nfcCode4Moxa.jsp','','mf900252694f4bd99fa3e16ce9df3e5n',63);
+INSERT INTO  t_menu(id,menu_name,menu_code,menu_url,icon_url,parent_id,order_num) VALUES ('mf9f0252694f4bd99fa3e16ce9dm201d','探测器NFC序列号','m.detecotr.nfc.dict','/dict/nfcCode4Detector.jsp','','mf900252694f4bd99fa3e16ce9df3e5n',64);
+
+
 
 /* 初始角色权限 */
 /* 超级管理员拥有的菜单 */
@@ -101,6 +108,13 @@ INSERT INTO  t_role_res(id,role_id,res_type,res_id) VALUES ('rr5abe33b3ae4f459cf
 INSERT INTO  t_role_res(id,role_id,res_type,res_id) VALUES ('rr5abe33b3ae4f459cf554859d9d1anc','rc106393c9f649e393d7c5d1a52c6105','M','me93bc69648a4e8eae2a78fd883aea19');
 INSERT INTO  t_role_res(id,role_id,res_type,res_id) VALUES ('rr5abe33b3ae4f459cf554859d9d1axc','rc106393c9f649e393d7c5d1a52c6105','M','me93bc69648a4e8eae2a78fd883aca89');
 INSERT INTO  t_role_res(id,role_id,res_type,res_id) VALUES ('rr5abe33b3ae4f459cf554859d9d1ayc','rc106393c9f649e393d7c5d1a52c6105','M','me93bc69648a4e8eae2a78fd883aba36');
+
+/* 管理员增加的字典管理*/
+INSERT INTO  t_role_res(id,role_id,res_type,res_id) VALUES ('rr5abe13b3ae4f459cf554859d8d1986','rc106393c9f649e393d7c5d1a52c6105','M','mf900252694f4bd99fa3e16ce9df3e5n');
+INSERT INTO  t_role_res(id,role_id,res_type,res_id) VALUES ('rr5abe13b3ae4f459cf554859d8d2011','rc106393c9f649e393d7c5d1a52c6105','M','mf900252694f4bd99fa3e16ce9dm201a');
+INSERT INTO  t_role_res(id,role_id,res_type,res_id) VALUES ('rr5abe13b3ae4f459cf554859d8d2080','rc106393c9f649e393d7c5d1a52c6105','M','mf910252694f4bd99fa3e16ce9dm201b');
+INSERT INTO  t_role_res(id,role_id,res_type,res_id) VALUES ('rr5abe13b3ae4f459cf554859d8d3011','rc106393c9f649e393d7c5d1a52c6105','M','mf9c0252694f4bd99fa3e16ce9dm201c');
+INSERT INTO  t_role_res(id,role_id,res_type,res_id) VALUES ('rr5abe13b3ae4f459cf554859d8dc015','rc106393c9f649e393d7c5d1a52c6105','M','mf9f0252694f4bd99fa3e16ce9dm201d');
 
 
 /* 系统工程师拥有的菜单 */

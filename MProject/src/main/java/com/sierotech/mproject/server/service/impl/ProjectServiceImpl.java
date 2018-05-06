@@ -140,13 +140,13 @@ public class ProjectServiceImpl implements IProjectService {
 		try {
 			alProjects = springJdbcDao.queryForList(selectSql);
 		} catch (DataAccessException dae) {
-			throw new BusinessException("恢复单位错误,获取单位访问数据库异常.");
+			throw new BusinessException("修改项目错误,获取项目访问数据库异常.");
 		}
 		Map<String, Object> oldProjectObj;
 		if (alProjects != null && alProjects.size() > 0) {
 			oldProjectObj = alProjects.get(0);
 		} else {
-			throw new BusinessException("恢复单位错误,未查询到单位.");
+			throw new BusinessException("修改项目错误,未查询到项目.");
 		}
 				
 		String preSql = ConfigSQLUtil.getCacheSql("mproject-project-updateProject");

@@ -15,6 +15,11 @@
 <script type="text/javascript"	src="<%=path%>/js/easyui/locale/easyui-lang-zh_CN.js"></script>
 <script type="text/javascript"	src="<%=path%>/js/common.js"></script>
 </head>
+<style>
+.textbox-label{
+	width:120px;
+}
+</style>
 <body>
 <div style="margin: 20px 0;"></div>
 <div class="easyui-panel"
@@ -26,23 +31,15 @@
 		</div>
 		<div style="margin-bottom: 20px;width: 100%">
 			<input class="easyui-textbox" id="nfcNumber" name="nfcNumber" style="width: 100%"
-				data-options="label:'NFC序列号:',required:true,validType:'length[1,20]'">
-		</div>
-		<div style="margin-bottom: 20px">
-			<input class="easyui-textbox" id="processorId" name="processorId" style="width: 100%"
-				data-options="label:'处理器ID:',required:true,validType:'length[1,20]'">
+				data-options="label:'处理器NFC序列号:',required:true,validType:'length[1,20]'">
 		</div>
 		<div style="margin-bottom: 20px">
 			<input class="easyui-textbox" id="moxaNumber" name="moxaNumber" style="width: 100%"
-				data-options="label:'MOXA序列号:',required:true,validType:'length[1,20]'">
-		</div>
-		<div style="margin-bottom: 20px">
-			<input class="easyui-textbox" id="ip" name="ip" style="width: 100%"
-				data-options="label:'IP:',validType:'checkIp'">
+				data-options="label:'MOXA-NFC序列号:',required:true,validType:'length[1,20]'">
 		</div>
 		<div style="margin-bottom: 20px;width: 100%">
-			<input class="easyui-numberbox" id="detectorNum" name="detectorNum" style="width: 100%"
-				data-options="label:'探测器数量:',required:true,validType:'length[1,3]'">
+			<input class="easyui-textbox" id="detectorNum" name="detectorNum" style="width: 100%"
+				data-options="label:'探测器数量:',required:true,validType:'checkDNum'">
 		</div>
 	</form>
 	<!-- -->
@@ -55,12 +52,24 @@
 </div>
 	
 <script>
+var pNfcCodeValid = false;
+var mNfcCodeValid = false;
+
 function submitForm() {
 	if($("#ff").form('validate') == false){
 		$.messager.alert('输入错误','请检查输入项!');
 		return false;
 	}
-	
+	if(pNfcCodeValid == false){
+		$("#nfcNumber").next("span").addClass("textbox-invalid");
+		$.messager.alert('提示','处理器NFC序列号未通过验证,不能提交!');
+		return false;
+	}
+	if(mNfcCodeValid == false){
+		$("#moxaNumber").next("span").addClass("textbox-invalid");
+		$.messager.alert('提示','MOXA-NFC序列号未通过验证,不能提交!');
+		return false;
+	}
 	// 提交保存
 	$.ajax( {
 	    url:'<%=path%>/processor/mgr/update.do',
@@ -121,6 +130,62 @@ $(function() {
 	});
 	$("#boxNumber").textbox({disabled: true});
 	
+	
+	$("#nfcNumber").textbox({  
+	    onChange: function(value) {
+	    	var objValue = $(this).val();
+	    	if(objValue.length == 14){
+	    		$.ajax( {
+				    url:'<%=path%>/dict/mgr/checkNfcNum.do',
+				    data:{codeName:'processor',codeValue:objValue,id:'<%=id%>'},
+		    		type:'post',
+				    async:false,
+				    dataType:'json',
+				    success:function(data) {
+				    	if(data.returnCode == "success"){
+				    		pNfcCodeValid =  true;
+				    		$("#nfcNumber").next("span").removeClass("textbox-invalid");
+				    	}else{
+				    		pNfcCodeValid =  false;
+				    		$("#nfcNumber").next("span").addClass("textbox-invalid");
+				    		$.messager.alert('提示',data.msg);
+				    	}
+				    },
+				    error : function(data) {
+				    	$.messager.alert('异常',data.responseText);
+			        }
+				});
+	    	}
+	    }
+	});
+	
+	$("#moxaNumber").textbox({  
+	    onChange: function(value) {
+	    	var objValue = $(this).val();
+	    	if(objValue.length == 14){
+	    		$.ajax( {
+				    url:'<%=path%>/dict/mgr/checkNfcNum.do',
+				    data:{codeName:'moxa',codeValue:objValue,id:'<%=id%>'},
+		    		type:'post',
+				    async:false,
+				    dataType:'json',
+				    success:function(data) {
+				    	if(data.returnCode == "success"){
+				    		mNfcCodeValid =  true;
+				    		$("#moxaNumber").next("span").removeClass("textbox-invalid");
+				    	}else{
+				    		mNfcCodeValid =  false;
+				    		$("#moxaNumber").next("span").addClass("textbox-invalid");
+				    		$.messager.alert('提示',data.msg);
+				    	}
+				    },
+				    error : function(data) {
+				    	$.messager.alert('异常',data.responseText);
+			        }
+				});
+	    	}
+	    }
+	});
 });
 
 $.extend($.fn.validatebox.defaults.rules, {            
@@ -130,7 +195,13 @@ $.extend($.fn.validatebox.defaults.rules, {
             return reg.test(value);  
         },  
         message : 'IP地址格式不正确'
-	} 
+	},
+	checkDNum: { //验证探测器数量
+        validator: function(value, param){
+         return  /^([1-9]|[1-9][0-9]|1[0-1][0-9]|1[2][0-8])$/.test(value);
+        },
+        message: '一个处理器可设置1-128个探测器!'
+    }
 });
 </script>
 </body>

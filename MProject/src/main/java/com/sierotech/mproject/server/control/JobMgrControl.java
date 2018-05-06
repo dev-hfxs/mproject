@@ -115,7 +115,7 @@ public class JobMgrControl {
 			String boxPos = request.getParameter("machineBoxPos");
 			String installOption = request.getParameter("installOption");
 			String detectorPos = request.getParameter("detectorPos");
-			String processorInfo = request.getParameter("processorInfo");
+			
 			if(boxPos == null) {
 				result.put("msg", "处理工单错误,机箱位置描述为空.");
 				return result;
@@ -124,21 +124,15 @@ public class JobMgrControl {
 				result.put("msg", "处理工单错误,处理器安装选项为空.");
 				return result;
 			}
-			if(processorInfo == null) {
-				result.put("msg", "处理工单错误,处理器IP信息为空.");
-				return result;
-			}
+			
 			if(detectorPos == null) {
 				result.put("msg", "处理工单错误,探测器位置信息为空.");
 				return result;
 			}
-			
-			List<Map> processorIpList = null;
 			List<Map> detectorPosList = null;
 			Map<String,String> installOptionMap = null;
 			try {
 				installOptionMap = JsonUtil.jsonToMap(installOption, false);
-				processorIpList = JsonUtil.jsonToList(processorInfo, Map.class);
 				detectorPosList = JsonUtil.jsonToList(detectorPos, Map.class);
 			}catch(Exception e) {
 				result.put("msg", "处理器IP、探测器位置参数格式错误.");
@@ -147,7 +141,7 @@ public class JobMgrControl {
 			
 			try {
 				String curUserId = UserTool.getLoginUser(request).get("id");
-				jobService.updateJob(curUserId, jobId, jobStatus, "", boxPos, installOptionMap, processorIpList, detectorPosList);
+				jobService.updateJob(curUserId, jobId, jobStatus, "", boxPos, installOptionMap, detectorPosList);
 			}catch(BusinessException be) {
 				result.put("msg", be.getMessage());
 				return result;
@@ -187,9 +181,13 @@ public class JobMgrControl {
 			}
 		}else if("F".equalsIgnoreCase(jobStatus)) {
 			//工单完成,获取工单填写的附件(处理器配置信息、探测器信息)
+			String processorInfo = request.getParameter("processorInfo");
 			String configFile = request.getParameter("configFile");
 			String detectorInfo = request.getParameter("detectorInfo");
-			
+			if(processorInfo == null) {
+				result.put("msg", "处理调试工单错误,处理器IP信息为空.");
+				return result;
+			}
 			if(configFile == null) {
 				result.put("msg", "处理调试工单错误,处理器配置附件为空.");
 				return result;
@@ -200,10 +198,11 @@ public class JobMgrControl {
 			}
 			List<Map> configFileList = null;
 			List<Map> detectorInfoList = null;
-			
+			List<Map> processorIpList = null;
 			try {
+				processorIpList = JsonUtil.jsonToList(processorInfo, Map.class);
 				configFileList = JsonUtil.jsonToList(configFile, Map.class);
-				detectorInfoList = JsonUtil.jsonToList(detectorInfo, Map.class);				
+				detectorInfoList = JsonUtil.jsonToList(detectorInfo, Map.class);
 			}catch(Exception e) {
 				log.info(e.getMessage());
 				result.put("msg", "处理器配置、探测器信息参数格式错误.");
@@ -211,7 +210,7 @@ public class JobMgrControl {
 			}
 			try {
 				String curUserId = UserTool.getLoginUser(request).get("id");
-				jobService.updateJob(curUserId, jobId, jobStatus, "",  configFileList, detectorInfoList);
+				jobService.updateJob(curUserId, jobId, jobStatus, "", processorIpList, configFileList, detectorInfoList);
 			}catch(BusinessException be) {
 				result.put("msg", be.getMessage());
 				return result;

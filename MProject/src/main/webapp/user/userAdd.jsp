@@ -147,10 +147,8 @@
 		
 		
 		$(function() {
-			//获取用户类型
-			
 			$("#orgName").next("span").click(function(){  
-                // todo弹出单位列表页面
+                // 弹出单位列表页面
 				//$("#orgName").val('abcd');
                 //$(this).children('input').eq(0).val('abcd');
                 

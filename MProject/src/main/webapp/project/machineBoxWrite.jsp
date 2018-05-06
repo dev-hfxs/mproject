@@ -25,7 +25,8 @@
 			data-options="singleSelect:true,rownumbers:true,pageSize:20,fit:true,url:'<%=path%>/comm/queryForPage.do',pagination:true,method:'post',multiSort:true">
 		<thead>
 			<tr>
-				<th data-options="field:'box_number',width:100,sortable:true">机箱编号</th>
+				<th data-options="field:'box_number',width:150,sortable:true">机箱编号</th>
+				<th data-options="field:'box_number',width:150,sortable:true">NFC序列号</th>
 				<th data-options="field:'longitude',width:200,sortable:true">经度</th>
 				<th data-options="field:'latitude',width:100,sortable:true">纬度</th>
 				<th data-options="field:'processor_num',width:200">包含处理器数量</th>
@@ -53,6 +54,10 @@ $(function() {
 	
 	//$('#dg').datagrid('hideColumn', 'status'); 
 });
+
+function refreshDataGrid(){
+	$('#dg').datagrid('reload');
+}
 
 var cmenu = null;
 function showHeaderMenu(e, field){
@@ -107,7 +112,8 @@ function showStatusName(val,row){
 }
 
 function showButtons(val,row){
-	var columnItem = '<span><a href="javascript:void(0)" class="easyui-linkbutton" onclick="javascript:configProcessor(\''+row.id+'\',\'' + row.box_number +'\')" style="width:80px;">修改信息</a></span>&nbsp;&nbsp;'
+	var columnItem = '<span><a href="javascript:void(0)" class="easyui-linkbutton" onclick="updateBox(\''+val+'\')" style="width:80px;">修改</a></span>&nbsp;&nbsp;'
+				   + '<span><a href="javascript:void(0)" class="easyui-linkbutton" onclick="javascript:configProcessor(\''+row.id+'\',\'' + row.box_number +'\')" style="width:80px;">维护处理器</a></span>&nbsp;&nbsp;'
                    + '<span><a href="javascript:void(0)" class="easyui-linkbutton" onclick="submitBox(\''+val+'\')" style="width:80px;">提交信息</a></span>&nbsp;&nbsp;'
                    + '<span><a href="javascript:void(0)" class="easyui-linkbutton" onclick="deleteBox(\''+val+'\')" style="width:80px;">删除信息</a></span>&nbsp;&nbsp;';
 	return columnItem;
@@ -115,6 +121,24 @@ function showButtons(val,row){
 
 function configProcessor(boxId,boxNumber){
 	parent.loadUrl("<%=path%>/processor/processorList.jsp?boxId=" + boxId + "&boxNumber=" + boxNumber);
+}
+
+function updateBox(boxId){
+	var content = '<iframe src="<%=path%>/box/machineBoxEdit.jsp?boxId='+boxId+'" width="100%" height="80%" frameborder="0" scrolling="no"></iframe>';
+	var boarddiv = '<div id="msgwindow" title="修改机箱" ></div>'// style="overflow:hidden;"可以去掉滚动条
+	$(document.body).append(boarddiv);
+	var win = $('#msgwindow').dialog({
+		content : content,
+		width : '640',
+		height : '480',
+		modal : true,
+		title : '修改机箱',
+		onClose : function() {
+			$(this).dialog('destroy');
+		}
+	});
+	win.dialog('open');
+	win.window('center');
 }
 
 function submitBox(boxId){

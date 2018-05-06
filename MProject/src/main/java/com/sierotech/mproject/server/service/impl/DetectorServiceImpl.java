@@ -40,9 +40,9 @@ public class DetectorServiceImpl implements IDetectorService{
 	
 	@Override
 	public void addDetector(String curUser, Map<String, Object> detectorObj) throws BusinessException {
-		if (null == detectorObj.get("detectorId")) {
-			throw new BusinessException("添加探测器错误,缺少探测器ID!");
-		}
+//		if (null == detectorObj.get("detectorId")) {
+//			throw new BusinessException("添加探测器错误,缺少探测器ID!");
+//		}
 		if (null == detectorObj.get("processorId")) {
 			throw new BusinessException("添加探测器错误,缺少处理器ID!");
 		}
@@ -72,8 +72,11 @@ public class DetectorServiceImpl implements IDetectorService{
 
 	@Override
 	public void updateDetector(String curUser, Map<String, Object> detectorObj) throws BusinessException {
-		if (null == detectorObj.get("detectorId")) {
-			throw new BusinessException("修改探测器错误,缺少探测器ID!");
+//		if (null == detectorObj.get("detectorId")) {
+//			throw new BusinessException("修改探测器错误,缺少探测器ID!");
+//		}
+		if (null == detectorObj.get("detectorSeq")) {
+			throw new BusinessException("修改探测器错误,缺少探测器编号!");
 		}
 		if (null == detectorObj.get("id")) {
 			throw new BusinessException("修改探测器错误,缺少ID!");
@@ -158,7 +161,7 @@ public class DetectorServiceImpl implements IDetectorService{
 				//生成插入数据的sql
 				StringBuffer importDataSql = new StringBuffer();
 				for(Map<String, String> data : datas) {
-					String detectorId = data.get("detector_id")!= null ? data.get("detector_id").toString() : "";
+					String detectorSeq = data.get("detector_seq")!= null ? data.get("detector_seq").toString() : "";
 					String nfcNumber = data.get("nfc_number")!= null ? data.get("nfc_number").toString() : "";
 					String longitude = data.get("longitude")!= null ? data.get("longitude").toString() : "null";
 					String latitude = data.get("latitude")!= null ? data.get("latitude").toString() : "null";
@@ -166,7 +169,7 @@ public class DetectorServiceImpl implements IDetectorService{
 					String end_point = data.get("end_point")!= null ? data.get("end_point").toString() : "null";
 					String pos_desc = data.get("pos_desc")!= null ? data.get("pos_desc").toString() : "";
 					
-					if(existsDetectorIdMap.get(detectorId) != null) {
+					if(existsDetectorIdMap.get(detectorSeq) != null) {
 						//存在						
 						importDataSql.append(" update t_detector set ");
 						importDataSql.append(" nfc_number='").append(nfcNumber).append("'");
@@ -175,12 +178,12 @@ public class DetectorServiceImpl implements IDetectorService{
 						importDataSql.append(", start_point=").append(start_point).append("");
 						importDataSql.append(", end_point=").append(end_point).append("");
 						importDataSql.append(" where processor_id='").append(processorId).append("'");
-						importDataSql.append(" and detector_id = '").append(detectorId).append("'").append(";\n");						
+						importDataSql.append(" and detector_seq = '").append(detectorSeq).append("'").append(";\n");						
 					}else {
 						//不存在
-						importDataSql.append(" insert into t_detector(id,detector_id,processor_id,nfc_number,longitude,latitude,start_point,end_point) values (");
+						importDataSql.append(" insert into t_detector(id,detector_seq,processor_id,nfc_number,longitude,latitude,start_point,end_point) values (");
 						importDataSql.append(" '").append(UUIDGenerator.getUUID()).append("'");
-						importDataSql.append(",'").append(detectorId).append("'");
+						importDataSql.append(",'").append(detectorSeq).append("'");
 						importDataSql.append(",'").append(processorId).append("'");
 						importDataSql.append(",'").append(nfcNumber).append("'");
 						importDataSql.append(", ").append(longitude).append("");
@@ -199,7 +202,7 @@ public class DetectorServiceImpl implements IDetectorService{
 				//生成插入数据的sql
 				StringBuffer importDataSql = new StringBuffer();
 				for(Map<String, String> data : datas) {
-					String detectorId = data.get("detector_id")!= null ? data.get("detector_id").toString() : "";
+					String detectorSeq = data.get("detector_seq")!= null ? data.get("detector_seq").toString() : "";
 					String nfcNumber = data.get("nfc_number")!= null ? data.get("nfc_number").toString() : "";
 					String longitude = data.get("longitude")!= null ? data.get("longitude").toString() : "null";
 					String latitude = data.get("latitude")!= null ? data.get("latitude").toString() : "null";
@@ -207,18 +210,19 @@ public class DetectorServiceImpl implements IDetectorService{
 					String end_point = data.get("end_point")!= null ? data.get("end_point").toString() : "null";
 					String pos_desc = data.get("pos_desc")!= null ? data.get("pos_desc").toString() : "";
 					
-					importDataSql.append(" insert into t_detector(id,detector_id,processor_id,nfc_number,longitude,latitude,start_point,end_point) values (");
+					importDataSql.append(" insert into t_detector(id,detector_seq,processor_id,nfc_number,longitude,latitude,start_point,end_point) values (");
 					importDataSql.append(" '").append(UUIDGenerator.getUUID()).append("'");
-					importDataSql.append(",'").append(detectorId).append("'");
+					importDataSql.append(",'").append(detectorSeq).append("'");
 					importDataSql.append(",'").append(processorId).append("'");
 					importDataSql.append(",'").append(nfcNumber).append("'");
 					importDataSql.append(", ").append(longitude).append("");
 					importDataSql.append(", ").append(latitude).append("");
-					importDataSql.append(", ").append(start_point).append("");
-					importDataSql.append(", ").append(end_point).append("");
+					importDataSql.append(", '").append(start_point).append("'");
+					importDataSql.append(", '").append(end_point).append("'");
 					importDataSql.append(" ) ;\n");
 				}
 				try {
+//					log.info(importDataSql.toString());
 					springJdbcDao.batchUpdate(importDataSql.toString().split("\n"));
 				}catch(DataAccessException dae ) {
 					throw new BusinessException("导入探测器错误,数据入库异常.");

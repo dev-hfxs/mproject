@@ -2,7 +2,7 @@
 <sqls>
 	<sql id="mproject-detector-getListByProcessorId" name="根据处理器ID获取探测器列表">
 		<content>
-		SELECT id, detector_id, processor_id, nfc_number, longitude, latitude, start_point, end_point 
+		SELECT id, detector_id, detector_seq, processor_id, nfc_number, longitude, latitude, start_point, end_point 
 		FROM t_detector 
 		WHERE processor_id = ':processorId' 
 		</content>
@@ -11,7 +11,7 @@
 	
 	<sql id="mproject-detector-getDetectorById" name="根据ID获取探测器">
 		<content>
-		SELECT id, detector_id, processor_id, nfc_number, longitude, latitude, start_point, end_point, pos_desc 
+		SELECT id, detector_id, detector_seq, processor_id, nfc_number, longitude, latitude, start_point, end_point, pos_desc 
 		FROM t_detector WHERE id = ':id' 
 		</content>
 		<description></description>
@@ -19,15 +19,15 @@
 	
 	<sql id="mproject-detector-add" name="添加探测器">
 		<content>
-		INSERT INTO  t_detector (id, detector_id, processor_id, nfc_number, longitude, latitude, start_point, end_point) 
-		VALUES (':id', ':detectorId', ':processorId', ':nfcNumber', :longitude, :latitude, :startPoint, :endPoint ) 
+		INSERT INTO  t_detector (id, detector_seq, processor_id, nfc_number, longitude, latitude, start_point, end_point) 
+		VALUES (':id', ':detectorSeq', ':processorId', ':nfcNumber', :longitude, :latitude, ':startPoint', ':endPoint' ) 
 		</content>
 		<description></description>
 	</sql>
 	
 	<sql id="mproject-detector-updateById" name="修改探测器">
 		<content>
-		UPDATE t_detector SET detector_id=':detectorId', nfc_number=':nfcNumber', longitude=:longitude, latitude=:latitude, start_point=:startPoint, end_point=:endPoint 
+		UPDATE t_detector SET detector_seq=':detectorSeq', nfc_number=':nfcNumber', longitude=:longitude, latitude=:latitude, start_point=':startPoint', end_point=':endPoint' 
 		WHERE id = ':id'  
 		</content>
 		<description></description>
@@ -43,6 +43,14 @@
 	<sql id="mproject-detector-deleteByProcessorId" name="根据处理器ID删除探测器">
 		<content>
 		DELETE FROM t_detector WHERE processor_id = ':processorId' 
+		</content>
+		<description></description>
+	</sql>
+	
+	<sql id="mproject-detector-getStartAndPointByProcessorId" name="根据处理器ID获取已设置的起点探测器和终点探测器">
+		<content>
+		select (select id from t_detector where processor_id = ':processorId' and start_point = 'Y' LIMIT 0,1) as start_point_id,
+               (select id from t_detector where processor_id = ':processorId' and end_point = 'Y' LIMIT 0,1) as end_point_id 
 		</content>
 		<description></description>
 	</sql>

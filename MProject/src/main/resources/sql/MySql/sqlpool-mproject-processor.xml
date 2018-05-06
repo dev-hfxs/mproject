@@ -2,15 +2,15 @@
 <sqls>
 	<sql id="mproject-processor-add" name="添加处理器">
 		<content>
-		INSERT INTO t_processor(id, machine_box_id, nfc_number, processor_id, moxa_number, ip, detector_num, creator, create_date) 
-		VAlUES (':id', ':boxId', ':nfcNumber', ':processorId', ':moxaNumber', ':ip', :detectorNUm, ':creator', ':createDate')
+		INSERT INTO t_processor(id, machine_box_id, nfc_number, moxa_number, detector_num, creator, create_date) 
+		VAlUES (':id', ':boxId', ':nfcNumber', ':moxaNumber', :detectorNUm, ':creator', ':createDate')
 		</content>
 		<description></description>
 	</sql>
 	
 	<sql id="mproject-processor-getProcessorListByBoxId" name="通过机箱ID获取处理器列表">
 		<content>
-		SELECT p.id, p.machine_box_id, p.nfc_number, p.moxa_number, p.processor_id, p.ip, p.detector_num, p.create_date, m.box_number
+		SELECT p.id, p.machine_box_id, p.nfc_number, p.moxa_number, p.ip, p.detector_num, p.create_date, m.box_number
 		FROM t_processor p
 		LEFT JOIN t_machine_box m on m.id = p.machine_box_id 
 		WHERE p.machine_box_id = ':boxId' 
@@ -21,7 +21,7 @@
 	
 	<sql id="mproject-processor-getProcessorById" name="通过机箱ID获取处理器">
 		<content>
-		SELECT p.id, p.machine_box_id, p.nfc_number, p.moxa_number, p.processor_id, p.ip, p.detector_num, p.create_date, m.box_number
+		SELECT p.id, p.machine_box_id, p.nfc_number, p.moxa_number, p.ip, p.detector_num, p.create_date, m.box_number
 		FROM t_processor p 
 		LEFT JOIN t_machine_box m on m.id = p.machine_box_id 
 		WHERE p.id = ':id' 
@@ -31,7 +31,7 @@
 	
 	<sql id="mproject-processor-updateProcessorById" name="根据ID修改处理器">
 		<content>
-		UPDATE t_processor SET nfc_number=':nfcNumber', moxa_number=':moxaNumber', processor_id = ':processorId', ip=':ip', detector_num=:detectorNum
+		UPDATE t_processor SET nfc_number=':nfcNumber', moxa_number=':moxaNumber', detector_num=:detectorNum
 		WHERE id = ':id' 
 		</content>
 		<description></description>

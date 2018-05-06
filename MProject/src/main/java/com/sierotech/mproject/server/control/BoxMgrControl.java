@@ -93,6 +93,10 @@ public class BoxMgrControl {
 			result.put("msg", "添加机箱错误,缺少机箱编号!");
 			return result;
 		}
+		if (null == boxObj.get("nfcNumber")) {
+			result.put("msg", "添加机箱错误,缺少机箱NFC序列号!");
+			return result;
+		}
 		if (null == boxObj.get("longitude")) {
 			result.put("msg", "添加机箱错误,缺少经度!");
 			return result;
@@ -116,6 +120,47 @@ public class BoxMgrControl {
 		result.put("msg", "");
 		return result;
 	}
+	
+
+	@RequestMapping(value = "/update")
+	@ResponseBody
+	public Map<String, String> updateBox(HttpServletRequest request) {	
+		Map<String, String> result = new HashMap<String, String>();
+		result.put("returnCode", "fail");
+		Map boxObj = ControllerUtils.toMap(request);
+				
+		if (null == boxObj.get("boxNumber")) {
+			result.put("msg", "修改机箱错误,缺少机箱编号!");
+			return result;
+		}
+		if (null == boxObj.get("nfcNumber")) {
+			result.put("msg", "修改机箱错误,缺少NFC序列号!");
+			return result;
+		}
+		if (null == boxObj.get("longitude")) {
+			result.put("msg", "修改机箱错误,缺少经度!");
+			return result;
+		}
+		if (null == boxObj.get("latitude")) {
+			result.put("msg", "修改机箱错误,缺少纬度!");
+			return result;
+		}
+		if (null == boxObj.get("processorNum")) {
+			result.put("msg", "修改机箱错误,处理器数量!");
+			return result;
+		}
+		
+		try {
+			boxService.updateBox(UserTool.getLoginUser(request).get("user_name"), boxObj);
+		}catch(BusinessException be) {
+			result.put("msg", be.getMessage());
+			return result;
+		}
+		result.put("returnCode", "success");
+		result.put("msg", "");
+		return result;
+	}
+	
 	
 	@RequestMapping(value = "/delete")
 	@ResponseBody

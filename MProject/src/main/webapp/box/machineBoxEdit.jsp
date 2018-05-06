@@ -1,81 +1,59 @@
 <%@ page pageEncoding="UTF-8"%>
 <%
 	String path = request.getContextPath();
+	String boxId = request.getParameter("boxId");
 %>
 <!DOCTYPE html>
 <html>
 <head>
 <meta charset="UTF-8">
-<title>新建项目</title>
+<title>修改机箱</title>
 <script type="text/javascript"	src="<%=path%>/js/jquery/jquery-3.3.1.min.js"></script>
 <link rel="stylesheet" type="text/css"	href="<%=path%>/js/easyui/themes/default/easyui.css">
 <link rel="stylesheet" type="text/css"	href="<%=path%>/js/easyui/themes/icon.css">
 <script type="text/javascript"	src="<%=path%>/js/easyui/jquery.easyui.min.js"></script>
 <script type="text/javascript"	src="<%=path%>/js/easyui/locale/easyui-lang-zh_CN.js"></script>
 <script type="text/javascript"	src="<%=path%>/js/common.js"></script>
-<style>
-.text-noborder{
-  border-left:none;
-  border-right:none;
-  border-top:none;
-  border-bottom:1px solid #95B8E7;
-  outline-style: none;
-  text-align:right;
-}
-</style>
 </head>
 <body>
 	<div style="margin: 20px 0;"></div>
 	<div class="easyui-panel"
-		style="width: 100%; max-width: 460px; padding: 30px 60px; border-width:0" >
+		style="width: 100%; max-width: 480px; padding: 30px 60px; border-width:0" >
 		<form id="ff" method="post" >
 			<div style="margin-bottom: 20px;width: 100%">
-						<input class="easyui-textbox" id="boxNumber" name="boxNumber" style="width: 100%"
+						<input class="easyui-textbox" id="boxNumber" name="boxNumber" style="width: 90%"
 							data-options="label:'机箱编号 :',required:true,validType:'checkBoxCode'">
 			</div>
 			<div style="margin-bottom: 20px;width: 100%">
-						<input class="easyui-textbox" id="nfcNumber" name="nfcNumber" style="width: 100%"
-							data-options="label:'NFC序列号 :',required:true,validType:'length[14,14]'">
-			</div>
-			<!-- 
-			<div style="margin-bottom: 20px">
-				<table>
-					<tr>
-						<td width="80px">经度 :</td>
-						<td><input type="text" class="text-noborder" id="lng-part1" name="longitude" style="width: 40px;">&nbsp;°(度)
-                            <input type="text" class="text-noborder" id="lng-part2" name="longitude" style="width: 40px;">&nbsp;′(分)
-                            <input type="text" class="text-noborder" id="lng-part3" name="longitude" style="width: 50px;">&nbsp;″(秒)
-					    </td>
-					</tr>
-				</table>				
-			</div>
-			-->
-			<div style="margin-bottom: 20px">
-				<input class="easyui-textbox" id="longitude" name="longitude" style="width: 100%"
-					data-options="label:'经度 :',required:true,validType:'checkLng'">
+						<input class="easyui-textbox" id="nfcNumber" name="nfcNumber" style="width: 90%"
+							data-options="label:'NFC编号 :',required:true,validType:'length[14,14]'">
 			</div>
 			<div style="margin-bottom: 20px">
-				<input class="easyui-textbox" id="latitude" name="latitude" style="width: 100%"
-					data-options="label:'纬度 :', required:true,validType:'checkLat'">
+				<input class="easyui-textbox" id="longitude" name="longitude" style="width: 90%"
+					data-options="label:'经度 :',required:true,precision:6,validType:'checkLng'">
 			</div>
 			<div style="margin-bottom: 20px">
-				<input class="easyui-numberbox" id="processorNum" name="processorNum" style="width: 100%"
+				<input class="easyui-textbox" id="latitude" name="latitude" style="width: 90%"
+					data-options="label:'纬度 :',required:true,precision:6,validType:'checkLat'">
+			</div>
+			<div style="margin-bottom: 20px">
+				<input class="easyui-numberbox" id="processorNum" name="processorNum" style="width: 90%"
 					data-options="label:'处理器数量 :',required:true,validType:'checkPNum'">
 			</div>
 			<div style="margin-bottom: 20px">
-				<input class="easyui-numberbox" id="installSpace" name="installSpace" style="width: 100%"
+				<input class="easyui-numberbox" id="installSpace" name="installSpace" style="width: 90%"
 					data-options="label:'安装间距 (m):',precision:2,validType:'length[0,7]'">
 			</div>
 		</form>
 		<!-- -->
 		<div style="text-align: center; padding: 5px 0">
 			<a href="javascript:void(0)" class="easyui-linkbutton"	onclick="submitForm()" style="width: 80px">确认</a> &nbsp;&nbsp;
-			<a href="javascript:void(0)" class="easyui-linkbutton" 	onclick="clearForm()" style="width: 80px">取消</a>
+			<a href="javascript:void(0)" class="easyui-linkbutton" 	onclick="doCancel()" style="width: 80px">取消</a>
 		</div>
 	</div>
 	
 	<script>
-	var nfcCodeValid = false;
+	var nfcCodeValid = true;
 	
 		function submitForm() {
 			if($("#ff").form('validate') == false){
@@ -90,7 +68,7 @@
 			$.ajax( {
 			    url:'<%=path%>/box/mgr/checkBoxNumber.do',
 			    data:{
-			    	'boxId':'',
+			    	'boxId':'<%=boxId%>',
 			    	'boxNumber':boxNumber
 			    },
 			    type:'post',
@@ -99,7 +77,6 @@
 			    success:function(data) {
 			    	if(data.exist != null && data.exist !='true'){
 			    		boxNumberExist = false;
-			    		$("#boxNumber").next("span").removeClass("textbox-invalid");
 			    	}else{
 			    		boxNumberExist = true;
 			    		//$.messager.alert('提示','机箱编号已存在,请检查!');
@@ -121,18 +98,13 @@
 				$.messager.alert('提示','机箱NFC序列号未通过验证,不能提交!');
 				return false;
 			}
-			
 			// 提交保存
 			$.ajax( {
-			    url:'<%=path%>/box/mgr/add.do',
+			    url:'<%=path%>/box/mgr/update.do',
 			    data:{
-			    	'boxId':'',
-			    	'userId':'${loginUser.id}',
-			    	'orgId':'${loginUser.orgId}',
-			    	'projectId':'${curProjectId}',
+			    	'boxId':'<%=boxId%>',
 			    	'boxNumber':$("#boxNumber").val(),
 			    	'nfcNumber':$("#nfcNumber").val(),
-			    	'allowBoxNum':$("#allowBoxNum").val(),
 			    	'longitude':$("#longitude").val(),
 			    	'latitude':$("#latitude").val(),
 			    	'processorNum':$("#processorNum").val(),
@@ -143,10 +115,11 @@
 			    dataType:'json',
 			    success:function(data) {
 			    	if(data.returnCode == "success"){
-			    		$.messager.alert('提示','添加成功!','info',
+			    		$.messager.alert('提示','修改成功!','info',
 			    			function(){
 								//
-								parent.loadUrl('<%=path%>/project/machineBoxWrite.jsp');
+								parent.refreshDataGrid();
+								parent.closeDialog();
 			    			}
 			    		);
 			    	}else{
@@ -159,10 +132,68 @@
 			});
 		}
 
-		function clearForm() {
-			$("#ff").form('clear');
+		function doCancel() {
+			parent.closeDialog();
 		}
 		
+		$(function() {
+			//
+			//获取机箱信息
+			$.ajax( {
+			    url:'<%=path%>/comm/queryForList.do',
+			    data:{
+			    	'sqlId':'mproject-box-queryBoxById',
+			    	'boxId':'<%=boxId%>'
+			    },
+			    type:'post',
+			    async:false,
+			    dataType:'json',
+			    success:function(data) {
+			    	if(data!=null && data.length > 0){
+			    		var boxObj = data[0];
+			    		$("#boxNumber").textbox('setValue', boxObj.box_number);
+			    		$("#nfcNumber").textbox('setValue', boxObj.nfc_number);
+			    		$("#longitude").textbox('setValue', boxObj.longitude);
+			    		$("#latitude").textbox('setValue', boxObj.latitude);
+			    		$("#processorNum").textbox('setValue', boxObj.processor_num);
+			    		$("#installSpace").textbox('setValue', boxObj.install_space);	
+			    	}
+			    },
+			    error : function(data) {
+			    	$.messager.alert('异常',data.responseText);
+		        }
+			});
+		});
+		
+		$("#nfcNumber").textbox({  
+		    onChange: function(value) {
+		    	var objValue = $(this).val();
+		    	if(objValue.length == 14){
+		    		$.ajax( {
+					    url:'<%=path%>/dict/mgr/checkNfcNum.do',
+					    data:{codeName:'box',codeValue:objValue,id:'<%=boxId%>'},
+			    		type:'post',
+					    async:false,
+					    dataType:'json',
+					    success:function(data) {
+					    	if(data.returnCode == "success"){
+					    		nfcCodeValid =  true;
+					    		$("#nfcNumber").next("span").removeClass("textbox-invalid");
+					    	}else{
+					    		nfcCodeValid =  false;
+					    		$("#nfcNumber").next("span").addClass("textbox-invalid");
+					    		$.messager.alert('提示',data.msg);
+					    	}
+					    },
+					    error : function(data) {
+					    	nfcCodeValid =  false;
+					    	$.messager.alert('异常',data.responseText);
+				        }
+					});
+		    	}
+		    }
+		});
+			
 		$.extend($.fn.validatebox.defaults.rules, {
 		    checkLng: { //验证经度
 		        validator: function(value, param){
@@ -188,37 +219,6 @@
 		        },
 		        message: '一个机箱可设置1-2个处理器!'
 		    }
-		});
-		
-		
-		$(function() {
-			$("#nfcNumber").textbox({  
-			    onChange: function(value) {
-			    	var objValue = $(this).val();
-			    	if(objValue.length == 14){
-			    		$.ajax( {
-						    url:'<%=path%>/dict/mgr/checkNfcNum.do',
-						    data:{codeName:'box',codeValue:objValue,id:''},
-				    		type:'post',
-						    async:false,
-						    dataType:'json',
-						    success:function(data) {
-						    	if(data.returnCode == "success"){
-						    		nfcCodeValid =  true;
-						    		$("#nfcNumber").next("span").removeClass("textbox-invalid");
-						    	}else{
-						    		nfcCodeValid =  false;
-						    		$("#nfcNumber").next("span").addClass("textbox-invalid");
-						    		$.messager.alert('提示',data.msg);
-						    	}
-						    },
-						    error : function(data) {
-						    	$.messager.alert('异常',data.responseText);
-					        }
-						});
-			    	}
-			    }
-			});
 		});
 		
 	</script>

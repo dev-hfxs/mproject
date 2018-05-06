@@ -118,8 +118,9 @@ create table t_machine_box
 (
    id                   varchar(32)                    not null,
    box_number           varchar(12)                    null comment '机箱编号' ,
-   longitude            decimal(9,6)                   null comment '经度' ,
-   latitude             decimal(9,6)                   null comment '纬度' ,
+   nfc_number           varchar(20)                    null comment 'NFC编号' ,
+   longitude            decimal(10,7)                  null comment '经度' ,
+   latitude             decimal(10,7)                  null comment '纬度' ,
    pos_desc             varchar(128)                   null comment '位置描述' ,
    processor_num        int(4)                         null comment '处理器数量' ,
    install_space        varchar(20)                    null comment '安装间距' ,
@@ -132,7 +133,6 @@ create table t_machine_box
    pm_confirm_date      varchar(19)                    null comment '项目经理确认时间' ,
    project_id           varchar(32)                    null comment '对应项目id' ,
    enable_edit          char(1)                        null comment '提交后是否允许修改' ,
-
    create_date          varchar(19)                    null ,
    constraint pk_t_machine_box_id primary key (id)
 );
@@ -178,12 +178,13 @@ create table t_detector
 (
    id                   varchar(32)                    not null,
    detector_id          varchar(20)                    null comment '探测器id' ,
+   detector_seq	        varchar(10)                    null comment '探测器编号' ,
    processor_id         varchar(32)                    null comment '对应处理器id' ,
    nfc_number           varchar(20)                    null comment 'NFC序列号' ,
-   longitude            decimal(9,6)                   null comment '经度' ,
-   latitude             decimal(9,6)                   null comment '纬度' ,
-   start_point          varchar(40)                    null comment '起点' ,
-   end_point            varchar(40)                    null comment '终点' ,
+   longitude            decimal(10,7)                   null comment '经度' ,
+   latitude             decimal(10,7)                   null comment '纬度' ,
+   start_point          char(1)			       null comment '起点' ,
+   end_point            char(1)                        null comment '终点' ,
    pos_desc             varchar(128)                   null comment '位置描述' ,
    constraint pk_t_detector_id primary key clustered (id)
 );
@@ -311,4 +312,48 @@ create table t_admin_log
    operation_module     varchar(20)                    null comment '操作模块' ,
    operation_desc       varchar(256)                   null comment '操作描述' ,
    constraint pk_t_admin_log_id primary key (id)
+);
+
+/*==============================================================*/
+/* Table: t_nfc_code_machinebox                                           */
+/*==============================================================*/
+create table t_nfc_code_machinebox 
+(
+   nfc_code             varchar(20)                    not null,
+   number               varchar(20)                    null comment '编号' ,
+   create_date          varchar(19)                    null comment '创建时间' ,
+   constraint pk_t_nfc_code_machinebox primary key (nfc_code)
+);
+
+/*==============================================================*/
+/* Table: t_nfc_code_processor                                           */
+/*==============================================================*/
+create table t_nfc_code_processor 
+(
+   nfc_code             varchar(20)                    not null,
+   number               varchar(20)                    null comment '编号' ,
+   create_date          varchar(19)                    null comment '创建时间' ,
+   constraint pk_t_nfc_code_processor primary key (nfc_code)
+);
+
+/*==============================================================*/
+/* Table: t_nfc_code_moxa                                           */
+/*==============================================================*/
+create table t_nfc_code_moxa 
+(
+   nfc_code             varchar(20)                    not null,
+   number               varchar(20)                    null comment '编号' ,
+   create_date          varchar(19)                    null comment '创建时间' ,
+   constraint pk_t_nfc_code_processor primary key (nfc_code)
+);
+
+/*==============================================================*/
+/* Table: t_nfc_code_detector                                           */
+/*==============================================================*/
+create table t_nfc_code_detector 
+(
+   nfc_code             varchar(20)                    not null,
+   number               varchar(20)                    null comment '编号' ,
+   create_date          varchar(19)                    null comment '创建时间' ,
+   constraint pk_t_nfc_code_detector primary key (nfc_code)
 );

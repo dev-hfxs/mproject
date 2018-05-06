@@ -2,8 +2,24 @@
 <sqls>
 	<sql id="mproject-box-add" name="添加机箱">
 		<content>
-		 INSERT INTO t_machine_box(id, box_number, longitude, latitude, processor_num, install_space,org_id,build_manager,project_id, create_date) 
-		 VALUES (':boxId', ':boxNumber', :longitude, :latitude, ':processorNum', ':installSpace', ':orgId', ':userId', ':projectId', ':createDate')  
+		 INSERT INTO t_machine_box(id, box_number, nfc_number, longitude, latitude, processor_num, install_space,org_id,build_manager,project_id, create_date) 
+		 VALUES (':boxId', ':boxNumber', ':nfcNumber', :longitude, :latitude, :processorNum, ':installSpace', ':orgId', ':userId', ':projectId', ':createDate')  
+		</content>
+		<description></description>
+	</sql>
+	
+	<sql id="mproject-box-updateById" name="修改机箱">
+		<content>
+		 UPDATE t_machine_box SET box_number=':boxNumber', nfc_number=':nfcNumber', longitude=:longitude, latitude=:latitude, processor_num=:processorNum ,install_space=':installSpace'
+         WHERE id = ':boxId' 
+		</content>
+		<description></description>
+	</sql>
+	
+	<sql id="mproject-box-queryBoxById" name="根据ID获取机箱">
+		<content>
+		 SELECT id, box_number, nfc_number, longitude, latitude, processor_num,install_space 
+		 FROM t_machine_box WHERE id = ':boxId' 
 		</content>
 		<description></description>
 	</sql>
@@ -11,20 +27,20 @@
 	<sql id="mproject-box-checkBoxNumberExist" name="检查机箱编号是否存在">
 		<content>
 		 SELECT count(*) as countNum FROM t_machine_box 
-		 WHERE id = ':boxId' AND box_number = ':boxNumber' 
+		 WHERE id != ':boxId' AND box_number = ':boxNumber' 
 		</content>
 		<description></description>
 	</sql>
 	
 	<sql id="mproject-box-getUserBoxsList" name="获取用户当前项目的机箱列表">
 		<content>
-		 SELECT id, box_number, longitude, latitude, processor_num, enable_edit, 
+		 SELECT id, box_number, nfc_number, longitude, latitude, processor_num, enable_edit, 
 		 0 AS submit_num
 		 FROM t_machine_box b
 		 WHERE b.project_id = ':projectId' AND b.build_manager = ':userId' 
 		 AND not exists (select machine_box_id from t_machine_box_submit s where s.machine_box_id = b.id )
 		 UNION 
-		 SELECT id, box_number, longitude, latitude, processor_num, enable_edit, 
+		 SELECT id, box_number, nfc_number, longitude, latitude, processor_num, enable_edit, 
 		 (SELECT count(*) FROM t_machine_box_submit t2 WHERE t2.machine_box_id = b.id) AS submit_num
 		 FROM t_machine_box b
 		 WHERE b.project_id = ':projectId' AND b.build_manager = ':userId' 
@@ -36,10 +52,10 @@
 	
 	<sql id="mproject-box-getUserBoxsProgessList" name="获取用户当前项目提交机箱验收进度">
 		<content>
-		 SELECT b.id, b.box_number, b.longitude, b.latitude, b.processor_num ,  
+		 SELECT b.id, b.box_number, b.nfc_number, b.longitude, b.latitude, b.processor_num ,  
 		 (SELECT count(*) FROM t_machine_box_submit t2 WHERE t2.machine_box_id = b.id) AS submit_num, 
 		 confirm_install_date, confirm_debug_date, pm_confirm_date
-		 FROM t_machine_box b
+		 FROM t_machine_box b 
 		 WHERE b.project_id = ':projectId' AND b.build_manager = ':userId' and (b.enable_edit = 'N' or b.enable_edit is null)  
 		 and exists (select id from t_machine_box_submit t4 where t4.machine_box_id = b.id)
 		</content> 
@@ -91,7 +107,7 @@
 	
 	<sql id="mproject-box-getBoxById" name="根据ID获取机箱">
 		<content>
-		SELECT id, box_number, longitude, latitude, processor_num, enable_edit, pm_confirm_date
+		SELECT id, box_number, nfc_number, longitude, latitude, processor_num, enable_edit, pm_confirm_date 
 		FROM t_machine_box WHERE id = ':boxId' 
 		</content>
 		<description></description>

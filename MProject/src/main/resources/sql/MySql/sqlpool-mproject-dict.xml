@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sqls>
+	<sql id="mproject-dict-queryBoxNfcsAll" name="获取机箱的nfc序列号列表">
+		<content>
+		 SELECT nfc_code, number, create_date FROM t_nfc_code_machinebox WHERE 1=1 [ AND instr(nfc_code, ':nfcCode') > 0 ] 
+		</content>
+		<description></description>
+	</sql>
+
+	<sql id="mproject-dict-queryProcessorNfcsAll" name="获取处理器的nfc序列号列表">
+		<content>
+		 SELECT nfc_code, number, create_date FROM t_nfc_code_processor WHERE 1=1 [ AND instr(nfc_code, ':nfcCode') > 0 ] 
+		</content>
+		<description></description>
+	</sql>
+	
+	<sql id="mproject-dict-queryMoxaNfcsAll" name="获取Moxa的nfc序列号列表">
+		<content>
+		 SELECT nfc_code, number, create_date FROM t_nfc_code_moxa WHERE 1=1 [ AND instr(nfc_code, ':nfcCode') > 0 ] 
+		</content>
+		<description></description>
+	</sql>
+	
+	<sql id="mproject-dict-queryDetectorNfcsAll" name="获取探测器的nfc序列号列表">
+		<content>
+		 SELECT nfc_code, number, create_date FROM t_nfc_code_detector WHERE 1=1 [ AND instr(nfc_code, ':nfcCode') > 0 ] 
+		</content>
+		<description></description>
+	</sql>
+	
+	<sql id="mproject-dict-queryBoxNfcByCode" name="根据nfc值获取机箱的nfc">
+		<content>
+		 SELECT nfc_code, number, create_date FROM t_nfc_code_machinebox WHERE nfc_code = ':nfcCode' 
+		</content>
+		<description></description>
+	</sql>
+
+	<sql id="mproject-dict-queryProcessorNfcByCode" name="根据nfc值获取处理器的nfc">
+		<content>
+		 SELECT nfc_code, number, create_date FROM t_nfc_code_processor WHERE nfc_code = ':nfcCode' 
+		</content>
+		<description></description>
+	</sql>
+	
+	<sql id="mproject-dict-queryMoxaNfcByCode" name="根据nfc值获取Moxa的nfc">
+		<content>
+		 SELECT nfc_code, number, create_date FROM t_nfc_code_moxa WHERE nfc_code = ':nfcCode' 
+		</content>
+		<description></description>
+	</sql>
+	
+	<sql id="mproject-dict-queryDetectorNfcByCode" name="根据nfc值获取探测器的nfc">
+		<content>
+		 SELECT nfc_code, number, create_date FROM t_nfc_code_detector WHERE nfc_code = ':nfcCode' 
+		</content>
+		<description></description>
+	</sql>
+	
+	
+	<sql id="mproject-dict-boxNfcCodeCheckUse" name="检查机箱的nfc是否使用">
+		<content>
+		 SELECT count(*) as countNum FROM t_machine_box WHERE nfc_number = ':nfcCode'  [ and id !=':id']
+		</content>
+		<description></description>
+	</sql>
+
+	<sql id="mproject-dict-processorNfcCheckUse" name="检查处理器的nfc是否使用">
+		<content>
+		 SELECT count(*) as countNum FROM t_processor WHERE nfc_number = ':nfcCode'  [ and id !=':id']
+		</content>
+		<description></description>
+	</sql>
+	
+	<sql id="mproject-dict-moxaNfcCodeCheckUse" name="检查Moxa的nfc是否使用">
+		<content>
+		 SELECT count(*) as countNum FROM t_processor WHERE moxa_number = ':nfcCode'  [ and id !=':id']
+		</content>
+		<description></description>
+	</sql>
+	
+	<sql id="mproject-dict-detectorNfcCodeCheckUse" name="检查探测器的nfc是否使用">
+		<content>
+		 SELECT count(*) as countNum FROM t_detector WHERE nfc_number = ':nfcCode'  [ and id !=':id']
+		</content>
+		<description></description>
+	</sql>
+	
+	
+	
+</sqls>
