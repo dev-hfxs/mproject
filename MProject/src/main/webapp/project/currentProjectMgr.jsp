@@ -25,15 +25,17 @@
 			data-options="singleSelect:true,rownumbers:true,pageSize:20,fit:true,url:'<%=path%>/comm/queryForPage.do',pagination:true,method:'post',toolbar:'#tb',multiSort:true">
 		<thead>
 			<tr>
-				<th data-options="field:'box_number',width:100,sortable:true">机箱编号</th>
-				<th data-options="field:'create_date',width:180,sortable:true">创建时间</th>
+				<th data-options="field:'box_number',width:110,sortable:true">机箱编号</th>
+				<th data-options="field:'box_number',width:130,sortable:true">机箱NFC序列号</th>
+				<th data-options="field:'create_date',width:130,sortable:true">创建时间</th>
 				<th data-options="field:'longitude',width:100">经度</th>
 				<th data-options="field:'latitude',width:100">纬度</th>
 				<th data-options="field:'pos_desc',width:200">位置描述</th>
 				<th data-options="field:'processor_num',width:120">包含处理器数量</th>
 				<th data-options="field:'user_name',width:100">施工经理</th>
 				<th data-options="field:'submit_num',width:120">施工经理提交次数</th>
-				<th data-options="field:'new_submit_date',width:120,sortable:true">最新提交时间</th>
+				<th data-options="field:'new_submit_date',width:130,sortable:true">最新提交时间</th>
+				<th data-options="field:'job_type',width:180,align:'center',formatter:showCurJob">当前工单</th>
 				<th data-options="field:'id',width:250,align:'center',formatter:showButtons">操作</th>
 			</tr>
 		</thead>
@@ -59,18 +61,31 @@ $(function() {
 });
 
 function showButtons(val,row){
+	var curJobProcessing = false;
+	if(row.job_type != null && row.job_status != null && row.job_status =='I'){
+		curJobProcessing = true;
+	}
 	var columnItem = '';
 	if(row.pm_confirm_date != null){
 		//已验收
 	}else{
 		if(row.submit_num > 0){
 			//未验收且提交过
-			columnItem = columnItem + '<span><a href="javascript:void(0)" class="easyui-linkbutton" onclick="publishJob(\''+row.project_id+'\',\''+ row.id + '\')" style="width:80px;">发布工单</a></span>&nbsp;&nbsp;'
+			if(curJobProcessing){
+				columnItem = columnItem + '<span><a href="javascript:void(0)" class="easyui-linkbutton" onclick="publishJob(1,\''+row.project_id+'\',\''+ row.id + '\')" style="width:80px;">发布工单</a></span>&nbsp;&nbsp;'
+			}else{
+				columnItem = columnItem + '<span><a href="javascript:void(0)" class="easyui-linkbutton" onclick="publishJob(0,\''+row.project_id+'\',\''+ row.id + '\')" style="width:80px;">发布工单</a></span>&nbsp;&nbsp;'
+			}
+			
 			if(row.enable_edit =='N'){
 				//提交过且没有验收可允许修改
 				columnItem = columnItem + '<span><a href="javascript:void(0)" class="easyui-linkbutton" onclick="doEnableEdit(\''+row.project_id+'\',\''+ row.id + '\')" style="width:80px;">允许修改</a></span>&nbsp;&nbsp;';
-				columnItem = columnItem + '<span><a href="javascript:void(0)" class="easyui-linkbutton" onclick="doAccept(\''+row.project_id+'\',\''+ row.id + '\')" style="width:80px;">确认验收</a></span>&nbsp;&nbsp;';
-			}			
+				if(curJobProcessing){
+					columnItem = columnItem + '<span><a href="javascript:void(0)" class="easyui-linkbutton" onclick="doAccept(1,\''+row.project_id+'\',\''+ row.id + '\')" style="width:80px;">确认验收</a></span>&nbsp;&nbsp;';
+				}else{
+					columnItem = columnItem + '<span><a href="javascript:void(0)" class="easyui-linkbutton" onclick="doAccept(0,\''+row.project_id+'\',\''+ row.id + '\')" style="width:80px;">确认验收</a></span>&nbsp;&nbsp;';
+				}	
+			}
 		}
 	}
 	//TODO测试先放开发布工单
@@ -81,7 +96,36 @@ function showButtons(val,row){
 	return columnItem;
 }
 
-function publishJob(projectId,boxId){
+function showCurJob(val,row){
+	var columnItem = '';
+	if(row.job_type != null && row.job_status != null){
+		if(row.job_type == 'A'){
+			columnItem = '安装工单';
+		}else if(row.job_type == 'T'){
+			columnItem = '调试工单';
+		}else if(row.job_type == 'Q'){
+			columnItem = '其他工单';
+		}
+		
+		if(row.job_status == 'I'){
+			columnItem = columnItem + ' : 处理中';
+		}else if(row.job_status == 'F'){
+			columnItem = columnItem + ' : 完成';
+		}else if(row.job_status == 'Q'){
+			columnItem = columnItem + ' : 问题工单';
+		}
+	}else{
+		columnItem = '无';
+	}
+	return columnItem;
+}
+
+function publishJob(curJobs,projectId,boxId){
+	//当前有未处理的工单,则不让发布工单
+	if(curJobs == 1){
+		$.messager.alert('提示', '当前机箱有工单在处理, 需处理完再发布工单.');
+		return;
+	}
 	parent.loadUrl("<%=path%>/job/publishJob.jsp?projectId=" + projectId + "&boxId=" + boxId);
 }
 
@@ -115,7 +159,12 @@ function doEnableEdit(projectId,boxId){
 	});
 }
 
-function doAccept(projectId,boxId){
+function doAccept(curJobs,projectId,boxId){
+	if(curJobs == 1){
+		$.messager.alert('提示', '当前机箱有工单在处理, 需处理完再确认验收.');
+		return;
+	}
+	
 	$.messager.confirm('确认', '确认验收?', function(r){
 		if(r){
 			$.ajax( {

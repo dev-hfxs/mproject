@@ -128,4 +128,11 @@
 		</content>
 		<description></description>
 	</sql>
+	
+	<sql id="mproject-job-getFinishInstallJobs" name="查询完成的安装工单">
+		<content>
+		select id from t_job where machine_box_id = ':boxId' and status = 'F' and job_type = 'A' 
+		</content>
+		<description></description>
+	</sql>
 </sqls>

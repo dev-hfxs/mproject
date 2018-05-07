@@ -155,11 +155,76 @@ public class BoxServiceImpl implements IBoxService{
 		if (null == boxId || "".equals(boxId)) {
 			throw new BusinessException("提交机箱错误,缺少ID!");
 		}
-		
-		//检查机箱下是否维护了处理器		
+		//获取机箱
+		Map<String, Object> paramsMap = new HashMap<String, Object>();
+		paramsMap.put("boxId", boxId);
+		String selectBoxPreSql = ConfigSQLUtil.getCacheSql("mproject-box-getBoxById");
+		String selectBoxSql = ConfigSQLUtil.preProcessSQL(selectBoxPreSql, paramsMap);
+		Map<String, Object> boxMap = null; 
+		try {
+			List<Map<String, Object>> alBoxs = springJdbcDao.queryForList(selectBoxSql);
+			if (alBoxs != null && alBoxs.size() > 0) {
+				boxMap = alBoxs.get(0);
+			}else {
+				throw new BusinessException("提交机箱错误,ID为"+boxId+"的机箱不存在!");
+			}
+		} catch (DataAccessException ex) {
+			log.info("提交机箱错误：{}", ex.getMessage());
+			throw new BusinessException("提交机箱错误，操作数据库异常.");
+		} catch (Exception e) {
+			//e.printStackTrace();
+		}
+		if(boxMap == null) {
+			throw new BusinessException("提交机箱错误,ID为"+boxId+"的机箱不存在!");
+		}
+		String processorNum = boxMap.get("processor_num").toString();
+		String queryProcessorNum = "";
+		//获取机箱下的处理器
+		List<Map<String,Object>> alProcessors = null;
+		String selectProcessorPreSql = ConfigSQLUtil.getCacheSql("mproject-processor-getProcessorListByBoxId");
+		String selectProcessorSql = ConfigSQLUtil.preProcessSQL(selectProcessorPreSql, paramsMap);
+		try {
+			alProcessors = springJdbcDao.queryForList(selectProcessorSql);
+		} catch (DataAccessException ex) {
+			throw new BusinessException("提交机箱错误，获取机箱下的处理器数据库访问错误.");
+		} catch (Exception e) {
+			//e.printStackTrace();
+		}
+		if (alProcessors != null && alProcessors.size() > 0) {
+			queryProcessorNum = "" + alProcessors.size();
+		}else {
+			throw new BusinessException("提交机箱错误，机箱下未维护处理器.");
+		}
+		//检查机箱下是否维护了处理器
+		if(!processorNum.equals(queryProcessorNum)) {
+			throw new BusinessException("提交机箱错误，机箱中指定的处理器数与机箱下维护的处理器数量不一致,不能提交.");
+		}
 		//检查机箱下的处理器是否维护了探测器
+		String getDetectorsPreSql = ConfigSQLUtil.getCacheSql("mproject-detector-getListByProcessorId");
+		for(Map<String,Object> processor: alProcessors) {
+			String processorId = processor.get("id").toString();
+			String detectorNum = processor.get("detector_num").toString();
+			paramsMap.clear();
+			paramsMap.put("processorId", processorId);
+			String getDetectorsSql =  ConfigSQLUtil.preProcessSQL(getDetectorsPreSql, paramsMap);
+			List<Map<String,Object>> alDetectors = null;
+			try {
+				alDetectors = springJdbcDao.queryForList(getDetectorsSql);
+			} catch (DataAccessException ex) {
+				throw new BusinessException("提交机箱错误，获取机箱下处理器的探测器数据库访问错误.");
+			} catch (Exception e) {
+				//e.printStackTrace();
+			}
+			if(alDetectors == null || alDetectors.size() < 1) {
+				throw new BusinessException("提交机箱错误，机箱下处理器["+ processor.get("nfc_number").toString() +"]的探测器未维护.");
+			}
+			String queryDetectorNum = "" + alDetectors.size();
+			if(!detectorNum.equals(queryDetectorNum)) {
+				throw new BusinessException("提交机箱错误，机箱下处理器["+ processor.get("nfc_number").toString() +"]维护的探测器与处理器指定的探测器数不一致,不能提交.");
+			}
+		}
+		
 		String preSql = ConfigSQLUtil.getCacheSql("mproject-box-getBoxBelowInfo");
-		Map<String,Object> paramsMap = new HashMap<String,Object>();
 		paramsMap.clear();
 		paramsMap.put("boxId", boxId);
 		
@@ -177,7 +242,7 @@ public class BoxServiceImpl implements IBoxService{
 							}
 						}catch(NumberFormatException ne) {
 							throw new BusinessException("提交机箱错误,机箱下处理器未维护探测器.");
-						}						
+						}
 					}
 				}
 			}else {
@@ -282,7 +347,19 @@ public class BoxServiceImpl implements IBoxService{
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		//检查机箱下的IP是否为空或为0.0.0.0
+		//检查机箱下是否有完成的安装工单
+		String getFinishJobPreSql =  ConfigSQLUtil.getCacheSql("mproject-job-getFinishInstallJobs");
+		String getFinishJobSql = ConfigSQLUtil.preProcessSQL(getFinishJobPreSql, paramsMap);
+		List<Map<String, Object>> alJobs;
+		try {
+			alJobs = springJdbcDao.queryForList(getFinishJobSql);
+		}catch( DataAccessException ex) {
+			throw new BusinessException("确认验收机箱错误,查找机箱下的处理工单异常.");
+		}
+		if(alJobs == null || alJobs.size()< 1) {
+			throw new BusinessException("确认验收机箱错误,该机箱下还没有处理完成的安装工单,不能验收.");
+		}
+		//检查机箱下的处理器IP是否为空或为0.0.0.0
 		String getProcessorPreSql = ConfigSQLUtil.getCacheSql("mproject-box-getBoxProcessor4IpIsEmpty");
 		paramsMap.clear();
 		paramsMap.put("boxId", boxId);
@@ -294,8 +371,23 @@ public class BoxServiceImpl implements IBoxService{
 			throw new BusinessException("确认验收机箱错误,查找机箱下的处理器数据库访问异常.");
 		}
 		if(alProcessor != null && alProcessor.size() > 0) {
-			throw new BusinessException("确认验收机箱错误,机箱下存在IP为空的处理器.");
+			throw new BusinessException("机箱下存在IP为空的处理器,不能通过确认验收.");
 		}
+		//检查机箱下的处理器是否上传配置文件
+		String getProcessorByConfigPreSql = ConfigSQLUtil.getCacheSql("mproject-box-getBoxProcessorConfigIsEmpty");
+		paramsMap.clear();
+		paramsMap.put("boxId", boxId);
+		String getProcessorByConfigSql = ConfigSQLUtil.preProcessSQL(getProcessorByConfigPreSql, paramsMap);
+		List<Map<String, Object>> alDatas;
+		try {
+			alDatas = springJdbcDao.queryForList(getProcessorByConfigSql);
+		}catch( DataAccessException ex) {
+			throw new BusinessException("确认验收机箱错误,查找机箱下的处理器数据库访问异常.");
+		}
+		if(alDatas != null && alDatas.size() > 0) {
+			throw new BusinessException("机箱下的处理器配置文件和探测器信息未上传.");
+		}
+		
 		String updateBoxPreSql = ConfigSQLUtil.getCacheSql("mproject-box-updateBox4Accept");
 		paramsMap.clear();
 		paramsMap.put("boxId", boxId);

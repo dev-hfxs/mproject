@@ -170,9 +170,10 @@ public class DetectorMgrControl {
 		}
 		String[] arrImportOption = request.getParameterValues("importOption");
 		boolean enableReplace = false;
+		boolean ignoreExistsData = true;
+		
 		if(arrImportOption != null) {
 			for(String option : arrImportOption) {
-				System.out.println("option:" + option);
 				if("enableReplace".equals(option)) {
 					enableReplace = true;
 				}
@@ -228,7 +229,7 @@ public class DetectorMgrControl {
 			return result;
 		}
 		try {
-			detectorService.update4ImportDetector(UserTool.getLoginUser(request).get("user_name"), processorId, enableReplace, alDatas);
+			detectorService.update4ImportDetector(UserTool.getLoginUser(request).get("user_name"), processorId,ignoreExistsData, enableReplace, alDatas);
 		}catch(BusinessException be) {
 			result.put("msg", be.getMessage());
 			return result;

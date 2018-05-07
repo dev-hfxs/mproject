@@ -9,10 +9,11 @@
 	<data name="detector" sheetNum="0" heardRowNum="0">
 		<column name="detector_seq"    dataType="String"	 isNull="N" cellNum="1">探测器编号</column>
 		<column name="nfc_number" 	  dataType="String" 	 isNull="Y" cellNum="2">NFC序列号</column>
-		<column name="longitude"	  dataType="double(10,7)" isNull="Y" cellNum="3">经度</column>
-		<column name="latitude"   	  dataType="double(10,7)" isNull="Y" cellNum="4">纬度</column>
-		<column name="start_point"    dataType="String"       isNull="Y" cellNum="5">起点</column>
-		<column name="end_point"      dataType="String"       isNull="Y" cellNum="6">终点</column>
+		<column name="detector_id" 	  dataType="String" 	 isNull="Y" cellNum="3">探测器ID</column>
+		<column name="longitude"	  dataType="double(10,7)" isNull="Y" cellNum="4">经度</column>
+		<column name="latitude"   	  dataType="double(10,7)" isNull="Y" cellNum="5">纬度</column>
+		<column name="start_point"    dataType="String"       isNull="Y" cellNum="6">起点</column>
+		<column name="end_point"      dataType="String"       isNull="Y" cellNum="7">终点</column>
 	</data>
 	<data name="nfc-code-box" sheetNum="0" heardRowNum="0">
 		<column name="nfc_code"       dataType="String"		 isNull="N" cellNum="1">NFC序列号</column>

@@ -19,7 +19,7 @@
 		<description></description>
 	</sql>
 	
-	<sql id="mproject-processor-getProcessorById" name="通过机箱ID获取处理器">
+	<sql id="mproject-processor-getProcessorById" name="通过ID获取处理器">
 		<content>
 		SELECT p.id, p.machine_box_id, p.nfc_number, p.moxa_number, p.ip, p.detector_num, p.create_date, m.box_number
 		FROM t_processor p 

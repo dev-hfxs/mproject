@@ -51,6 +51,7 @@
 				<tr>
 					<th data-options="field:'nfc_number',width:200,sortable:true">探测器NFC序列号</th>
 					<th data-options="field:'detector_seq',width:200,sortable:true">探测器编号</th>
+					<th data-options="field:'detector_id',width:200,sortable:true">探测器ID</th>
 					<th data-options="field:'longitude',width:100,sortable:true">经度</th>
 					<th data-options="field:'latitude',width:200">纬度</th>
 					<th data-options="field:'start_point',width:100,formatter:showStatus">起点</th>
@@ -115,6 +116,11 @@ function showDetectorButtons(val,row){
 }
 
 function addProcessor(){
+	var datas = $('#dg').datagrid('getData');
+	if(datas != null && datas.rows!=null && datas.rows.length > 2){
+		$.messager.alert('提示','单个机箱下面不能维护2个以上的处理器!');
+		return;
+	}
 	var content = '<iframe src="<%=path%>/processor/processorAdd.jsp?boxId=<%=boxId%>&boxNumber=<%=boxNumber%>" width="100%" height="80%" frameborder="0" scrolling="no"></iframe>';
 	var boarddiv = '<div id="msgwindow" title="添加处理器" ></div>'// style="overflow:hidden;"可以去掉滚动条
 	$(document.body).append(boarddiv);
@@ -135,6 +141,11 @@ function addProcessor(){
 function addDetector(){
 	if(curProcessorId == null){
 		$.messager.alert('提示','没有选择处理器,请先选择!');
+		return;
+	}
+	var datas = $('#dg2').datagrid('getData');
+	if(datas != null && datas.rows!=null && datas.rows.length > 2){
+		$.messager.alert('提示','单个处理器下面不能维护128个以上的探测器!');
 		return;
 	}
 	var content = '<iframe src="<%=path%>/detector/detectorAdd.jsp?processorId='+curProcessorId+'" width="100%" height="90%" frameborder="0" scrolling="no"></iframe>';

@@ -130,99 +130,94 @@ public class DetectorServiceImpl implements IDetectorService{
 	}
 
 	@Override
-	public void update4ImportDetector(String curUser,String processorId, boolean enableReplace, List<Map<String, String>> datas)
+	public void update4ImportDetector(String curUser,String processorId,boolean ignoreExistsData, boolean enableReplace, List<Map<String, String>> datas)
 			throws BusinessException {
 		if(datas!= null && datas.size() >0) {
-			if(enableReplace) {
-				StringBuffer checkSql = new StringBuffer();
-				checkSql.append("select detector_id, '1' from t_detector where detector_id in(  ");
-				//根据探测器ID覆盖
-				for(Map<String, String> data : datas) {
-					if(data.get("detector_id") != null) {
-						checkSql.append("'").append(data.get("detector_id")).append("',");
-					}					 
+			if(datas.size() > 128) {
+				throw new BusinessException("导入探测器错误, 文件中的数据行超出128，单个处理器下的探测器不能超过128个.");
+			}
+			
+			//检查文件中的探测器nfc序列号、编号是否存在
+			StringBuffer checkSql = new StringBuffer();
+			StringBuffer checkUseSql = new StringBuffer();
+			StringBuffer importDataSql = new StringBuffer();
+			for(Map<String, String> data : datas) {
+				checkSql.setLength(0);
+				String longitude = data.get("longitude");
+				if(longitude == null || longitude.indexOf(".") < 1 || longitude.length() < 8) {
+					throw new BusinessException("导入探测器错误, 文件中的经度" + longitude + "精度不正确.");
 				}
-				checkSql.setLength(checkSql.length() - 1);
-				checkSql.append(") ");
-				List<Map<String,Object>> existsData;
-				try {
-					existsData = springJdbcDao.queryForList(checkSql.toString());
+				String latitude = data.get("latitude");
+				if(latitude == null || latitude.indexOf(".") < 1 || latitude.length() < 8) {
+					throw new BusinessException("导入探测器错误, 文件中的纬度" + longitude + "精度不正确.");
+				}
+				
+				if(data.get("nfc_number") != null) {
+					checkSql.append("select nfc_code, number from t_nfc_code_detector where nfc_code ='").append(data.get("nfc_number")).append("'");
+				}else {
+					throw new BusinessException("导入探测器错误, 文件中的探测器NFC序列号不完整.");
+				}				
+				if(data.get("detector_seq") != null) {
+					//checkSql.append(" and number ='").append(data.get("detector_seq")).append("'");
+				}else {
+					throw new BusinessException("导入探测器错误, 文件中的探测器编号不完整.");
+				}
+				
+				List<Map<String,Object>> alSysNfcCode;
+				try {					
+					alSysNfcCode = springJdbcDao.queryForList(checkSql.toString());
 				}catch(DataAccessException dae ) {
-					throw new BusinessException("导入探测器错误,访问数据库检查数据异常.");
+					throw new BusinessException("导入探测器错误, 检查序列号操作数据库异常.");
 				}
-				Map<String,String> existsDetectorIdMap = new HashMap<String,String>();
-				if(existsData!=null) {
-					for(Map<String,Object> record:existsData) {
-						String detectorId = record.get("detector_id")!= null ? record.get("detector_id").toString() : "";
-						existsDetectorIdMap.put(detectorId, "1");
+				if(alSysNfcCode == null || alSysNfcCode.size() < 1) {
+					throw new BusinessException("导入探测器错误, 序列号["+data.get("nfc_number")+"]在探测器NFC编码库中不存在.");
+				}else {
+					if(alSysNfcCode.get(0).get("number")!=null) {
+						String recordNumber = alSysNfcCode.get(0).get("number").toString();
+						if(!recordNumber.equals(data.get("detector_seq"))) {
+							throw new BusinessException("导入探测器错误, 序列号["+data.get("nfc_number")+"]在探测器NFC编码库中对应的编号与文件中的编号["+data.get("detector_seq")+"]不一致.");
+						}
 					}
 				}
 				
-				//生成插入数据的sql
-				StringBuffer importDataSql = new StringBuffer();
-				for(Map<String, String> data : datas) {
-					String detectorSeq = data.get("detector_seq")!= null ? data.get("detector_seq").toString() : "";
-					String nfcNumber = data.get("nfc_number")!= null ? data.get("nfc_number").toString() : "";
-					String longitude = data.get("longitude")!= null ? data.get("longitude").toString() : "null";
-					String latitude = data.get("latitude")!= null ? data.get("latitude").toString() : "null";
-					String start_point = data.get("start_point")!= null ? data.get("start_point").toString() : "null";
-					String end_point = data.get("end_point")!= null ? data.get("end_point").toString() : "null";
-					String pos_desc = data.get("pos_desc")!= null ? data.get("pos_desc").toString() : "";
-					
-					if(existsDetectorIdMap.get(detectorSeq) != null) {
-						//存在						
-						importDataSql.append(" update t_detector set ");
-						importDataSql.append(" nfc_number='").append(nfcNumber).append("'");
-						importDataSql.append(", longitude=").append(longitude).append("");
-						importDataSql.append(", latitude=").append(latitude).append("");
-						importDataSql.append(", start_point=").append(start_point).append("");
-						importDataSql.append(", end_point=").append(end_point).append("");
-						importDataSql.append(" where processor_id='").append(processorId).append("'");
-						importDataSql.append(" and detector_seq = '").append(detectorSeq).append("'").append(";\n");						
-					}else {
-						//不存在
-						importDataSql.append(" insert into t_detector(id,detector_seq,processor_id,nfc_number,longitude,latitude,start_point,end_point) values (");
-						importDataSql.append(" '").append(UUIDGenerator.getUUID()).append("'");
-						importDataSql.append(",'").append(detectorSeq).append("'");
-						importDataSql.append(",'").append(processorId).append("'");
-						importDataSql.append(",'").append(nfcNumber).append("'");
-						importDataSql.append(", ").append(longitude).append("");
-						importDataSql.append(", ").append(latitude).append("");
-						importDataSql.append(", ").append(start_point).append("");
-						importDataSql.append(", ").append(end_point).append("");
-						importDataSql.append(" ) ;\n");
-					}					
+				//检查nfc号是否已录入
+				checkUseSql.setLength(0);
+				checkUseSql.append("select nfc_number from t_detector where nfc_number='").append(data.get("nfc_number")).append("'");
+				List usedNfcCode = springJdbcDao.queryForList(checkUseSql.toString());
+				if(usedNfcCode!=null && usedNfcCode.size() > 0) {
+					throw new BusinessException("导入探测器错误, 探测器NFC序列号["+data.get("nfc_number")+"]已录入.");
 				}
+				
+				String detectorSeq = data.get("detector_seq")!= null ? data.get("detector_seq").toString() : "";
+				String start_point = data.get("start_point")!= null ? data.get("start_point").toString() : "N";
+				if("是".equals(start_point)) {
+					start_point = "Y";
+				}
+				if("否".equals(start_point)) {
+					start_point = "N";
+				}
+				
+				String end_point = data.get("end_point")!= null ? data.get("end_point").toString() : "N";
+				if("是".equals(end_point)) {
+					end_point = "Y";
+				}
+				if("否".equals(end_point)) {
+					end_point = "N";
+				}
+				importDataSql.append(" insert into t_detector(id,detector_id, detector_seq,processor_id,nfc_number,longitude,latitude,start_point,end_point) values (");
+				importDataSql.append(" '").append(UUIDGenerator.getUUID()).append("'");
+				importDataSql.append(",'").append(data.get("detector_id")).append("'");
+				importDataSql.append(",'").append(detectorSeq).append("'");
+				importDataSql.append(",'").append(processorId).append("'");
+				importDataSql.append(",'").append(data.get("nfc_number")).append("'");
+				importDataSql.append(", ").append(longitude).append("");
+				importDataSql.append(", ").append(latitude).append("");
+				importDataSql.append(", '").append(start_point).append("'");
+				importDataSql.append(", '").append(end_point).append("'");
+				importDataSql.append(" ) ;\n");
+			}
+			if(importDataSql.length()> 0) {
 				try {
-					springJdbcDao.batchUpdate(importDataSql.toString().split("\n"));
-				}catch(DataAccessException dae ) {
-					throw new BusinessException("导入探测器错误,数据入库异常.");
-				}
-			}else {
-				//生成插入数据的sql
-				StringBuffer importDataSql = new StringBuffer();
-				for(Map<String, String> data : datas) {
-					String detectorSeq = data.get("detector_seq")!= null ? data.get("detector_seq").toString() : "";
-					String nfcNumber = data.get("nfc_number")!= null ? data.get("nfc_number").toString() : "";
-					String longitude = data.get("longitude")!= null ? data.get("longitude").toString() : "null";
-					String latitude = data.get("latitude")!= null ? data.get("latitude").toString() : "null";
-					String start_point = data.get("start_point")!= null ? data.get("start_point").toString() : "null";
-					String end_point = data.get("end_point")!= null ? data.get("end_point").toString() : "null";
-					String pos_desc = data.get("pos_desc")!= null ? data.get("pos_desc").toString() : "";
-					
-					importDataSql.append(" insert into t_detector(id,detector_seq,processor_id,nfc_number,longitude,latitude,start_point,end_point) values (");
-					importDataSql.append(" '").append(UUIDGenerator.getUUID()).append("'");
-					importDataSql.append(",'").append(detectorSeq).append("'");
-					importDataSql.append(",'").append(processorId).append("'");
-					importDataSql.append(",'").append(nfcNumber).append("'");
-					importDataSql.append(", ").append(longitude).append("");
-					importDataSql.append(", ").append(latitude).append("");
-					importDataSql.append(", '").append(start_point).append("'");
-					importDataSql.append(", '").append(end_point).append("'");
-					importDataSql.append(" ) ;\n");
-				}
-				try {
-//					log.info(importDataSql.toString());
 					springJdbcDao.batchUpdate(importDataSql.toString().split("\n"));
 				}catch(DataAccessException dae ) {
 					throw new BusinessException("导入探测器错误,数据入库异常.");

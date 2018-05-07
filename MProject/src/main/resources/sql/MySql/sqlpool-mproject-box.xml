@@ -128,4 +128,11 @@
 		<description></description>
 	</sql>
 	
+	<sql id="mproject-box-getBoxProcessorConfigIsEmpty" name="获取机箱下的处理器配置文件是否维护">
+		<content>
+		SELECT id, nfc_number, moxa_number, processor_id, ip FROM t_processor 
+		WHERE machine_box_id = ':boxId' AND (config_file IS NULL  || detector_file IS NULL || config_file ='' || detector_file = '')   
+		</content>
+		<description></description>
+	</sql>	
 </sqls>

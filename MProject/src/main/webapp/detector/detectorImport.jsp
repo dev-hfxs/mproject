@@ -22,7 +22,9 @@
 	<form id="ff" method="post" >
 		<div style="margin-bottom: 20px;width: 100%">
 			<input type="hidden" name="processorId" value="<%=processorId %>">
+			<!-- 
 			<input type="checkbox"  name="importOption" value="enableReplace" ><span>导入时是否覆盖(根据探测器ID)</span>
+			-->
 		</div>
 		<div style="margin-bottom: 20px">
 			<input type="text" name="dataFile" style="width:100%">

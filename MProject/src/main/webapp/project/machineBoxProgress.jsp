@@ -26,6 +26,7 @@
 		<thead>
 			<tr>
 				<th data-options="field:'box_number',width:100,sortable:true">机箱编号</th>
+				<th data-options="field:'nfc_number',width:100,sortable:true">NFC序列号</th>
 				<th data-options="field:'longitude',width:100,sortable:true">经度</th>
 				<th data-options="field:'latitude',width:100,sortable:true">纬度</th>
 				<th data-options="field:'processor_num',width:150">包含处理器数量</th>

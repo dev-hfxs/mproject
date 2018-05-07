@@ -26,7 +26,7 @@
 	<div style="text-align: left; padding: 5px 0">
 		<div style="margin-bottom:20px"> 
 			<input type="radio" id="jobTypeA" name="jobType" value="A" checked="true"><span id="jobTypeSpanA">安装验收工单&nbsp;&nbsp;&nbsp;&nbsp;</span>
-			<input type="radio" id="jobTypeT" name="jobType" value="T"><span id="jobTypeSpanT">调试工单&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+			<input type="radio" id="jobTypeT" name="jobType" value="T"><span id="jobTypeSpanT" title="安装工单完成后可发布调试工单">调试工单&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
 			<input type="radio" id="jobTypeQ" name="jobType" value="Q"><span id="jobTypeSpanQ">其他工单</span>
 		</div>
 		<div style="margin-bottom:20px">
@@ -47,6 +47,8 @@
 </div>
 	
 <script>
+var debugJobEnabled = true;
+
 	function submitForm() {
 		var jobType = $("input[name='jobType']:checked").val();
 		if(jobType == null || jobType ==''){
@@ -86,7 +88,6 @@
 	
 	
 	$(function() {
-		
 		$("#jobTypeSpanQ").click(function(){
 			$("#jobTypeQ").trigger("click");
 		});
@@ -109,12 +110,43 @@
 		$("[type='radio']").click(function(){
 			var v = $(this).val();
 			//var s = $(this).next('span').text();
-			if( v == 'A' || v == 'T'){
+			if( v == 'A' ){
 				$("#workContent").next("span").children("textarea").attr("disabled","disabled");
 			}
+			if( v == 'T'){
+				if(debugJobEnabled){
+					$("#workContent").next("span").children("textarea").attr("disabled","disabled");
+				}				
+			}
+			
+			
 			if(v == 'Q'){
 				$("#workContent").next("span").children("textarea").removeAttr("disabled");
 			}
+		});
+		
+		//获取当前机箱下是否有处理完成的安装工单
+		$.ajax( {
+		    url:'<%=path%>/comm/queryForList.do',
+		    data:{
+		    	'sqlId':'mproject-job-getFinishInstallJobs',
+		    	'boxId':'<%=boxId%>'
+		    },
+		    type:'post',
+		    async:false,
+		    dataType:'json',
+		    success:function(data) {
+		    	if(data!=null && data.length > 0){
+		    		//
+		    	}else{
+		    		//禁用调试工单发布
+		    		debugJobEnabled = false;
+		    		$("#jobTypeT").attr("disabled","disabled");
+		    	}
+		    },
+		    error : function(data) {
+		    	//$.messager.alert('异常',data.responseText);
+	        }
 		});
 		
 		$("#processPerson").next("span").click(function(){
@@ -125,7 +157,7 @@
 			}
                
 			showMessageDialog("<%=path%>/job/engineerSelect.jsp?jobType="+jobType+"&boxId=<%=boxId%>" ,"选择工程师",640,480,true);
-           });
+        });
 	});
 	
 	

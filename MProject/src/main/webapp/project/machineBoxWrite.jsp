@@ -26,7 +26,7 @@
 		<thead>
 			<tr>
 				<th data-options="field:'box_number',width:150,sortable:true">机箱编号</th>
-				<th data-options="field:'box_number',width:150,sortable:true">NFC序列号</th>
+				<th data-options="field:'nfc_number',width:150,sortable:true">NFC序列号</th>
 				<th data-options="field:'longitude',width:200,sortable:true">经度</th>
 				<th data-options="field:'latitude',width:100,sortable:true">纬度</th>
 				<th data-options="field:'processor_num',width:200">包含处理器数量</th>
@@ -154,8 +154,10 @@ function submitBox(boxId){
 			    dataType:'json',
 			    success:function(data) {
 			    	if(data.returnCode == "success"){
-			    		$('#dg').datagrid('loadData',{total:0,rows:[]});
-			    		$('#dg').datagrid('reload');
+			    		$.messager.alert('提示','提交成功!','info',function(){
+			    			$('#dg').datagrid('loadData',{total:0,rows:[]});
+				    		$('#dg').datagrid('reload');
+			    		});
 			    	}else{
 			    		$.messager.alert('提示',data.msg);
 			    	}

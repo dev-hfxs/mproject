@@ -199,13 +199,13 @@
 		        validator: function(value, param){
 		         return  /^-?(((\d|[1-9]\d|1[1-7]\d|0)\.\d{7})|0|180)$/.test(value);
 		        },
-		        message: '经度整数部分为0-180,小数位保留7位!'
+		        message: '经度整数部分为0-180,小数位保留6位!'
 		    },
 		    checkLat: { //验证纬度
 		        validator: function(value, param){
-		         return  /^-?([0-8]?\d{1}\.\d{7}|0|([0-8]?\d{1})\.\d{7}|90)$/.test(value);
+		         return  /^-?([0-8]?\d{1}\.\d{6}|0|([0-8]?\d{1})\.\d{6}|90)$/.test(value);
 		        },
-		        message: '纬度整数部分为0-90,小数位保留7位!'
+		        message: '纬度整数部分为0-90,小数位保留6位!'
 		    },
 		    checkBoxCode: { //验证机箱编号
 		        validator: function(value, param){

@@ -28,6 +28,6 @@ public interface IDetectorService {
 	
 	public void deleteDetectorByProcessorId(String curUser, String processorId) throws BusinessException;
 	
-	public void update4ImportDetector(String curUser,String processorId, boolean enableReplace, List<Map<String,String>> datas) throws BusinessException;
+	public void update4ImportDetector(String curUser,String processorId, boolean ignoreExistsData, boolean enableReplace, List<Map<String,String>> datas) throws BusinessException;
 	
 }

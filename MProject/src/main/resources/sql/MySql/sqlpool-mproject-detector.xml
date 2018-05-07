@@ -19,15 +19,15 @@
 	
 	<sql id="mproject-detector-add" name="添加探测器">
 		<content>
-		INSERT INTO  t_detector (id, detector_seq, processor_id, nfc_number, longitude, latitude, start_point, end_point) 
-		VALUES (':id', ':detectorSeq', ':processorId', ':nfcNumber', :longitude, :latitude, ':startPoint', ':endPoint' ) 
+		INSERT INTO  t_detector (id, detector_id, detector_seq, processor_id, nfc_number, longitude, latitude, start_point, end_point) 
+		VALUES (':id', ':detectorId', ':detectorSeq', ':processorId', ':nfcNumber', :longitude, :latitude, ':startPoint', ':endPoint' ) 
 		</content>
 		<description></description>
 	</sql>
 	
 	<sql id="mproject-detector-updateById" name="修改探测器">
 		<content>
-		UPDATE t_detector SET detector_seq=':detectorSeq', nfc_number=':nfcNumber', longitude=:longitude, latitude=:latitude, start_point=':startPoint', end_point=':endPoint' 
+		UPDATE t_detector SET detector_id=':detectorId', detector_seq=':detectorSeq', nfc_number=':nfcNumber', longitude=:longitude, latitude=:latitude, start_point=':startPoint', end_point=':endPoint' 
 		WHERE id = ':id'  
 		</content>
 		<description></description>
