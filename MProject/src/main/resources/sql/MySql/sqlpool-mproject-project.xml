@@ -142,7 +142,7 @@
    		j.status as job_status, j.job_type 
 		FROM t_machine_box b 
 		LEFT JOIN t_user u ON b.build_manager = u.id 
-		LEFT JOIN t_job j  on b.id = j.machine_box_id and j.status = 'I' and j.create_date in ( select max(create_date) from t_job t3 where t3.machine_box_id = b.id) 
+		LEFT JOIN t_job j  on b.id = j.machine_box_id and j.create_date in ( select max(create_date) from t_job t3 where t3.machine_box_id = b.id) 
 		WHERE b.project_id = ':projectId' [ AND instr(b.box_number,':boxNumber') > 0 ] 
 		</content>
 		<description>
@@ -156,4 +156,44 @@
 		<description></description>
 	</sql>
 	
+	<sql id="mproject-project-getBoxList4ViewByProjectId" name="管理人员查看项目下的机箱">
+		<content>
+		SELECT b.id, b.box_number, b.nfc_number, b.create_date, b.longitude, b.latitude, b.pos_desc, b.install_space,o.org_name, 
+		(SELECT COUNT(*) FROM t_machine_box_submit t1 where machine_box_id = b.id ) AS submit_num,
+		(SELECT max(submit_date) FROM t_machine_box_submit t0 where machine_box_id = b.id ) AS new_submit_date,
+        (SELECT full_name FROM t_user t0 where t0.id = b.build_manager) AS build_manager, 
+        (SELECT full_name FROM t_user t2 where t2.id = b.install_engineer) AS install_engineer, 
+        (SELECT full_name FROM t_user t4 where t4.id = b.debug_engineer) AS debug_engineer, 
+        b.confirm_install_date, b.confirm_debug_date, b.pm_confirm_date 
+		FROM t_machine_box b 
+		LEFT JOIN t_org o ON b.org_id = o.id 
+		WHERE b.project_id = ':projectId' [ AND instr(b.box_number,':boxNumber') > 0 ] 
+		</content>
+		<description>
+		</description>
+	</sql>
+	
+	<sql id="mproject-project-getProcessorList4ViewByBoxId" name="根据机箱ID查看机箱下的处理器">
+		<content>
+		SELECT p.id, p.machine_box_id, p.nfc_number, p.moxa_number, p.ip, p.detector_num, p.create_date, m.nfc_number as box_nfc_number 
+		FROM t_processor p
+		LEFT JOIN t_machine_box m on m.id = p.machine_box_id 
+		WHERE p.machine_box_id = ':boxId' [ AND instr(p.nfc_number,':nfcNumber') > 0 ] 
+		ORDER BY create_date DESC 
+		</content>
+		<description>
+		</description>
+	</sql>
+	
+	<sql id="mproject-project-getDetectorList4ViewByProcessorId" name="根据处理器ID查看下属的探测器">
+		<content>
+		SELECT t.id, t.detector_id, t.detector_seq, t.processor_id, t.nfc_number, t.longitude, t.latitude, t.start_point, t.end_point,t.pos_desc, 
+		p.nfc_number as processor_nfc_number  
+		FROM t_detector t
+		LEFT JOIN t_processor p on t.processor_id = p.id
+		WHERE t.processor_id = ':processorId' [ AND instr(t.nfc_number,':nfcNumber') > 0 ] order by detector_seq 
+		</content>
+		<description>
+		</description>
+	</sql>
 </sqls>

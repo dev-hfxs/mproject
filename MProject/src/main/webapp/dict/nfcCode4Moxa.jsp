@@ -28,6 +28,7 @@
 			<tr>
 				<th data-options="field:'nfc_code',width:200,sortable:true">NFC序列号</th>
 				<th data-options="field:'number',width:200,sortable:true">编号</th>
+				<th data-options="field:'box_nfc_code',width:200,sortable:true">机箱NFC序列号</th>
 				<th data-options="field:'create_date',width:150,sortable:true">创建日期</th>
 			</tr>
 		</thead>

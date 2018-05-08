@@ -111,7 +111,7 @@ function showStatusName(val,row){
 
 function showButtons(val,row){
 	var columnItem = '<span><a href="javascript:void(0)" class="easyui-linkbutton" onclick="javascript:doUpdate(\''+val+'\')" style="width:80px;">修 改</a></span>&nbsp;&nbsp;'
-                   + '<span><a href="javascript:void(0)" class="easyui-linkbutton" onclick="doView(\''+val+'\')" style="width:80px;">查 看</a></span>&nbsp;&nbsp;';
+                   + '<span><a href="javascript:void(0)" class="easyui-linkbutton" onclick="doView(\''+val+'\')" style="width:80px;">查看内容</a></span>&nbsp;&nbsp;';
 	return columnItem;
 }
 
@@ -124,7 +124,7 @@ function doUpdate(val){
 	parent.loadUrl(curUrl);
 }
 
-function doView(val){
+function doViewProject(val){
 	var content = '<iframe src="<%=path%>/project/projectView.jsp?id=' + val + '" width="100%" height="80%" frameborder="0" scrolling="no"></iframe>';
 	var boarddiv = '<div id="msgwindow" title="查看项目" ></div>'// style="overflow:hidden;"可以去掉滚动条
 	$(document.body).append(boarddiv);
@@ -140,9 +140,26 @@ function doView(val){
 	});
 	win.dialog('open');
 	win.window('center');
-	
 }
 
+//查看项目内容
+function doView(val){
+	var content = '<iframe src="<%=path%>/project/view/viewContent.jsp?projectId=' + val + '" width="100%" height="100%" frameborder="0" scrolling="no"></iframe>';
+	var boarddiv = '<div id="msgwindow" title="查看项目内容" style="overflow:hidden;"></div>'// style="overflow:hidden;"可以去掉滚动条
+	$(document.body).append(boarddiv);
+	var win = $('#msgwindow').dialog({
+		content : content,
+		width : '960',
+		height : '560',
+		modal : true,
+		title : '查看项目内容',
+		onClose : function() {
+			$(this).dialog('destroy');// 后面可以关闭后的事件
+		}
+	});
+	win.dialog('open');
+	win.window('center');
+}
 function doSearch(){
 	var charKey = $("#inpKey" ).val();
 	var queryParams = $('#dg').datagrid('options').queryParams;

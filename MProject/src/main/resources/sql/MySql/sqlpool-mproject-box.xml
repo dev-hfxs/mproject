@@ -134,5 +134,18 @@
 		WHERE machine_box_id = ':boxId' AND (config_file IS NULL  || detector_file IS NULL || config_file ='' || detector_file = '')   
 		</content>
 		<description></description>
+	</sql>
+	
+	<sql id="mproject-box-getUserAllowBoxNumByUserId" name="获取用户应建机箱数量">
+		<content>
+		SELECT id, allow_box_num FROM t_project_personnel WHERE project_id = ':projectId' and user_id = ':userId' 
+		</content>
+		<description></description>
+	</sql>
+	<sql id="mproject-box-getUserFactBoxNumByUserId" name="获取用户实际建的机箱数量">
+		<content>
+		SELECT id FROM t_machine_box WHERE project_id = ':projectId' and build_manager = ':userId' 
+		</content>
+		<description></description>
 	</sql>	
 </sqls>

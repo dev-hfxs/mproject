@@ -22,10 +22,12 @@
 	<data name="nfc-code-processor" sheetNum="0" heardRowNum="0">
 		<column name="nfc_code"       dataType="String"		 isNull="N" cellNum="1">NFC序列号</column>
 		<column name="number" 	      dataType="String" 	 isNull="Y" cellNum="2">编号</column>
+		<column name="box_nfc_code"   dataType="String" 	 isNull="Y" cellNum="3">对应机箱序列号</column>
 	</data>
 	<data name="nfc-code-moxa" sheetNum="0" heardRowNum="0">
 		<column name="nfc_code"       dataType="String"		 isNull="N" cellNum="1">NFC序列号</column>
 		<column name="number" 	      dataType="String" 	 isNull="Y" cellNum="2">编号</column>
+		<column name="box_nfc_code"   dataType="String" 	 isNull="Y" cellNum="3">对应机箱序列号</column>
 	</data>
 	<data name="nfc-code-detector" sheetNum="0" heardRowNum="0">
 		<column name="nfc_code"       dataType="String"		 isNull="N" cellNum="1">NFC序列号</column>

@@ -54,30 +54,57 @@ public class DictServiceImpl implements IDictService {
 		
 		
 		String curDate = DateUtils.getNow(DateUtils.FORMAT_LONG);
-		if(datas!= null && datas.size() >0) {
-			for(Map<String, String> data : datas) {
-				if(data.get("nfc_code") == null || "".equals(data.get("nfc_code"))) {
-					continue;
-				}
-				String nfcCode = data.get("nfc_code").toString();
-				String number = data.get("number").toString();
-				sbInsert.setLength(0);
-				sbInsert.append(" insert into ").append(tableName).append(" (nfc_code,number,create_date) values(");
-				sbInsert.append("'").append(nfcCode).append("','").append(number).append("','").append(curDate).append("')");
-				try {
-					springJdbcDao.update(sbInsert.toString());
-				}catch(DataAccessException dae ) {
-					//
-					sbUpdate.setLength(0);
-					sbUpdate.append(" update ").append(tableName).append(" set number =");
-					sbUpdate.append("'").append(number).append("' where nfc_code='").append(nfcCode).append("'");
+		if(datas!= null && datas.size() >0) {			
+			if("processor".equals(dataName) || "moxa".equals(dataName)) {
+				for(Map<String, String> data : datas) {
+					if(data.get("nfc_code") == null || "".equals(data.get("nfc_code"))) {
+						continue;
+					}
+					String nfcCode = data.get("nfc_code").toString();
+					String number = data.get("number") == null ? "" : data.get("number").toString();
+					String box_nfc_code = data.get("box_nfc_code")==null ? "" : data.get("box_nfc_code").toString();
+					sbInsert.setLength(0);
+					sbInsert.append(" insert into ").append(tableName).append(" (nfc_code,number,box_nfc_code, create_date) values(");
+					sbInsert.append("'").append(nfcCode).append("','").append(number).append("','").append(box_nfc_code).append("','").append(curDate).append("')");
 					try {
 						springJdbcDao.update(sbInsert.toString());
-					}catch(DataAccessException dae2 ) {
-						//忽略该数据
+					}catch(DataAccessException dae ) {
+						//
+						sbUpdate.setLength(0);
+						sbUpdate.append(" update ").append(tableName).append(" set number =");
+						sbUpdate.append("'").append(number).append("', box_nfc_code='").append(box_nfc_code).append("' where nfc_code='").append(nfcCode).append("'");
+						try {
+							springJdbcDao.update(sbInsert.toString());
+						}catch(DataAccessException dae2 ) {
+							//忽略该数据
+						}
 					}
 				}
-			}
+			}else {
+				for(Map<String, String> data : datas) {
+					if(data.get("nfc_code") == null || "".equals(data.get("nfc_code"))) {
+						continue;
+					}
+					String nfcCode = data.get("nfc_code").toString();
+					String number = data.get("number").toString();
+					sbInsert.setLength(0);
+					sbInsert.append(" insert into ").append(tableName).append(" (nfc_code,number,create_date) values(");
+					sbInsert.append("'").append(nfcCode).append("','").append(number).append("','").append(curDate).append("')");
+					try {
+						springJdbcDao.update(sbInsert.toString());
+					}catch(DataAccessException dae ) {
+						//
+						sbUpdate.setLength(0);
+						sbUpdate.append(" update ").append(tableName).append(" set number =");
+						sbUpdate.append("'").append(number).append("' where nfc_code='").append(nfcCode).append("'");
+						try {
+							springJdbcDao.update(sbInsert.toString());
+						}catch(DataAccessException dae2 ) {
+							//忽略该数据
+						}
+					}
+				}
+			}			
 		}
 	}
 

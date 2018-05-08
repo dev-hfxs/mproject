@@ -41,6 +41,7 @@ public class SpringContextUtil implements ApplicationContextAware {
 
 	public void setApplicationContext(ApplicationContext context) throws BeansException {
 		applicationContext = context;
+		log.info("=================={}",applicationContext);
 		initAutoRun();
 	}
 

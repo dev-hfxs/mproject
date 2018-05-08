@@ -19,7 +19,7 @@
 	<context:component-scan base-package="com.sierotech.mproject.server.service">
 	</context:component-scan>
     
-	<bean id="SpringContextUtil" class="com.sierotech.mproject.common.utils.spring.SpringContextUtil" lazy-init="false"/>
+	<bean id="SpringContextUtil" class="com.sierotech.mproject.common.utils.spring.SpringContextUtil"/>
 	<!--  -->
 	<bean id="messageSource" class="org.springframework.context.support.ResourceBundleMessageSource">
 		<property name="basenames">

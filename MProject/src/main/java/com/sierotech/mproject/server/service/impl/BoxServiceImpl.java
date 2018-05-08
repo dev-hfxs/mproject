@@ -102,8 +102,51 @@ public class BoxServiceImpl implements IBoxService{
 			throw new BusinessException("机箱编号已存在!");
 		}
 		
-		// TODO 检查机箱数量是否到达项目设置的上限
+		//获取用户应建机箱数、已建机箱数, 检查机箱数量是否到达用户应建的数量
+		Map<String, Object> paramsMap = new HashMap<String, Object>();
+		paramsMap.put("userId", boxObj.get("userId"));
+		paramsMap.put("projectId", boxObj.get("projectId"));
+				
+		String getUserAllowBoxNumPreSql = ConfigSQLUtil.getCacheSql("mproject-box-getUserAllowBoxNumByUserId");
+		String getUserAllowBoxNumSql = ConfigSQLUtil.preProcessSQL(getUserAllowBoxNumPreSql, paramsMap);
+		List<Map<String, Object>> alDatas = null; 
+		try {
+			alDatas = springJdbcDao.queryForList(getUserAllowBoxNumSql);
+		} catch (DataAccessException ex) {
+			throw new BusinessException("获取用户应建机箱数异常.");
+		} catch (Exception e) {
+			//e.printStackTrace();
+		}
+		int iAllowBoxNUm = 0;
+		if(alDatas !=null && alDatas.size() >0) {
+			String allowBoxNum = alDatas.get(0).get("allow_box_num").toString();
+			try {
+				iAllowBoxNUm = Integer.parseInt(allowBoxNum);
+			}catch (NumberFormatException e) {
+				//e.printStackTrace();
+			}
+		}else {
+			throw new BusinessException("没有分配用户应建机箱数.");
+		}
+		String getUserFactBoxNumPreSql = ConfigSQLUtil.getCacheSql("mproject-box-getUserFactBoxNumByUserId");
+		String getUserFactBoxNumSql = ConfigSQLUtil.preProcessSQL(getUserFactBoxNumPreSql, paramsMap);
+		List<Map<String, Object>> alFactDatas = null; 
+		try {
+			alFactDatas = springJdbcDao.queryForList(getUserFactBoxNumSql);
+		} catch (DataAccessException ex) {
+			throw new BusinessException("获取用户已建机箱数异常.");
+		} catch (Exception e) {
+			//e.printStackTrace();
+		}
+		int iFactBoxNUm = 0;
+		if(alFactDatas !=null && alFactDatas.size() >0) {
+			iFactBoxNUm = alFactDatas.size();
+		}
+		if(iFactBoxNUm >= iAllowBoxNUm) {
+			throw new BusinessException("用户应建机箱数已到上限, 不能继续添加.");
+		}
 		
+		//
 		String boxId = UUIDGenerator.getUUID();
 		boxObj.put("boxId", boxId);
 		boxObj.put("createDate", DateUtils.getNow(DateUtils.FORMAT_LONG));

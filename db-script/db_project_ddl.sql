@@ -357,3 +357,20 @@ create table t_nfc_code_detector
    create_date          varchar(19)                    null comment '创建时间' ,
    constraint pk_t_nfc_code_detector primary key (nfc_code)
 );
+
+
+/*==============================================================*/
+/* Table: t_ip_info                                             */
+/*==============================================================*/
+create table t_ip_info 
+(
+   id		        varchar(32)                    not null,
+   ip                   varchar(16)                    null comment 'IP' ,
+   gateway              varchar(16)                    null comment '网关' ,
+   net_mask		varchar(16)		       null comment '子网掩码' ,
+   project_id           varchar(32)                    null comment 'IP对应的项目' ,
+   used                 char(1)                        null comment '是否使用',
+   net_name             varchar(64)                    null comment '网络名称',
+   create_date          varchar(19)                    null comment '创建时间' ,
+   constraint pk_t_ip_info primary key (id)
+);

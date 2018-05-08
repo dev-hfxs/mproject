@@ -135,4 +135,17 @@
 		</content>
 		<description></description>
 	</sql>
+	
+	<sql id="mproject-job-getAllJobList" name="管理人员查询所有的工单">
+		<content>
+		 SELECT j.id, p.project_number, p.project_name, b.box_number, j.create_date, j.process_person, j.work_content, j.status, j.job_desc, j.job_type, u.user_name  
+		 FROM t_job j 
+		 LEFT JOIN t_project p ON j.project_id = p.id 
+		 LEFT JOIN t_machine_box b ON j.machine_box_id = b.id 
+		 LEFT JOIN t_user u ON j.process_person = u.id 
+		 WHERE 1=1 [ and instr(p.project_name,':projectName') > 0 ]
+		</content>
+		<!-- AND j.process_person = ':userId'  -->
+		<description></description>
+	</sql>
 </sqls>

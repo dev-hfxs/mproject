@@ -7,4 +7,11 @@
 		</content>
 		<description></description>
 	</sql>
+	
+	<sql id="mproject-query-getLogOperations" name="获取修改记录">
+		<content>
+		select id, user_name, operation_date, operation_type, old_value, new_value, project_id, operation_part, update_field from t_operation_log 
+		</content>
+		<description></description>
+	</sql>
 </sqls>
