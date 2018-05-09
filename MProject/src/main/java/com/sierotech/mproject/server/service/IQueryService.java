@@ -21,4 +21,7 @@ import com.sierotech.mproject.common.BusinessException;
 public interface IQueryService {
 	
 	public void createCode(String curUser, Map<String,Object> codeObj) throws BusinessException;
+	
+	public Map<String,Object> queryInfo(String codeUser, String queryType, String queryValue, String codeValue ) throws BusinessException;
+	
 }

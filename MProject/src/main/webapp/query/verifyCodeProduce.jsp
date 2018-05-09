@@ -35,7 +35,7 @@
 					data-options="label:'使用用户:',readonly:true">
 			</div>
 			<div style="margin-bottom:20px">
-				<select class="easyui-combobox" id="codeType" name="codeType" label="验证码类型:" style="width:100%;" panelHeight="auto"><option value="Q">查询</option><option value="U">修改</option></select>
+				<select class="easyui-combobox" id="codeType" name="codeType" label="验证码功能:" style="width:100%;" panelHeight="auto"><option value="P">项目查询</option><option value="M">机箱查询</option><option value="C">处理器查询</option><option value="D">探测器查询</option><option value="U">信息修改</option></select>
 			</div>
 			<div style="margin-bottom: 20px">
 				<input class="easyui-numberbox" id="validTime" name="validTime" style="width: 100%"

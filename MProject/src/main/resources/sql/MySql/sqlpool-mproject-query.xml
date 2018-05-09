@@ -14,4 +14,71 @@
 		</content>
 		<description></description>
 	</sql>
+	
+	<sql id="mproject-query-getProjectByNumber" name="信息查询中查询项目">
+		<content>
+		SELECT p.id, p.project_name, p.project_number, p.contract_number, p.project_desc, p.status, p.allow_box_num, p.create_date,  
+		( SELECT u.full_name FROM t_user u WHERE p.project_manager = u.id) as project_manager,
+		( SELECT u2.full_name FROM t_user u2 WHERE p.creator = u2.user_name) as creator		
+		FROM t_project p 
+		WHERE p.id = ':projectId'  and instr(p.project_number,':projectNumber') > 0 
+		</content>
+		<description></description>
+	</sql>
+		
+	<sql id="mproject-query-getBoxByBoxNumber" name="信息查询中查询机箱">
+		<content>
+		 SELECT b.id, b.box_number, b.nfc_number, b.create_date, b.longitude, b.latitude, b.pos_desc, b.install_space,o.org_name, 
+		(SELECT COUNT(*) FROM t_machine_box_submit t1 where machine_box_id = b.id ) AS submit_num, 
+		(SELECT max(submit_date) FROM t_machine_box_submit t0 where machine_box_id = b.id ) AS new_submit_date, 
+        (SELECT full_name FROM t_user t0 where t0.id = b.build_manager) AS build_manager, 
+        (SELECT full_name FROM t_user t2 where t2.id = b.install_engineer) AS install_engineer, 
+        (SELECT full_name FROM t_user t4 where t4.id = b.debug_engineer) AS debug_engineer, 
+        b.confirm_install_date, b.confirm_debug_date, b.pm_confirm_date ,p.project_number
+		FROM t_machine_box b 
+		LEFT JOIN t_org o ON b.org_id = o.id 
+		LEFT JOIN t_project p ON b.project_id = p.id 
+		WHERE b.project_id = ':projectId' [ AND instr(b.box_number,':boxNumber') > 0 ]
+		</content>
+		<description></description>
+	</sql>
+	
+	<sql id="mproject-query-getProcessorByNfcNumber" name="信息查询中查询处理器">
+		<content>
+		SELECT p.id, p.machine_box_id, p.nfc_number, p.moxa_number, p.ip, p.detector_num, p.create_date, m.nfc_number as box_nfc_number 
+		FROM t_processor p
+		LEFT JOIN t_machine_box m on m.id = p.machine_box_id 
+		WHERE p.machine_box_id IN ( SELECT id FROM t_machine_box WHERE project_id = ':projectId') [ AND instr(p.nfc_number,':nfcNumber') > 0 ]  
+		ORDER BY create_date DESC 
+		</content>
+		<description></description>
+	</sql>
+	
+	<sql id="mproject-query-getDetectorByNfcNumber" name="">
+		<content>
+		SELECT t.id, t.detector_id, t.detector_seq, t.processor_id, t.nfc_number, t.longitude, t.latitude, t.start_point, t.end_point,t.pos_desc, 
+		p.nfc_number as processor_nfc_number  
+		FROM t_detector t
+		LEFT JOIN t_processor p on t.processor_id = p.id
+		WHERE t.processor_id in (select id from t_processor t0 where t0.machine_box_id in (select id from t_machine_box t2 where t2.project_id = ':projectId') ) 
+		 [ AND instr(t.nfc_number,':nfcNumber') > 0  order by detector_seq ]
+		</content>
+		<description></description>
+	</sql>
+	
+	<sql id="mproject-query-getCodeByCodeValue" name="根据验证码值查找验证码">
+		<content>
+		SELECT id, project_id, code_type, code_value, target_user, valid_time, create_date FROM t_verification_code 
+		WHERE code_value = ':codeValue' AND target_user=':targetUser' and used = 'N' 
+		</content>
+		<description></description>
+	</sql>
+	
+	<sql id="mproject-query-closeCodeByCodeId" name="将验证码标识为已使用">
+		<content>
+		UPDATE t_verification_code used = 'Y' where id = ':codeId'  
+		</content>
+		<description></description>
+	</sql>
+	
 </sqls>

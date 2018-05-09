@@ -32,7 +32,7 @@
 				<th data-options="field:'creator',width:100">创建人</th>
 				<th data-options="field:'create_date',width:150,sortable:true">创建时间</th>
 				<th data-options="field:'status',width:60,formatter:showStatusName,sortable:true">项目状态</th>
-				<th data-options="field:'id',width:150,align:'center',formatter:showButtons">操作</th>
+				<th data-options="field:'id',width:150,align:'left',formatter:showButtons">操作</th>
 			</tr>
 		</thead>
 	</table>
@@ -112,6 +112,9 @@ function showStatusName(val,row){
 function showButtons(val,row){
 	var columnItem = '<span><a href="javascript:void(0)" class="easyui-linkbutton" onclick="javascript:doUpdate(\''+val+'\')" style="width:80px;">修 改</a></span>&nbsp;&nbsp;'
                    + '<span><a href="javascript:void(0)" class="easyui-linkbutton" onclick="doView(\''+val+'\')" style="width:80px;">查看内容</a></span>&nbsp;&nbsp;';
+    if(row.status == 'I'){
+    	columnItem = columnItem + '<span><a href="javascript:void(0)" class="easyui-linkbutton" onclick="closeProject(\''+val+'\')" style="width:80px;">结束项目</a></span>&nbsp;&nbsp;';
+    }
 	return columnItem;
 }
 
@@ -124,22 +127,32 @@ function doUpdate(val){
 	parent.loadUrl(curUrl);
 }
 
-function doViewProject(val){
-	var content = '<iframe src="<%=path%>/project/projectView.jsp?id=' + val + '" width="100%" height="80%" frameborder="0" scrolling="no"></iframe>';
-	var boarddiv = '<div id="msgwindow" title="查看项目" ></div>'// style="overflow:hidden;"可以去掉滚动条
-	$(document.body).append(boarddiv);
-	var win = $('#msgwindow').dialog({
-		content : content,
-		width : '640',
-		height : '480',
-		modal : true,
-		title : '查看项目',
-		onClose : function() {
-			$(this).dialog('destroy');// 后面可以关闭后的事件
+function closeProject(val){
+	$.messager.confirm('确认', '确认结束该项目?', function(r){
+		if(r){
+			$.ajax( {
+			    url:'<%=path%>/project/mgr/closeProject.do',
+			    data:{
+			    	'projectId':val
+			    },
+			    type:'post',
+			    async:false,
+			    dataType:'json',
+			    success:function(data) {
+			    	if(data.returnCode == "success"){
+			    		$.messager.alert('提示','操作成功!','info',function(){
+			    			$('#dg').datagrid('reload');
+			    		});
+			    	}else{
+			    		$.messager.alert('提示',data.msg);
+			    	}
+			    },
+			    error : function(data) {
+			    	$.messager.alert('异常',data.responseText);
+		        }
+			});
 		}
 	});
-	win.dialog('open');
-	win.window('center');
 }
 
 //查看项目内容

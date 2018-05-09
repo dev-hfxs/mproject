@@ -239,4 +239,26 @@ public class ProjectMgrControl {
 		return result;
 	}
 	
+	@RequestMapping(value = "/closeProject")
+	@ResponseBody
+	public Map<String, String> closeProject(HttpServletRequest request) {
+		Map<String, String> result = new HashMap<String, String>();
+		result.put("returnCode", "fail");
+		String projectId = request.getParameter("projectId").toString();
+		
+		if(null == projectId) {
+			result.put("msg", "结束项目错误,缺少项目ID.");
+			return result;
+		}
+		
+		try {
+			projectService.updateProject4Close(UserTool.getLoginUser(request).get("user_name"), projectId);
+		}catch(BusinessException be) {
+			result.put("msg", be.getMessage());
+			return result;
+		}
+		result.put("returnCode", "success");
+		result.put("msg", "");
+		return result;
+	}
 }

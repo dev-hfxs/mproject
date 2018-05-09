@@ -71,4 +71,44 @@ public class QueryMgrControl {
 		result.put("msg", "");
 		return result;
 	}
+	
+	@RequestMapping(value = "/queryInfo")
+	@ResponseBody
+	public Map<String, String> queryInfo(HttpServletRequest request) {	
+		Map<String, String> result = new HashMap<String, String>();
+		result.put("returnCode", "fail");
+		
+		if (null == request.getParameter("queryType")) {
+			result.put("msg", "信息查询错误, 缺少查询方式!");
+			return result;
+		}
+		String queryType = request.getParameter("queryType");
+		
+		if (null == request.getParameter("searchValue")) {
+			result.put("msg", "信息查询错误, 缺少查询的值!");
+			return result;
+		}
+		String searchValue = request.getParameter("searchValue");
+		
+		if (null == request.getParameter("searchCode")) {
+			result.put("msg", "信息查询错误, 缺少查询验证码!");
+			return result;
+		}
+		String searchCode = request.getParameter("searchCode");
+		Map<String,Object> verCodeMap = null;
+		try {
+			String targetUser = UserTool.getLoginUser(request).get("id").toString();
+			verCodeMap = querySerive.queryInfo(targetUser, queryType, searchValue, searchCode);
+		}catch(BusinessException be) {
+			result.put("msg", be.getMessage());
+			return result;
+		}
+		if(verCodeMap != null) {
+			result.put("returnCode", "success");
+			result.put("queryProject", verCodeMap.get("project_id") == null ? "" : verCodeMap.get("project_id").toString());
+			result.put("codeType", queryType);
+		}		
+		result.put("msg", "");
+		return result;
+	}
 }

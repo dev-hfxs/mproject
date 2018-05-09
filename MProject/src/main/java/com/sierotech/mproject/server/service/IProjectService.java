@@ -33,4 +33,5 @@ public interface IProjectService {
 	
 	public void updateProjectPsnBoxNum(String curUser,String projectId,String userId,int oldAllowBoxNum, int allowBoxNum) throws BusinessException;
 	
+	public void updateProject4Close(String adminUser, String projectId) throws BusinessException;
 }

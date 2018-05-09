@@ -403,4 +403,70 @@ public class ProjectServiceImpl implements IProjectService {
 			throw new BusinessException("修改施工经理应建机箱数错误,数据存储异常.");
 		}
 	}
+	
+	@Override
+	public void updateProject4Close(String adminUser, String projectId) throws BusinessException {
+		//获取项目
+		String preSelectSql = ConfigSQLUtil.getCacheSql("mproject-project-queryProjectById");
+		Map<String, Object> paramsMap = new HashMap<String, Object>();
+		paramsMap.put("projectId", projectId);
+		String selectSql = ConfigSQLUtil.preProcessSQL(preSelectSql, paramsMap);
+		List<Map<String, Object>> alProjects;
+		try {
+			alProjects = springJdbcDao.queryForList(selectSql);
+		} catch (DataAccessException dae) {
+			throw new BusinessException("结束项目,查找对应的项目错误.");
+		}
+		Map<String, Object> projectObj;
+		if (alProjects != null && alProjects.size() > 0) {
+			projectObj = alProjects.get(0);
+		} else {
+			throw new BusinessException("结束项目错误,未找到对应的项目.");
+		}
+		
+		//未处理工单变更为未完成
+		String preUpdateJobSql = ConfigSQLUtil.getCacheSql("mproject-project-updateWaitJob4CloseProject");
+		paramsMap.clear();
+		paramsMap.put("projectId", projectId);
+		paramsMap.put("jobDesc", "项目结束-"+adminUser);
+		String updateJobSql = ConfigSQLUtil.preProcessSQL(preUpdateJobSql, paramsMap);
+		try {
+			springJdbcDao.update(updateJobSql);
+		} catch (DataAccessException dae) {
+			throw new BusinessException("结束项目,关闭项目未处理工单错误.");
+		}
+		//解除与项目关联的施工经理
+		String preDeletePsnSql = ConfigSQLUtil.getCacheSql("mproject-project-deleteProjectPsn4CloseProject");
+		paramsMap.clear();
+		paramsMap.put("projectId", projectId);
+		String deletePsnSql = ConfigSQLUtil.preProcessSQL(preDeletePsnSql, paramsMap);
+		try {
+			springJdbcDao.update(deletePsnSql);
+		} catch (DataAccessException dae) {
+			throw new BusinessException("结束项目, 解除与项目关联的施工经理数据库访问错误.");
+		}
+		// 删除施工经理创建的且未提交的机箱信息
+		String preDeleteDetectorSql = ConfigSQLUtil.getCacheSql("mproject-project-deleteDetector4CloseProject");
+		paramsMap.clear();
+		paramsMap.put("projectId", projectId);
+		String deleteDetectorSql = ConfigSQLUtil.preProcessSQL(preDeleteDetectorSql, paramsMap);
+		
+		String preDeleteProcessorSql = ConfigSQLUtil.getCacheSql("mproject-project-deleteProcessor4CloseProject");
+		String deleteProcessorSql = ConfigSQLUtil.preProcessSQL(preDeleteProcessorSql, paramsMap);
+		
+		String preDeleteBoxSql = ConfigSQLUtil.getCacheSql("mproject-project-deleteBox4CloseProject");
+		String deleteBoxSql = ConfigSQLUtil.preProcessSQL(preDeleteBoxSql, paramsMap);
+		// 变更项目状态
+		String preUpdateProjectSql = ConfigSQLUtil.getCacheSql("mproject-project-updateProject4CloseProject");
+		String updateProjectSql = ConfigSQLUtil.preProcessSQL(preUpdateProjectSql, paramsMap);
+		
+		try {		
+			springJdbcDao.update(deleteDetectorSql);
+			springJdbcDao.update(deleteProcessorSql);
+			springJdbcDao.update(deleteBoxSql);
+			springJdbcDao.update(updateProjectSql);
+		} catch (DataAccessException dae) {
+			throw new BusinessException("结束项目, 删除项目下未提交的机箱信息,访问数据库错误.");
+		}
+	}
 }

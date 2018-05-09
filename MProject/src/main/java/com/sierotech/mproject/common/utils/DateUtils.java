@@ -154,6 +154,21 @@ public final class DateUtils {
 	}
 
 	/**
+	 * 在日期上增加小时
+	 * 
+	 * @param date
+	 *            日期
+	 * @param n
+	 *            要增加的小时数
+	 * @return
+	 */
+	public static Date addHour(Date date, int n) {
+		Calendar cal = Calendar.getInstance();
+		cal.setTime(date);
+		cal.add(Calendar.HOUR, n);
+		return cal.getTime();
+	}
+	/**
 	 * 获取时间戳
 	 */
 	public static String getTimeString() {
@@ -309,4 +324,19 @@ public final class DateUtils {
 		return num % 4 == 0 ? 4 : num % 4;
 
 	}
+
+	/**
+	 * 比较两个日期,起始日期是否小于结束日期
+	 * 
+	 * @param num
+	 * @return
+	 */
+	public static int compareDate(Date startDate, Date endDate) {
+		Calendar ca1=Calendar.getInstance();
+		ca1.setTime(startDate);
+		Calendar ca2=Calendar.getInstance();
+		ca2.setTime(endDate);
+		return ca2.compareTo(ca1);
+	}
+	 
 }

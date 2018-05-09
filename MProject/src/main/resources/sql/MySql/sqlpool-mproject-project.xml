@@ -196,4 +196,59 @@
 		<description>
 		</description>
 	</sql>
+	
+	<sql id="mproject-project-updateWaitJob4CloseProject" name="结束项目时将未处理的工单标为未处理">
+		<content>
+		UPDATE t_job set status='C', job_desc = ':jobDesc' WHERE status = 'I' AND machine_box_id IN ( SELECT id FROM t_machine_box WHERE project_id = ':projectId')  
+		</content>
+		<description>
+		</description>
+	</sql>
+	
+	<sql id="mproject-project-deleteProjectPsn4CloseProject" name="结束项目时将项目设置的施工经理删除">
+		<content>
+		DELETE FROM t_project_personnel WHERE project_id = ':projectId' 
+		</content>
+		<description>
+		</description>
+	</sql>
+	
+	<sql id="mproject-project-deleteDetector4CloseProject" name="结束项目时将项目下未提交的探测器删除">
+		<content>
+		DELETE FROM t_detector 
+		WHERE processor_id in ( select id from t_processor  
+           WHERE machine_box_id in (select id from t_machine_box m 
+                WHERE m.project_id = ':projectId' and not exists (select id from t_machine_box_submit s where s.machine_box_id = m.id)))
+		</content>
+		<description>
+		</description>
+	</sql>
+	
+	<sql id="mproject-project-deleteProcessor4CloseProject" name="结束项目时将项目下未提交的处理器删除">
+		<content>
+		DELETE FROM t_processor  
+           WHERE machine_box_id in (select id from t_machine_box m 
+                WHERE m.project_id = ':projectId' and not exists (select id from t_machine_box_submit s where s.machine_box_id = m.id))
+		</content>
+		<description>
+		</description>
+	</sql>
+	
+	<sql id="mproject-project-deleteBox4CloseProject" name="结束项目时将项目下未提交的机箱删除">
+		<content>
+        DELETE FROM t_machine_box 
+        WHERE project_id = ':projectId' and id not in (select machine_box_id from t_machine_box_submit ) 
+		</content>
+		<description>
+		</description>
+	</sql>
+	
+	<sql id="mproject-project-updateProject4CloseProject" name="设置项目为结束">
+		<content>
+		UPDATE t_project set  status = 'F' where id = ':projectId' 
+		</content>
+		<description>
+		</description>
+	</sql>
+	
 </sqls>
