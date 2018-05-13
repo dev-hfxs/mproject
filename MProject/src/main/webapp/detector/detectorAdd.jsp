@@ -217,6 +217,23 @@ $(function() {
 	    	}
 	    }
 	});
+	
+	$("#detectorSeq").textbox({
+		 onChange: function(value) {
+			if(dictNfcCodeSeq!= null && dictNfcCodeSeq.length > 0){
+				var inDetectorSeq = $("#detectorSeq").val();
+				if(inDetectorSeq != dictNfcCodeSeq){
+					nfcCodeValid =  false;
+					$.messager.alert('提示','探测器NFC序列号['+$("#nfcNumber").val()+']在系统中的探测器编号与输入的探测器编号不一致,不能提交!');
+					return;
+				}else{
+					nfcCodeValid =  true;
+		    		$("#nfcNumber").next("span").removeClass("textbox-invalid");
+				}
+			}
+		 }
+	});
+	
 });
 
 $.extend($.fn.validatebox.defaults.rules, {
@@ -234,7 +251,7 @@ $.extend($.fn.validatebox.defaults.rules, {
     },
     checkDCode: { //验证探测器编号
         validator: function(value, param){
-         return  /^((00[1-9])|(0[1-9][1-9])|(1[0-1][1-9])|(12[0-8])){1}$/.test(value);
+         return  /^((00[1-9])|(0[1-9][0-9])|(1[0-1][0-9])|(12[0-8])){1}$/.test(value);
         },
         message: '探测器编号为001-128的数字组成!'
     }

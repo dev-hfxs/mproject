@@ -254,6 +254,18 @@ var gotoDetector = true;
 		var queryType = $("#queryType" ).val();
 		var charKey = $("#searchKey" ).val();
 		var searchCode = $("#searchCode" ).val();
+		if(searchCode.length != 8){
+			$.messager.alert('提示', '请输入8位查询的验证码!','info',function(){
+				return;
+			});
+			return;
+		}
+		if(charKey.length < 1){
+			$.messager.alert('提示', '请输入查询的值!','info',function(){
+				return;
+			});
+			return;
+		}
 		//发起查询请求
 		$.ajax( {
 		    url:'<%=path%>/query/mgr/queryInfo.do',

@@ -76,7 +76,7 @@
 	
 	<sql id="mproject-query-closeCodeByCodeId" name="将验证码标识为已使用">
 		<content>
-		UPDATE t_verification_code used = 'Y' where id = ':codeId'  
+		UPDATE t_verification_code set used = 'Y' where id = ':codeId'  
 		</content>
 		<description></description>
 	</sql>

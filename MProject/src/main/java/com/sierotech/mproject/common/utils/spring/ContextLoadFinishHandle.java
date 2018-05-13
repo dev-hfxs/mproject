@@ -17,6 +17,8 @@ import org.springframework.stereotype.Component;
 
 import com.sierotech.mproject.common.utils.SQLPoolInitializor;
 import com.sierotech.mproject.context.AppContext;
+import com.sierotech.mproject.task.FileCleanJob;
+import com.sierotech.mproject.task.TaskScheduler;
 
 /**
 * @JDK版本: 1.7
@@ -43,6 +45,10 @@ public class ContextLoadFinishHandle implements ApplicationListener<ContextRefre
 
 			// 加载excel模板元数据
 			AppContext.loadExcelMeta();
+			
+			//设置临时文件清理任务
+			TaskScheduler.init();
+			TaskScheduler.addJob("deleteTempFile","mproject","0 59 23 * * ?",FileCleanJob.class);
 		}
 	}
 }

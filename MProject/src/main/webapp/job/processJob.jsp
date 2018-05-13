@@ -116,7 +116,7 @@
 			$("#jobDescPanel").hide();
 			$("#installOptionPanel").show();
 			
-			var tableHtml = tableHtml + '<tr><td style="width:250px;">机箱位置描述:</td><td style="width:250px"><input style="width:320px" type="text" class="textbox-text" intype="boxPos"></td><td style="width:100px"></td></tr>';
+			var tableHtml = tableHtml + '<tr><td style="width:330px;">机箱位置描述:</td><td style="width:300px"><input style="width:300px" type="text" class="textbox-text" intype="boxPos"></td><td style="width:10px"></td></tr>';
 			$('#boxAndDetectorOptionTb').append(tableHtml);
 			tableHtml = '';
 			// 获取工单对应机箱下的处理器、探测器,用于设置处理器IP、探测器位置
@@ -136,7 +136,7 @@
 			    			if(item.device_type == 'P'){
 			    				//tableHtml = '<tr><td style="width:250px">' + item.device_desc + '</td><td style="width:250px"><input style="width:320px" type="text" class="textbox-text" intype="ip" id="input_'+item.id+'" name="'+item.device_type+'#' + item.id + '" value="0.0.0.0" readonly="readonly" onchange="maskIp(this)"></td><td style="width:100px"><input type="checkbox" linkId="'+item.id+'" name="chkHadIP">是否分配IP</td></tr>';
 			    			}else{
-			    				tableHtml = '<tr><td style="width:250px">' + item.device_desc + '</td><td style="width:250px"><input style="width:320px" type="text" class="textbox-text" intype="detectorPos" id="input_'+item.id+'" name="'+item.device_type+'#' + item.id + '"></td><td style="width:100px"></td></tr>';
+			    				tableHtml = '<tr><td style="width:330px">' + item.device_desc + '</td><td style="width:300px"><input style="width:300px" type="text" class="textbox-text" intype="detectorPos" id="input_'+item.id+'" name="'+item.device_type+'#' + item.id + '"></td><td style="width:10px"></td></tr>';
 			    			}
 			    			$('#boxAndDetectorOptionTb').append(tableHtml);
 			    		});

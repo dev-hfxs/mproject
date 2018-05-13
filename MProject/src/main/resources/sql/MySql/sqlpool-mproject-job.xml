@@ -15,7 +15,7 @@
 		 LEFT JOIN t_project p ON j.project_id = p.id 
 		 LEFT JOIN t_machine_box b ON j.machine_box_id = b.id 
 		 LEFT JOIN t_user u ON j.process_person = u.id 
-		 WHERE j.status = 'I' AND j.process_person = ':userId' 
+		 WHERE j.status = 'I' AND j.process_person = ':userId' ORDER BY j.create_date DESC 
 		</content>
 		<!-- AND j.project_id = ':projectId' -->
 		<description></description>
@@ -28,12 +28,25 @@
 		 LEFT JOIN t_project p ON j.project_id = p.id 
 		 LEFT JOIN t_machine_box b ON j.machine_box_id = b.id 
 		 LEFT JOIN t_user u ON j.process_person = u.id 
-		 WHERE j.status IN('N','F','Q') AND j.process_person = ':userId' 
+		 WHERE j.status IN('N','F','Q') AND j.process_person = ':userId' ORDER BY j.create_date DESC 
 		</content>
 		<!-- AND j.project_id = ':projectId' -->
 		<description></description>
 	</sql>
 
+	<sql id="mproject-job-getJobById" name="根据ID获取工单">
+		<content>
+		 SELECT j.id, j.project_id, p.project_number, p.project_name, b.box_number, j.create_date, j.process_person, j.work_content, j.status, j.job_desc, j.job_type, u.user_name  
+		 FROM t_job j 
+		 LEFT JOIN t_project p ON j.project_id = p.id 
+		 LEFT JOIN t_machine_box b ON j.machine_box_id = b.id 
+		 LEFT JOIN t_user u ON j.process_person = u.id 
+		 WHERE j.id = ':jobId' 
+		</content>
+		<!-- AND j.project_id = ':projectId' -->
+		<description></description>
+	</sql>
+	
 	<sql id="mproject-job-getProjectJobListByUser" name="获取项目下用户的工单">
 		<content>
 		 SELECT j.id, p.project_number, p.project_name, b.box_number, j.create_date, j.process_person, j.work_content, j.status, j.job_desc, j.job_type, u.user_name  
@@ -41,7 +54,7 @@
 		 LEFT JOIN t_project p ON j.project_id = p.id 
 		 LEFT JOIN t_machine_box b ON j.machine_box_id = b.id 
 		 LEFT JOIN t_user u ON j.process_person = u.id 
-		 WHERE j.project_id = ':projectId' 
+		 WHERE j.project_id = ':projectId' ORDER BY j.create_date DESC 
 		</content>
 		<!-- AND j.process_person = ':userId'  -->
 		<description></description>
@@ -143,7 +156,7 @@
 		 LEFT JOIN t_project p ON j.project_id = p.id 
 		 LEFT JOIN t_machine_box b ON j.machine_box_id = b.id 
 		 LEFT JOIN t_user u ON j.process_person = u.id 
-		 WHERE 1=1 [ and instr(p.project_name,':projectName') > 0 ]
+		 WHERE 1=1 [ and instr(p.project_name,':projectName') > 0 ] ORDER BY j.create_date DESC 
 		</content>
 		<!-- AND j.process_person = ':userId'  -->
 		<description></description>

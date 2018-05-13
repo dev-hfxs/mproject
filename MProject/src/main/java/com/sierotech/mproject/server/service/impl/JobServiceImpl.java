@@ -216,20 +216,64 @@ public class JobServiceImpl implements IJobService {
 			throw new BusinessException("处理调试工单错误,缺少工单ID.");
 		}
 		if(null == jobStatus) {
-			throw new BusinessException("处理调试工单错误,缺少工单状态.");			
+			throw new BusinessException("处理调试工单错误,缺少工单状态.");
 		}
-		
+		// 先获取工单
+		String getJobPreSql = ConfigSQLUtil.getCacheSql("mproject-job-getJobById");
 		Map<String, Object> paramsMap = new HashMap<String, Object>();
+		paramsMap.clear();
 		paramsMap.put("jobId", jobId);
-		paramsMap.put("status", jobStatus);
-		paramsMap.put("jobDesc", "");
-		String preSql = ConfigSQLUtil.getCacheSql("mproject-job-updateJobStatus");
-		String sql = ConfigSQLUtil.preProcessSQL(preSql, paramsMap);
+		String getJobSql = ConfigSQLUtil.preProcessSQL(getJobPreSql, paramsMap);
+		List<Map<String, Object>> alJobs = null;
 		try {
-			springJdbcDao.update(sql);
+			alJobs = springJdbcDao.queryForList(getJobSql);
 		} catch (DataAccessException dae) {
-			log.info(dae.toString());
-			throw new BusinessException("处理调试工单错误,访问数据库异常.");
+			log.info(dae.getMessage());
+		}
+		if(alJobs == null || alJobs.size() < 1) {
+			throw new BusinessException("处理调试工单错误, 未找到对应的工单.");
+		}
+		Map<String, Object> jobObj = alJobs.get(0);
+		
+		//检查处理器IP
+		Map<String,String> ipMap = new HashMap<String, String>();
+		if(processIpList != null && processIpList.size() > 0) {
+			for(Map processIpMap : processIpList) {
+				
+				String checkIpPreSql =  ConfigSQLUtil.getCacheSql("mproject-ip-checkIpByIpAndUser");
+				paramsMap.clear();
+				paramsMap.put("ip", processIpMap.get("ip").toString());
+				paramsMap.put("projectId", jobObj.get("project_id").toString());
+				paramsMap.put("markUser", curUser);
+				String checkIpSql = ConfigSQLUtil.preProcessSQL(checkIpPreSql, paramsMap);
+				List<Map<String, Object>> alIps = null;
+				try {
+					log.info(checkIpSql);
+					alIps = springJdbcDao.queryForList(checkIpSql);
+				} catch (DataAccessException dae) {
+					log.info(dae.getMessage());
+				}
+				if(alIps == null || alIps.size() < 1) {
+					throw new BusinessException("处理调试工单错误, IP[" + processIpMap.get("ip").toString() +"]在IP库中没有被标记为使用.");
+				}else {
+					ipMap.put(processIpMap.get("ip").toString(), alIps.get(0).get("id").toString());
+				}
+//				//检查IP是否已在其他处理器配置
+//				String checkIpUsePreSql =  ConfigSQLUtil.getCacheSql("mproject-ip-checkIpIsOtherProcessorUse");
+//				String checkIpUseSql = ConfigSQLUtil.preProcessSQL(checkIpUsePreSql, paramsMap);
+//				try {
+//					alIps = springJdbcDao.queryForList(checkIpUseSql);
+//				} catch (DataAccessException dae) {
+//					log.info(dae.getMessage());
+//				}
+//				if(alIps != null || alIps.size() > 0) {
+//					throw new BusinessException("处理调试工单错误, IP[" + processIpMap.get("ip").toString() +"]已有处理器在使用,处理器的NFC序列号是["+alIps.get(0).get("processor_number") +"].");
+//				}
+				
+			}
+			if(processIpList.size() > ipMap.size()) {
+				throw new BusinessException("处理调试工单错误, 处理器的IP存在重复.");
+			}
 		}
 		
 		StringBuffer batchSql = new StringBuffer();
@@ -237,20 +281,29 @@ public class JobServiceImpl implements IJobService {
 		String uploadDir = AppContext.getUploadDir();
 		String curDate = DateUtils.getNow(DateUtils.FORMAT_SHORT);
 		
-		//更新处理器IP
+		//更新处理器IP, 同时更新ip对应的处理器Id
 		if(processIpList != null && processIpList.size() > 0) {
 			String updateProcessIpPreSql = ConfigSQLUtil.getCacheSql("mproject-job-updateProcessorIpById");
+			String updateIpPreSql = ConfigSQLUtil.getCacheSql("mproject-ip-updateIpProcessorId");
+			StringBuffer updateProcessorBatchSql = new StringBuffer();
 			StringBuffer updateIpBatchSql = new StringBuffer();
 			for(Map processIpMap : processIpList) {
 				paramsMap.clear();
 				paramsMap.put("processorId", processIpMap.get("id"));
 				paramsMap.put("ip", processIpMap.get("ip"));
 				String updateProcessIpSql = ConfigSQLUtil.preProcessSQL(updateProcessIpPreSql, paramsMap);
-				updateIpBatchSql.append(updateProcessIpSql).append(";\n");
+				updateProcessorBatchSql.append(updateProcessIpSql).append(";\n");
+				paramsMap.clear();
+				paramsMap.put("id", ipMap.get(processIpMap.get("ip").toString()));
+				paramsMap.put("processorId", processIpMap.get("id").toString());
+				String updateIpSql = ConfigSQLUtil.preProcessSQL(updateIpPreSql, paramsMap);
+				updateIpBatchSql.append(updateIpSql).append(";\n");				
 			}
-			if(updateIpBatchSql.length() > 0 ) {
+			if(updateProcessorBatchSql.length() > 0 ) {
 				try {
-					// springJdbcDao.update(batchSql.toString());
+					//更新处理器的IP
+					springJdbcDao.batchUpdate(updateProcessorBatchSql.toString().split("\n"));
+					//更新IP对应的处理器ID
 					springJdbcDao.batchUpdate(updateIpBatchSql.toString().split("\n"));
 				} catch (DataAccessException dae) {
 					log.info(dae.toString());
@@ -342,6 +395,20 @@ public class JobServiceImpl implements IJobService {
 		} catch (DataAccessException dae) {
 			log.info(dae.toString());
 			throw new BusinessException("处理调试工单错误,更新机箱的调试工程师错误.");
+		}
+		
+		// 更新工单状态
+		paramsMap.clear();
+		paramsMap.put("jobId", jobId);
+		paramsMap.put("status", jobStatus);
+		paramsMap.put("jobDesc", "");
+		String preSql = ConfigSQLUtil.getCacheSql("mproject-job-updateJobStatus");
+		String sql = ConfigSQLUtil.preProcessSQL(preSql, paramsMap);
+		try {
+			springJdbcDao.update(sql);
+		} catch (DataAccessException dae) {
+			log.info(dae.toString());
+			throw new BusinessException("处理调试工单错误,访问数据库异常.");
 		}
 	}
 }

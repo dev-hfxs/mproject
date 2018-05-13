@@ -32,5 +32,11 @@
 	<data name="nfc-code-detector" sheetNum="0" heardRowNum="0">
 		<column name="nfc_code"       dataType="String"		 isNull="N" cellNum="1">NFC序列号</column>
 		<column name="number" 	      dataType="String" 	 isNull="Y" cellNum="2">编号</column>
+	</data>	
+	<data name="ip-info" sheetNum="0" heardRowNum="0">
+		<column name="ip"       	dataType="String"		 isNull="N" cellNum="1">IP</column>
+		<column name="gateway" 	    dataType="String" 	     isNull="N" cellNum="2">网关</column>
+		<column name="net_mask"     dataType="String" 	     isNull="N" cellNum="3">子网掩码</column>
+		<column name="net_name"     dataType="String" 	     isNull="N" cellNum="4">网段名称</column>
 	</data>
 </importDatas>

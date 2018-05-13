@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sqls>
+	<sql id="mproject-ip-getAllIPList" name="获取所有的IP列表">
+		<content>
+		 SELECT a.id, a.ip, a.gateway, a.net_mask, a.project_id, a.status, a.net_name, a.create_date, b.project_name  
+		 FROM t_ip_info a
+		 LEFT JOIN t_project b ON a.project_id = b.id  
+		 WHERE 1 = 1 [ AND instr(a.ip,':ip') > 0 ] 
+		</content>
+		<description></description>
+	</sql>
+	<sql id="mproject-ip-getCanUseIPList" name="获取用户可用的IP列表">
+		<content>
+		 SELECT a.id, a.ip, a.gateway, a.net_mask, a.project_id, a.status, a.net_name, a.create_date,a.processor_id, b.project_name  
+		 FROM t_ip_info a
+		 LEFT JOIN t_project b ON a.project_id = b.id  
+		 WHERE a.status = 'N' [ and a.project_id = ':projectId' ]
+		 UNION 
+		 SELECT a.id, a.ip, a.gateway, a.net_mask, a.project_id, a.status, a.net_name, a.create_date,a.processor_id, b.project_name  
+		 FROM t_ip_info a
+		 LEFT JOIN t_project b ON a.project_id = b.id  
+		 WHERE a.status IN ('Y','L','Q') and mark_user = ':userId' [ and a.project_id = ':projectId' ] 	 
+		</content>
+		<description></description>
+	</sql>
+	<sql id="mproject-ip-getIPById" name="根据id获取IP">
+		<content>
+		 SELECT a.id, a.ip, a.gateway, a.net_mask, a.project_id, a.status, a.net_name, a.create_date, b.id as project_id 
+		 FROM t_ip_info a
+		 LEFT JOIN t_project b ON a.project_id = b.id  
+		 WHERE a.id = ':id' 
+		</content>
+		<description></description>
+	</sql>
+	
+	<sql id="mproject-ip-addIP" name="添加IP">
+		<content>
+		 INSERT INTO t_ip_info(id, ip, gateway, net_mask, project_id, status, net_name, create_date) 
+		 VALUES(':id', ':ip', ':gateway', ':netMask', ':projectId', ':status', ':netName', ':createDate') 
+		</content>
+		<description></description>
+	</sql>
+	
+	<sql id="mproject-ip-updateIP" name="修改IP">
+		<content>
+		 UPDATE t_ip_info set ip=':ip', gateway=':gateway', net_mask=':netMask', project_id=':projectId', net_name=':netName'    
+		 WHERE id = ':id' 
+		</content>
+		<description></description>
+	</sql>
+	
+	<sql id="mproject-ip-deleteIP" name="删除IP">
+		<content>
+		 DELETE FROM t_ip_info WHERE id = ':id' 
+		</content>
+		<description></description>
+	</sql>
+	
+	<sql id="mproject-ip-updateIpStatus" name="更新IP状态">
+		<content>
+		 UPDATE t_ip_info SET status = ':status', mark_user=':markUser' WHERE id = ':id' 
+		</content>
+		<description></description>
+	</sql>
+	
+	<sql id="mproject-ip-updateIpProcessorId" name="更新IP对应的处理器ID">
+		<content>
+		 UPDATE t_ip_info SET processor_id = ':processorId' WHERE id = ':id' 
+		</content>
+		<description></description>
+	</sql>
+	
+	<sql id="mproject-ip-checkIpByIpAndUser" name="检查IP是否在库中和标记">
+		<content>
+		 SELECT id FROM t_ip_info WHERE ip = ':ip' AND project_id = ':projectId' AND status = 'Y' AND mark_user = ':markUser' AND ( processor_id is null OR processor_id = '' )
+		</content>
+		<description></description>
+	</sql>
+	
+	<sql id="mproject-ip-checkIpIsOtherProcessorUse" name="检查IP是否有其他处理器使用">
+		<content>
+		 SELECT id, processor_number FROM t_ip_info WHERE ip = ':ip' AND project_id = ':projectId' AND status = 'Y' AND mark_user = ':markUser' AND length(processor_id) > 0  
+		</content>
+		<description></description>
+	</sql>
+</sqls>

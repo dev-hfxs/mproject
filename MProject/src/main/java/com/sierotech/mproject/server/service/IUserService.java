@@ -18,5 +18,5 @@ public interface IUserService {
 	
 	public void deleteUser(String adminUser,String userId) throws BusinessException;
 	
-	public void recoverUser(String adminUser,String userId) throws BusinessException;
+	public void updateUser4Recover(String adminUser,String userId) throws BusinessException;
 }

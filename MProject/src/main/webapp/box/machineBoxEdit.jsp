@@ -197,7 +197,7 @@
 		$.extend($.fn.validatebox.defaults.rules, {
 		    checkLng: { //验证经度
 		        validator: function(value, param){
-		         return  /^-?(((\d|[1-9]\d|1[1-7]\d|0)\.\d{7})|0|180)$/.test(value);
+		         return  /^-?(((\d|[1-9]\d|1[1-7]\d|0)\.\d{6})|0|180)$/.test(value);
 		        },
 		        message: '经度整数部分为0-180,小数位保留6位!'
 		    },

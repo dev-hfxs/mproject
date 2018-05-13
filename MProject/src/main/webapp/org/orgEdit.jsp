@@ -37,8 +37,8 @@
 							data-options="label:'地  址 :',validType:'length[0,60]'">
 					</div>
 					<div style="margin-bottom: 20px">
-						<input class="easyui-numberbox" id="telephone" name="telephone" style="width: 100%"
-							data-options="label:'单位电话 :',validtype:['numberCheck','length[0,60]']">
+						<input class="easyui-textbox" id="telephone" name="telephone" style="width: 100%"
+							data-options="label:'单位电话 :',validType:'telNum'">
 					</div>
 					<div style="margin-bottom: 20px">
 						<input class="easyui-numberbox" id="account" name="account" style="width: 100%"
@@ -50,7 +50,7 @@
 					</div>
 					<div style="margin-bottom: 20px">
 						<input class="easyui-textbox" id="contactPhone" name="contactPhone" style="width: 100%"
-							data-options="label:'联系人电话 :'" validtype='telNum'">
+							data-options="label:'联系人电话 :',validType:'telNum'">
 					</div>
 			</div>
 			<div data-options="region:'east'" style="width:42%;height:60%;margin: 0 0 0 0px;border-width:0;left:20px">

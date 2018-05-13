@@ -12,6 +12,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -30,6 +32,9 @@ import com.sierotech.mproject.server.service.IDictService;
  */
 @Service
 public class DictServiceImpl implements IDictService {
+	
+	static final Logger log = LoggerFactory.getLogger(DictServiceImpl.class);
+	
 	@Autowired
 	private JdbcTemplate springJdbcDao;
 	
@@ -76,7 +81,7 @@ public class DictServiceImpl implements IDictService {
 						try {
 							springJdbcDao.update(sbInsert.toString());
 						}catch(DataAccessException dae2 ) {
-							//忽略该数据
+							log.info(dae2.getMessage());
 						}
 					}
 				}
@@ -100,7 +105,7 @@ public class DictServiceImpl implements IDictService {
 						try {
 							springJdbcDao.update(sbInsert.toString());
 						}catch(DataAccessException dae2 ) {
-							//忽略该数据
+							log.info(dae2.getMessage());
 						}
 					}
 				}
@@ -129,7 +134,7 @@ public class DictServiceImpl implements IDictService {
 		try {
 			nfcDataMap = springJdbcDao.queryForMap(dataSql);
 		}catch(DataAccessException dae2 ) {
-			//忽略该数据
+			log.info(dae2.getMessage());
 		}
 		return nfcDataMap;
 	}
@@ -166,9 +171,9 @@ public class DictServiceImpl implements IDictService {
 				}
 			}
 		}catch(DataAccessException dae2 ) {
-			//忽略该数据
+			log.info(dae2.getMessage());
 		}catch(NumberFormatException ne) {
-			//
+			log.info(ne.getMessage());
 		}
 		
 		return codeUsed;

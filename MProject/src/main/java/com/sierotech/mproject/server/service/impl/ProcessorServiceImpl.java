@@ -84,8 +84,6 @@ public class ProcessorServiceImpl implements IProcessorService {
 			throw new BusinessException("修改处理器错误,探测器数量!");
 		}
 		// TODO检查 NFC序列号、MOXA序列号是否重复
-		// TODO检查探测器数量是否超出范围
-		
 		String preSql = ConfigSQLUtil.getCacheSql("mproject-processor-updateProcessorById");
 		String sql = ConfigSQLUtil.preProcessSQL(preSql, processorObj);
 		try {
@@ -113,8 +111,7 @@ public class ProcessorServiceImpl implements IProcessorService {
 		sb.append(deleteProcessorSql);
 		
 		try {
-			springJdbcDao.batchUpdate(sb.toString().split(";\n"));
-			
+			springJdbcDao.batchUpdate(sb.toString().split(";\n"));			
 		} catch (DataAccessException dae) {
 			log.info(dae.toString());
 			throw new BusinessException("删除处理器错误,访问数据库异常.");

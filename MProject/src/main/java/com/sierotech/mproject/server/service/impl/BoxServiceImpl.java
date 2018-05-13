@@ -65,9 +65,9 @@ public class BoxServiceImpl implements IBoxService{
 				}
 			}
 		} catch (DataAccessException ex) {
-			log.info("机箱编号验证，访问数据库异常.");
+			log.info(ex.getMessage());
 		} catch (Exception e) {
-			e.printStackTrace();
+			log.info(e.getMessage());
 		}
 		return result;
 	}
@@ -115,7 +115,7 @@ public class BoxServiceImpl implements IBoxService{
 		} catch (DataAccessException ex) {
 			throw new BusinessException("获取用户应建机箱数异常.");
 		} catch (Exception e) {
-			//e.printStackTrace();
+			log.info(e.getMessage());
 		}
 		int iAllowBoxNUm = 0;
 		if(alDatas !=null && alDatas.size() >0) {
@@ -123,7 +123,7 @@ public class BoxServiceImpl implements IBoxService{
 			try {
 				iAllowBoxNUm = Integer.parseInt(allowBoxNum);
 			}catch (NumberFormatException e) {
-				//e.printStackTrace();
+				log.info(e.getMessage());
 			}
 		}else {
 			throw new BusinessException("没有分配用户应建机箱数.");
@@ -136,7 +136,7 @@ public class BoxServiceImpl implements IBoxService{
 		} catch (DataAccessException ex) {
 			throw new BusinessException("获取用户已建机箱数异常.");
 		} catch (Exception e) {
-			//e.printStackTrace();
+			log.info(e.getMessage());
 		}
 		int iFactBoxNUm = 0;
 		if(alFactDatas !=null && alFactDatas.size() >0) {
@@ -187,7 +187,7 @@ public class BoxServiceImpl implements IBoxService{
 		try {
 			springJdbcDao.batchUpdate(sb.toString().split("\n"));
 		} catch (DataAccessException dae) {
-			log.info(dae.toString());
+			log.info(dae.getMessage());
 			throw new BusinessException("删除机箱错误,访问数据库异常.");
 		}
 	}
@@ -215,7 +215,7 @@ public class BoxServiceImpl implements IBoxService{
 			log.info("提交机箱错误：{}", ex.getMessage());
 			throw new BusinessException("提交机箱错误，操作数据库异常.");
 		} catch (Exception e) {
-			//e.printStackTrace();
+			log.info(e.getMessage());
 		}
 		if(boxMap == null) {
 			throw new BusinessException("提交机箱错误,ID为"+boxId+"的机箱不存在!");
@@ -231,7 +231,7 @@ public class BoxServiceImpl implements IBoxService{
 		} catch (DataAccessException ex) {
 			throw new BusinessException("提交机箱错误，获取机箱下的处理器数据库访问错误.");
 		} catch (Exception e) {
-			//e.printStackTrace();
+			log.info(e.getMessage());
 		}
 		if (alProcessors != null && alProcessors.size() > 0) {
 			queryProcessorNum = "" + alProcessors.size();
@@ -254,9 +254,10 @@ public class BoxServiceImpl implements IBoxService{
 			try {
 				alDetectors = springJdbcDao.queryForList(getDetectorsSql);
 			} catch (DataAccessException ex) {
+				log.info(ex.getMessage());
 				throw new BusinessException("提交机箱错误，获取机箱下处理器的探测器数据库访问错误.");
 			} catch (Exception e) {
-				//e.printStackTrace();
+				log.info(e.getMessage());
 			}
 			if(alDetectors == null || alDetectors.size() < 1) {
 				throw new BusinessException("提交机箱错误，机箱下处理器["+ processor.get("nfc_number").toString() +"]的探测器未维护.");
@@ -297,7 +298,7 @@ public class BoxServiceImpl implements IBoxService{
 			log.info("提交机箱获取机箱下属信息错误:{}",ex.getMessage());
 			throw new BusinessException("提交机箱获取机箱下属信息错误.");
 		} catch (Exception e) {
-			e.printStackTrace();
+			log.info(e.getMessage());
 		}
 				
 		//记录提交信息
@@ -388,7 +389,7 @@ public class BoxServiceImpl implements IBoxService{
 			log.info("确认验收机箱错误：{}", ex.getMessage());
 			throw new BusinessException("确认验收机箱错误，访问数据库异常.");
 		} catch (Exception e) {
-			e.printStackTrace();
+			log.info(e.getMessage());
 		}
 		//检查机箱下是否有完成的安装工单
 		String getFinishJobPreSql =  ConfigSQLUtil.getCacheSql("mproject-job-getFinishInstallJobs");

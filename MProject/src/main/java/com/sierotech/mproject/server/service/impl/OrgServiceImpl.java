@@ -66,9 +66,9 @@ public class OrgServiceImpl implements IOrgService {
 				}
 			}
 		} catch (DataAccessException ex) {
-			log.info("单位名验证，访问数据库异常.");
+			log.info(ex.getMessage());
 		} catch (Exception e) {
-			e.printStackTrace();
+			log.info(e.getMessage());
 		}
 		return result;
 	}
@@ -142,6 +142,7 @@ public class OrgServiceImpl implements IOrgService {
 		try {
 			alOrgs = springJdbcDao.queryForList(selectSql);
 		} catch (DataAccessException dae) {
+			log.info(dae.getMessage());
 			throw new BusinessException("删除单位错误,获取单位访问数据库异常.");
 		}
 		Map<String, Object> oldOrgObj;
@@ -207,7 +208,7 @@ public class OrgServiceImpl implements IOrgService {
 	}
 
 	@Override
-	public void recoverOrg(String adminUser, String orgId) throws BusinessException {
+	public void updateOrg4Recover(String adminUser, String orgId) throws BusinessException {
 		if (null == adminUser) {
 			throw new BusinessException("恢复单位错误,当前操作是未知的管理员!");
 		}
@@ -224,6 +225,7 @@ public class OrgServiceImpl implements IOrgService {
 		try {
 			alOrgs = springJdbcDao.queryForList(selectSql);
 		} catch (DataAccessException dae) {
+			log.info(dae.getMessage());
 			throw new BusinessException("恢复单位错误,获取单位访问数据库异常.");
 		}
 		Map<String, Object> orgObj;

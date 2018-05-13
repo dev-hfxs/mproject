@@ -64,7 +64,7 @@ create table t_org
    tax_number           varchar(25)                    null comment '单位税号',
    address              varchar(256)                   null comment '单位地址',
    area_code            varchar(4)                     null comment '电话区号',
-   telephone            varchar(8)                     null comment '单位电话',
+   telephone            varchar(11)                    null comment '单位电话',
    open_bank            varchar(64)                    null comment '开户行',
    account              varchar(20)                    null comment '账户',
    contacts             varchar(32)                    null comment '联系人',
@@ -281,7 +281,7 @@ create table t_operation_log
    old_value            varchar(128)                   null comment '修改前内容' ,
    new_value            varchar(128)                   null comment '修改后内容' ,
    project_id           varchar(32 )                   null comment '对应项目' ,
-   operation_part	char(1)			       null comment '1:项目,2:机箱,3:处理器,4:探测器',
+   operation_part	varchar(20)		       null comment '',
    update_field  	varchar(40)		       null comment '修改的字段',
    constraint pk_t_operation_log_id primary key (id)
 );
@@ -369,8 +369,10 @@ create table t_ip_info
    gateway              varchar(16)                    null comment '网关' ,
    net_mask		varchar(16)		       null comment '子网掩码' ,
    project_id           varchar(32)                    null comment 'IP对应的项目' ,
-   used                 char(1)                        null comment '是否使用',
-   net_name             varchar(64)                    null comment '网络名称',
+   status               char(1)                        null comment 'N未使用,Y已使用,L锁定使用',
+   mark_user		varchar(32)		       null comment 'ip状态标记的用户',
+   net_name             varchar(64)                    null comment '网段名称',
    create_date          varchar(19)                    null comment '创建时间' ,
+   processor_id         varchar(32)                    null comment '使用IP的处理器ID' ,
    constraint pk_t_ip_info primary key (id)
 );

@@ -34,18 +34,20 @@
 	
 	<sql id="mproject-box-getUserBoxsList" name="获取用户当前项目的机箱列表">
 		<content>
-		 SELECT id, box_number, nfc_number, longitude, latitude, processor_num, enable_edit, 
-		 0 AS submit_num
-		 FROM t_machine_box b
-		 WHERE b.project_id = ':projectId' AND b.build_manager = ':userId' 
-		 AND not exists (select machine_box_id from t_machine_box_submit s where s.machine_box_id = b.id )
-		 UNION 
-		 SELECT id, box_number, nfc_number, longitude, latitude, processor_num, enable_edit, 
-		 (SELECT count(*) FROM t_machine_box_submit t2 WHERE t2.machine_box_id = b.id) AS submit_num
-		 FROM t_machine_box b
-		 WHERE b.project_id = ':projectId' AND b.build_manager = ':userId' 
-		 AND exists (select machine_box_id from t_machine_box_submit s where s.machine_box_id = b.id )
-		 AND b.enable_edit = 'Y' 
+		select id, box_number, nfc_number, longitude, latitude, processor_num, enable_edit, submit_num, create_date
+		from (
+			SELECT id, box_number, nfc_number, longitude, latitude, processor_num, enable_edit, 
+		 	0 AS submit_num, b.create_date 
+		 	FROM t_machine_box b
+			 WHERE b.project_id = ':projectId' AND b.build_manager = ':userId' 
+		 	AND not exists (select machine_box_id from t_machine_box_submit s where s.machine_box_id = b.id ) 
+		 	UNION 
+		 	SELECT id, box_number, nfc_number, longitude, latitude, processor_num, enable_edit, 
+		 	(SELECT count(*) FROM t_machine_box_submit t2 WHERE t2.machine_box_id = b.id) AS submit_num, b.create_date 
+		 	FROM t_machine_box b
+		 	WHERE b.project_id = ':projectId' AND b.build_manager = ':userId' 
+		 	AND exists (select machine_box_id from t_machine_box_submit s where s.machine_box_id = b.id )  
+		) ta order by create_date 
 		</content>
 		<description></description>
 	</sql>
@@ -57,8 +59,19 @@
 		 confirm_install_date, confirm_debug_date, pm_confirm_date
 		 FROM t_machine_box b 
 		 WHERE b.project_id = ':projectId' AND b.build_manager = ':userId' and (b.enable_edit = 'N' or b.enable_edit is null)  
-		 and exists (select id from t_machine_box_submit t4 where t4.machine_box_id = b.id)
+		 and exists (select id from t_machine_box_submit t4 where t4.machine_box_id = b.id) order by b.create_date 
 		</content> 
+		<description></description> 
+	</sql>
+	
+	<sql id="mproject-box-getUserNoSubmitBoxs" name="获取用户当前项目提交机箱验收进度">
+		<content>
+		SELECT id, box_number, nfc_number, longitude, latitude, processor_num, enable_edit, 
+		 0 AS submit_num
+		 FROM t_machine_box b
+		 WHERE b.build_manager = ':userId' 
+		 AND not exists (select machine_box_id from t_machine_box_submit s where s.machine_box_id = b.id ) order by b.create_date 
+		 </content>
 		<description></description> 
 	</sql>
 	

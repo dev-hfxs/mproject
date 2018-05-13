@@ -55,7 +55,31 @@ public class DetectorServiceImpl implements IDetectorService{
 		if (null == detectorObj.get("latitude")) {
 			throw new BusinessException("添加探测器错误,缺少探测器纬度!");
 		}
-		
+		//获取当前处理器下维护的探测器数		
+		String getCountPreSql = ConfigSQLUtil.getCacheSql("mproject-detector-getDetectorNumByProcessorId");
+		Map<String, Object> paramMap = new HashMap<String, Object>();
+	    paramMap.clear();
+	    paramMap.put("processorId", detectorObj.get("processorId"));
+		String getCountSql = ConfigSQLUtil.preProcessSQL(getCountPreSql, paramMap);
+		Map<String,Object> recordMap = null;
+		try {
+			recordMap = springJdbcDao.queryForMap(getCountSql);
+		} catch (DataAccessException dae) {
+			log.info(dae.toString());
+			throw new BusinessException("添加探测器错误,未获取到当前处理器下的探测器数.");
+		}
+		if(recordMap!= null) {
+			int count = 0;
+			try{
+				count = Integer.parseInt(recordMap.get("countNum").toString());	
+			}catch(NumberFormatException ne) {
+				log.info(ne.getMessage());
+			}
+			if(count >= 128) {
+				throw new BusinessException("添加探测器错误, 当前处理器探测器数已到上限.");
+			}
+		}
+		// 保存数据到库
 		String primarykey = UUIDGenerator.getUUID();
 		detectorObj.put("id", primarykey);
 		detectorObj.put("creator", curUser);
@@ -220,6 +244,7 @@ public class DetectorServiceImpl implements IDetectorService{
 				try {
 					springJdbcDao.batchUpdate(importDataSql.toString().split("\n"));
 				}catch(DataAccessException dae ) {
+					log.info(dae.getMessage());
 					throw new BusinessException("导入探测器错误,数据入库异常.");
 				}
 			}

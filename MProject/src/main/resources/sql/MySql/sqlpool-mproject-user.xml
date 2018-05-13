@@ -45,7 +45,7 @@
 		FROM t_user u 
 		LEFT JOIN t_org o ON u.org_id = o.id 
 		LEFT JOIN t_role r ON u.role_id = r.id 
-		WHERE u.status IN ('N','R') [ AND instr(u.user_name,':userName') > 0 ] ORDER BY u.create_date DESC
+		WHERE u.status IN ('N','R') [ AND instr(u.user_name,':userName') > 0 ] ORDER BY u.role_id ASC, u.create_date DESC
 		</content>
 		<description>
 		</description>
@@ -64,7 +64,7 @@
 	</sql>
 	<sql id="mproject-user-getUserById" name="根据ID获取用户">
 		<content>
-		SELECT u.id, u.user_name, u.full_name,u.id_number,u.birthday,u.sex, u.org_id, o.org_name, u.contact_number, u.role_id, r.role_name, u.status, u.password, u.init_password 
+		SELECT u.id, u.user_name, u.full_name,u.id_number,u.birthday,u.sex, u.org_id, o.org_name, u.contact_number, u.role_id, r.role_name, r.role_type, u.status, u.password, u.init_password 
 		FROM t_user u 
 		LEFT JOIN t_org o ON u.org_id = o.id 
 		LEFT JOIN t_role r ON u.role_id = r.id 

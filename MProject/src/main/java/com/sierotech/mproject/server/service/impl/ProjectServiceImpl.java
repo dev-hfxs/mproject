@@ -64,9 +64,9 @@ public class ProjectServiceImpl implements IProjectService {
 				}
 			}
 		} catch (DataAccessException ex) {
-			log.info("项目名验证，访问数据库异常.");
+			log.info(ex.getMessage());
 		} catch (Exception e) {
-			e.printStackTrace();
+			log.info(e.getMessage());
 		}
 		return result;
 	}
@@ -140,6 +140,7 @@ public class ProjectServiceImpl implements IProjectService {
 		try {
 			alProjects = springJdbcDao.queryForList(selectSql);
 		} catch (DataAccessException dae) {
+			log.info(dae.getMessage());
 			throw new BusinessException("修改项目错误,获取项目访问数据库异常.");
 		}
 		Map<String, Object> oldProjectObj;
@@ -299,6 +300,7 @@ public class ProjectServiceImpl implements IProjectService {
 				}
 			}
 		} catch (DataAccessException ex) {
+			log.info(ex.getMessage());
 			throw new BusinessException("删除项目施工经理错误,获取用户提交的机箱数错误.");
 		}
 		if(existsAcceptBox == true) {
@@ -346,6 +348,7 @@ public class ProjectServiceImpl implements IProjectService {
 		try {
 			alProjects = springJdbcDao.queryForList(selectSql);
 		} catch (DataAccessException dae) {
+			log.info(dae.getMessage());
 			throw new BusinessException("修改施工经理应建机箱数错误,查找对应的项目错误.");
 		}
 		Map<String, Object> projectObj;
@@ -380,7 +383,7 @@ public class ProjectServiceImpl implements IProjectService {
 			try {
 				allotBoxNum = Integer.parseInt(strAllotBoxNum);	
 			}catch(NumberFormatException ne) {
-				//
+				log.info(ne.getMessage());
 			}
 		}
 		int oddBoxNum  =  projectBoxNum - allotBoxNum - oldAllowBoxNum;
@@ -415,6 +418,7 @@ public class ProjectServiceImpl implements IProjectService {
 		try {
 			alProjects = springJdbcDao.queryForList(selectSql);
 		} catch (DataAccessException dae) {
+			log.info(dae.getMessage());
 			throw new BusinessException("结束项目,查找对应的项目错误.");
 		}
 		Map<String, Object> projectObj;
@@ -443,6 +447,7 @@ public class ProjectServiceImpl implements IProjectService {
 		try {
 			springJdbcDao.update(deletePsnSql);
 		} catch (DataAccessException dae) {
+			log.info(dae.getMessage());
 			throw new BusinessException("结束项目, 解除与项目关联的施工经理数据库访问错误.");
 		}
 		// 删除施工经理创建的且未提交的机箱信息
@@ -466,6 +471,7 @@ public class ProjectServiceImpl implements IProjectService {
 			springJdbcDao.update(deleteBoxSql);
 			springJdbcDao.update(updateProjectSql);
 		} catch (DataAccessException dae) {
+			log.info(dae.getMessage());
 			throw new BusinessException("结束项目, 删除项目下未提交的机箱信息,访问数据库错误.");
 		}
 	}

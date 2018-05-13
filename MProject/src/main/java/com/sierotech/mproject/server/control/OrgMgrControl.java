@@ -167,7 +167,7 @@ public class OrgMgrControl {
 			return result;
 		}
 		try {
-			orgService.recoverOrg(UserTool.getLoginUser(request).get("user_name"), orgObj.get("id").toString());
+			orgService.updateOrg4Recover(UserTool.getLoginUser(request).get("user_name"), orgObj.get("id").toString());
 		}catch(BusinessException be) {
 			result.put("msg", be.getMessage());
 			return result;

@@ -77,6 +77,10 @@ function showButtons(val,row){
 }
 
 function doDelete(val){
+	if('u8952c8666964e07a9a285b10d706a61' == val){
+		$.messager.alert('提示','超级管理员不能删除.');
+		return;
+	}
 	$.messager.confirm('确认', '确认删除该用户?', function(r){
 		if(r){
 			$.ajax( {

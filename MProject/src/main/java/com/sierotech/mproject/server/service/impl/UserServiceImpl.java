@@ -309,8 +309,77 @@ public class UserServiceImpl implements IUserService {
 			throw new BusinessException("删除用户错误,未查询到用户.");
 		}
 
-		// TODO 1 将未处理的工单设置为未完成
-		// TODO 2 施工经理未提交的机箱及下属信息将被删除
+		String roleType = userObj.get("role_type") == null ? "" : userObj.get("role_type").toString();
+		if("I".equals(roleType) || "E".equals(roleType) || "D".equals(roleType)) {
+			//获取未处理的工单
+			List<Map<String,Object>> alWaitJobs = null;
+			String getJobsPreSql = ConfigSQLUtil.getCacheSql("mproject-job-getWaitingJobListByUser");
+			paramsMap.clear();
+			paramsMap.put("userId", userId);
+			String getJobsSql = ConfigSQLUtil.preProcessSQL(getJobsPreSql, paramsMap);
+			try {
+				alWaitJobs = springJdbcDao.queryForList(getJobsSql);
+			} catch (DataAccessException dae) {
+				log.info(dae.getMessage());
+			}
+			if(alWaitJobs != null && alWaitJobs.size() > 0 ) {
+				for(Map<String,Object> jobMap : alWaitJobs) {
+					//将未处理的工单设置为未完成
+					paramsMap.clear();
+					paramsMap.put("jobId", jobMap.get("id"));
+					paramsMap.put("status", "N");
+					paramsMap.put("jobDesc", "删除用户 - " + adminUser);
+					
+					String preSql = ConfigSQLUtil.getCacheSql("mproject-job-updateJobStatus");
+					String sql = ConfigSQLUtil.preProcessSQL(preSql, paramsMap);
+					try {
+						springJdbcDao.update(sql);
+					} catch (DataAccessException dae) {
+						log.info(dae.toString());
+					}
+				}
+			}
+		}
+		
+		if("B".equals(roleType)) {			
+			//获取该施工经理未提交的机箱
+			List<Map<String,Object>> alNoSubmitBoxs = null;			
+			String getBoxsPreSql = ConfigSQLUtil.getCacheSql("mproject-box-getUserNoSubmitBoxs");
+			paramsMap.clear();
+			paramsMap.put("userId", userId);
+			String getBoxsSql = ConfigSQLUtil.preProcessSQL(getBoxsPreSql, paramsMap);
+			try {
+				alNoSubmitBoxs = springJdbcDao.queryForList(getBoxsSql);
+			} catch (DataAccessException dae) {
+				log.info(dae.getMessage());
+			}
+			if(alNoSubmitBoxs != null && alNoSubmitBoxs.size() > 0) {
+				for(Map<String,Object> boxMap : alNoSubmitBoxs) {
+					//删除施工经理未提交的机箱及下属信息
+					String boxId = boxMap.get("id").toString();
+					String deleteDetectorPreSql = ConfigSQLUtil.getCacheSql("mproject-box-deleteBoxDetectorById");
+					String deleteProcessorPreSql = ConfigSQLUtil.getCacheSql("mproject-box-deleteBoxProcessorById");
+					String deleteBoxPreSql = ConfigSQLUtil.getCacheSql("mproject-box-deleteBoxById");
+					paramsMap.clear();
+					paramsMap.put("boxId", boxId);
+					
+					String deleteDetectorSql = ConfigSQLUtil.preProcessSQL(deleteDetectorPreSql, paramsMap);
+					String deleteProcessorSql = ConfigSQLUtil.preProcessSQL(deleteProcessorPreSql, paramsMap);
+					String deleteBoxSql = ConfigSQLUtil.preProcessSQL(deleteBoxPreSql, paramsMap);
+					
+					StringBuffer sb = new StringBuffer();
+					sb.append(deleteDetectorSql).append(";\n");
+					sb.append(deleteProcessorSql).append(";\n");
+					sb.append(deleteBoxSql).append("");
+					
+					try {
+						springJdbcDao.batchUpdate(sb.toString().split("\n"));
+					} catch (DataAccessException dae) {
+						log.info(dae.getMessage());
+					}
+				}
+			}			
+		}		
 
 		String preUpdateSql = ConfigSQLUtil.getCacheSql("mproject-user-deleteUserByUsrId");
 		paramsMap.clear();
@@ -327,7 +396,7 @@ public class UserServiceImpl implements IUserService {
 	}
 
 	@Override
-	public void recoverUser(String adminUser, String userId) throws BusinessException {
+	public void updateUser4Recover(String adminUser, String userId) throws BusinessException {
 		if (null == adminUser) {
 			throw new BusinessException("恢复用户错误,当前操作是未知的管理员!");
 		}

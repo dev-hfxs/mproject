@@ -94,7 +94,7 @@ public class QueryMgrControl {
 			result.put("msg", "信息查询错误, 缺少查询验证码!");
 			return result;
 		}
-		String searchCode = request.getParameter("searchCode");
+		String searchCode = request.getParameter("searchCode").toUpperCase();
 		Map<String,Object> verCodeMap = null;
 		try {
 			String targetUser = UserTool.getLoginUser(request).get("id").toString();
@@ -107,7 +107,72 @@ public class QueryMgrControl {
 			result.put("returnCode", "success");
 			result.put("queryProject", verCodeMap.get("project_id") == null ? "" : verCodeMap.get("project_id").toString());
 			result.put("codeType", queryType);
-		}		
+		}
+		result.put("msg", "");
+		return result;
+	}
+	
+	@RequestMapping(value = "/updateInfo")
+	@ResponseBody
+	public Map<String, String> updateInfo(HttpServletRequest request) {	
+		Map<String, String> result = new HashMap<String, String>();
+		result.put("returnCode", "fail");
+		
+		if (null == request.getParameter("operationPart")) {
+			result.put("msg", "信息修改错误, 未指定修改部分!");
+			return result;
+		}
+		String operationPart = request.getParameter("operationPart");
+		
+		if (null == request.getParameter("updateField")) {
+			result.put("msg", "信息修改错误, 未指定修改字段!");
+			return result;
+		}
+		String updateField = request.getParameter("updateField");
+		
+		if (null == request.getParameter("dataIndexValue")) {
+			result.put("msg", "信息修改错误, 未指定修改索引值!");
+			return result;
+		}
+		String dataIndexValue = request.getParameter("dataIndexValue");
+		
+		if (null == request.getParameter("oldValue")) {
+			result.put("msg", "信息修改错误, 未指定修改前的值!");
+			return result;
+		}
+		String oldValue = request.getParameter("oldValue");
+		
+		if (null == request.getParameter("newValue")) {
+			result.put("msg", "信息修改错误, 未指定修改后的值!");
+			return result;
+		}
+		String newValue = request.getParameter("newValue");
+		if (null == request.getParameter("searchCode")) {
+			result.put("msg", "信息修改错误, 缺少修改验证码!");
+			return result;
+		}
+		String searchCode = request.getParameter("searchCode");
+		
+		String dataIndex = "";
+	    if("box".equals(operationPart)){
+	    	dataIndex = "box_number";
+	    }
+	    if("processor".equals(operationPart)){
+	    	dataIndex = "nfc_number";
+	    }
+	    if("detector".equals(operationPart)){
+	    	dataIndex = "nfc_number";
+	    }
+	    
+		Map<String,Object> verCodeMap = null;
+		try {
+			String targetUser = UserTool.getLoginUser(request).get("id").toString();
+			querySerive.updateInfo(targetUser, operationPart, updateField, dataIndex, dataIndexValue, oldValue, newValue, searchCode);
+		}catch(BusinessException be) {
+			result.put("msg", be.getMessage());
+			return result;
+		}
+		result.put("returnCode", "success");
 		result.put("msg", "");
 		return result;
 	}

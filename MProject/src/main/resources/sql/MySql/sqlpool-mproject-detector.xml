@@ -4,7 +4,14 @@
 		<content>
 		SELECT id, detector_id, detector_seq, processor_id, nfc_number, longitude, latitude, start_point, end_point 
 		FROM t_detector 
-		WHERE processor_id = ':processorId' 
+		WHERE processor_id = ':processorId' order by detector_seq asc 
+		</content>
+		<description></description>
+	</sql>
+	
+	<sql id="mproject-detector-getDetectorNumByProcessorId" name="根据处理器ID获取探测器数">
+		<content>
+		SELECT count(*) AS countNum FROM t_detector WHERE processor_id = ':processorId' 
 		</content>
 		<description></description>
 	</sql>

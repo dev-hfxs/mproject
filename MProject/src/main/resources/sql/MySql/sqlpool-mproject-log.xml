@@ -16,4 +16,23 @@
 		<description></description>
 	</sql>
 	
+	<sql id="mproject-log-logUpdateInfo" name="记录信息修改">
+		<content>
+		 INSERT INTO t_operation_log (id, user_name, operation_date, operation_type, operation_desc,old_value, new_value, project_id, operation_part, update_field ) 
+		 VALUES (':id', ':userName', ':operationDate', ':operationType',':operationDesc', ':oldValue', ':newValue', ':projectId', ':operationPart', ':updateField')  
+		</content>
+		<description></description>
+	</sql>
+	
+	<sql id="mproject-log-getUpdateInfoLog" name="获取信息修改日志">
+		<content>
+		 SELECT id, operation_date, operation_desc,old_value, new_value, project_id, operation_part,  
+		 ( SELECT full_name from t_user u where u.id = log.user_name) as user_name,
+         case when operation_type='box' then '机箱' when operation_type='processor' then '处理器' when operation_type='detector' then '探测器' else operation_type end  as operation_type ,
+         update_field 
+		 FROM t_operation_log log 
+		</content>
+		<description></description>
+	</sql>
+	
 </sqls>

@@ -146,7 +146,10 @@ public class QueryServiceImpl implements IQueryService{
 		paramMap.put("targetUser", codeUser);
 		String getVerCodeSql = ConfigSQLUtil.preProcessSQL(getVerCodePreSql, paramMap);
 		try {
-			verCodeMap = springJdbcDao.queryForMap(getVerCodeSql);
+			List<Map<String,Object>> list = springJdbcDao.queryForList(getVerCodeSql);
+			if(list != null && list.size() > 0) {
+				verCodeMap = list.get(0);
+			}
 		}catch (DataAccessException dae) {
 			throw new BusinessException("信息查询错误, 获取验证码错误.");
 		}
@@ -156,11 +159,11 @@ public class QueryServiceImpl implements IQueryService{
 		if(!queryType.equals(verCodeMap.get("code_type").toString())){
 			throw new BusinessException("信息查询错误, 验证码对应的查询项目不一致.");
 		}
-		if(verCodeMap.get("create_date") == null || "".equals(verCodeMap.get("create_date")) || verCodeMap.get("valid_ime") == null || "".equals(verCodeMap.get("valid_ime"))) {
+		if(verCodeMap.get("create_date") == null || "".equals(verCodeMap.get("create_date")) || verCodeMap.get("valid_time") == null || "".equals(verCodeMap.get("valid_time"))) {
 			throw new BusinessException("信息查询错误, 验证码有效期未指定.");
 		}
 		String beginDate = verCodeMap.get("create_date").toString();
-		String sValidTime = verCodeMap.get("valid_ime").toString();
+		String sValidTime = verCodeMap.get("valid_time").toString();
 		int iValidTime = 0;
 		try{
 			iValidTime = Integer.parseInt(sValidTime);
@@ -168,10 +171,10 @@ public class QueryServiceImpl implements IQueryService{
 			//
 		}
 		//检查验证码有效期
-		Date endDate = DateUtils.getCurrDay();
+		Date curDate = DateUtils.getCurrDay();
 		Date startDate = DateUtils.parse(beginDate);
 		Date validDate = DateUtils.addHour(startDate, iValidTime);
-		int diffValue = DateUtils.compareDate(validDate, endDate);
+		int diffValue = DateUtils.compareDate(curDate, validDate);
 		if(diffValue < 0) {
 			throw new BusinessException("信息查询错误, 验证码有效期已过.");
 		}
@@ -203,16 +206,183 @@ public class QueryServiceImpl implements IQueryService{
 		if(alData == null || alData.size() < 1) {
 			throw new BusinessException("未查询到数据.");
 		}
-		//查询成功,将验证码标识未已使用
+		// 将验证码标识未已使用
 		String updateCodePreSql = ConfigSQLUtil.getCacheSql("mproject-query-closeCodeByCodeId");
 		paramMap.clear();
 		paramMap.put("codeId", verCodeMap.get("id"));
+		
 		String updateCodeSql = ConfigSQLUtil.preProcessSQL(updateCodePreSql, paramMap);
 		try {
-			springJdbcDao.queryForList(updateCodeSql);
+			springJdbcDao.update(updateCodeSql);
 		} catch (DataAccessException dae) {
 			log.info(dae.toString());
 		}
 		return verCodeMap;
+	}
+
+	@Override
+	public void updateInfo(String codeUser, String updatePart, String updateField, String dataIndex,
+			String dataIndexValue, String oldValue, String newValue, String verCode) throws BusinessException {
+		if(updatePart == null || updateField == null) {
+			throw new BusinessException("信息修改错误, 未指定修改的项目.");
+		}
+		//查询验证码
+		Map<String, Object> verCodeMap = null;
+		Map<String,Object> paramMap = new HashMap<String, Object>();
+		String getVerCodePreSql = ConfigSQLUtil.getCacheSql("mproject-query-getCodeByCodeValue");
+		paramMap.clear();
+		paramMap.put("codeValue", verCode);
+		paramMap.put("targetUser", codeUser);
+		String getVerCodeSql = ConfigSQLUtil.preProcessSQL(getVerCodePreSql, paramMap);
+		try {
+			List<Map<String,Object>> list = springJdbcDao.queryForList(getVerCodeSql);
+			if(list != null && list.size() > 0) {
+				verCodeMap = list.get(0);
+			}
+		}catch (DataAccessException dae) {
+			throw new BusinessException("信息修改错误, 获取验证码错误.");
+		}
+		if(verCodeMap == null) {
+			throw new BusinessException("信息修改错误, 不是有效的验证码.");
+		}
+		if(!"U".equals(verCodeMap.get("code_type").toString())){
+			throw new BusinessException("信息修改错误, 验证码的功能不是用于信息修改.");
+		}
+		if(verCodeMap.get("create_date") == null || "".equals(verCodeMap.get("create_date")) || verCodeMap.get("valid_time") == null || "".equals(verCodeMap.get("valid_time"))) {
+			throw new BusinessException("信息修改错误, 验证码有效期未指定.");
+		}
+		String beginDate = verCodeMap.get("create_date").toString();
+		String sValidTime = verCodeMap.get("valid_time").toString();
+		int iValidTime = 0;
+		try{
+			iValidTime = Integer.parseInt(sValidTime);
+		}catch(NumberFormatException ne) {
+			//
+		}
+		//检查验证码有效期
+		Date curDate = DateUtils.getCurrDay();
+		Date startDate = DateUtils.parse(beginDate);
+		Date validDate = DateUtils.addHour(startDate, iValidTime);
+		int diffValue = DateUtils.compareDate(curDate, validDate);
+		if(diffValue < 0) {
+			throw new BusinessException("信息修改错误, 验证码有效期已过.");
+		}
+		String projectId = verCodeMap.get("project_id") == null? "" : verCodeMap.get("project_id").toString();
+		
+		//信息修改前校验数据是否存在
+		StringBuffer getUpdateDataSql = new StringBuffer();
+		if("box".equals(updatePart)) {
+			getUpdateDataSql.append(" select id from t_machine_box where ").append(dataIndex).append(" = '").append(dataIndexValue).append("'");
+			getUpdateDataSql.append(" and project_id = '").append(projectId).append("'");		
+		}else if("processor".equals(updatePart)) {
+			getUpdateDataSql.append(" select id from t_processor where ").append(dataIndex).append(" = '").append(dataIndexValue).append("'");
+			getUpdateDataSql.append(" and machine_box_id in (select id from t_machine_box where project_id = '").append(projectId).append("') ");
+		}else if("detector".equals(updatePart)) {
+			getUpdateDataSql.append(" select id from t_detector where ").append(dataIndex).append(" = '").append(dataIndexValue).append("'");
+			getUpdateDataSql.append(" and processor_id in (select id from t_processor where machine_box_id in ( select id from t_machine_box where project_id = '").append(projectId).append("') )");
+		}		
+			
+		if("".equals(oldValue.trim())) {
+			getUpdateDataSql.append(" and ").append(updateField).append(" is null ");
+		}else {
+			if("longitude".equals(updateField) || "latitude".equals(updateField) ) {
+				getUpdateDataSql.append(" and ").append(updateField).append("=").append(oldValue);
+			}else {
+				getUpdateDataSql.append(" and ").append(updateField).append("='").append(oldValue).append("'");
+			}
+		}
+		
+		Map<String,Object> updateObjMap = null;
+		try {
+			List<Map<String,Object>> alUpdateData = springJdbcDao.queryForList(getUpdateDataSql.toString());
+			if(alUpdateData != null && alUpdateData.size() > 0) {
+				updateObjMap = alUpdateData.get(0);
+			}
+		}catch (DataAccessException dae) {
+			log.info(dae.getMessage());
+			//throw new BusinessException("信息修改错误, 获取验证码错误.");
+		}
+		if(updateObjMap == null) {
+			throw new BusinessException("信息修改错误, 未检索到对应的修改数据.");
+		}
+		//信息修改
+		StringBuffer updateInfoSql = new StringBuffer();
+		if("box".equals(updatePart)) {
+			updateInfoSql.append(" update t_machine_box ");
+			if("".equals(newValue.trim())){
+				updateInfoSql.append(" set " ).append(updateField).append( " = null ");
+			}else {
+				if("longitude".equals(updateField) || "latitude".equals(updateField) ) {
+					updateInfoSql.append(" set " ).append(updateField).append( " = ").append(newValue);
+				}else {
+					updateInfoSql.append(" set " ).append(updateField).append( "= '").append(newValue).append("' ");
+				}
+			}
+			updateInfoSql.append(" where ").append(dataIndex).append( "= '").append(dataIndexValue).append("' and project_id = '").append(projectId).append("'");
+		}else if("processor".equals(updatePart)) {
+			updateInfoSql.append(" update t_processor ");
+			if("".equals(newValue.trim())){
+				updateInfoSql.append(" set " ).append(updateField).append( " = null ");
+			}else {
+				if("longitude".equals(updateField) || "latitude".equals(updateField) ) {
+					updateInfoSql.append(" set " ).append(updateField).append( " = ").append(newValue);
+				}else {
+					updateInfoSql.append(" set " ).append(updateField).append( "= '").append(newValue).append("' ");
+				}
+			}
+			updateInfoSql.append(" where ").append(dataIndex).append( "= '").append(dataIndexValue).append("' ");
+			updateInfoSql.append(" and machine_box_id in (select id from t_machine_box where project_id = '").append(projectId).append("') ");
+		}else if("detector".equals(updatePart)) {
+			updateInfoSql.append(" update t_detector ");
+			if("".equals(newValue.trim())){
+				updateInfoSql.append(" set " ).append(updateField).append( " = null ");
+			}else {
+				if("longitude".equals(updateField) || "latitude".equals(updateField) ) {
+					updateInfoSql.append(" set " ).append(updateField).append( " = ").append(newValue);
+				}else {
+					updateInfoSql.append(" set " ).append(updateField).append( "= '").append(newValue).append("' ");
+				}
+			}
+			updateInfoSql.append(" where ").append(dataIndex).append( " = '").append(dataIndexValue).append("' ");
+			updateInfoSql.append(" and processor_id in (select id from t_processor where machine_box_id in ( select id from t_machine_box where project_id = '").append(projectId).append("') )");
+		}
+		
+		try {
+			springJdbcDao.update(updateInfoSql.toString());
+		} catch (DataAccessException dae) {
+			log.info(dae.toString());
+		}
+		// 将验证码标识未已使用
+		String updateCodePreSql = ConfigSQLUtil.getCacheSql("mproject-query-closeCodeByCodeId");
+		paramMap.clear();
+		paramMap.put("codeId", verCodeMap.get("id"));
+		
+		String updateCodeSql = ConfigSQLUtil.preProcessSQL(updateCodePreSql, paramMap);
+		try {
+			springJdbcDao.update(updateCodeSql);
+		} catch (DataAccessException dae) {
+			log.info(dae.toString());
+		}
+		//记录日志
+		paramMap.clear();
+		paramMap.put("id", UUIDGenerator.getUUID());
+		paramMap.put("userName", codeUser);
+		paramMap.put("operationDate", DateUtils.getNow(DateUtils.FORMAT_LONG));
+		paramMap.put("operationType", 'U');
+		paramMap.put("operationDesc", "信息修改");
+		paramMap.put("oldValue", oldValue);
+		paramMap.put("newValue", newValue);
+		paramMap.put("projectId", projectId);
+		paramMap.put("operationPart", updatePart);
+		paramMap.put("updateField", updateField);
+		
+		
+		String logPreSql = ConfigSQLUtil.getCacheSql("mproject-log-logUpdateInfo");
+		String logSql = ConfigSQLUtil.preProcessSQL(logPreSql, paramMap);
+		try {
+			springJdbcDao.update(logSql);
+		} catch (DataAccessException dae) {
+			log.info(dae.toString());
+		}
 	}
 }

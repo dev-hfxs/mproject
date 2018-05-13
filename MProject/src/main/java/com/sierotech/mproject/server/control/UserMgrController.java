@@ -266,7 +266,7 @@ public class UserMgrController {
 			return result;
 		}
 		try {
-			userService.recoverUser(UserTool.getLoginUser(request).get("user_name"), userObj.get("id").toString());
+			userService.updateUser4Recover(UserTool.getLoginUser(request).get("user_name"), userObj.get("id").toString());
 		}catch(BusinessException be) {
 			result.put("msg", be.getMessage());
 			return result;

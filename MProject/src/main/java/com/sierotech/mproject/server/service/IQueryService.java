@@ -24,4 +24,7 @@ public interface IQueryService {
 	
 	public Map<String,Object> queryInfo(String codeUser, String queryType, String queryValue, String codeValue ) throws BusinessException;
 	
+	public void updateInfo(String curUser,String updatePart, String updateField, String dataIndex, String dataIndexValue, String oldValue, String newValue ,String verCode) throws BusinessException;
+	
+	
 }

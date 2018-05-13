@@ -228,7 +228,7 @@ var currentModuleText;
 					用户:&nbsp;<span id="userName"></span>&nbsp;&nbsp;单位:&nbsp;<span id="orgName"></span><br><span id="roleName"></span>
 				</div>
 				<div class="header-button">
-					<div class="bt-reset-pwd">重置密码</div>
+					<div class="bt-reset-pwd">修改密码</div>
 					<div class="bt-logout">注销</div>
 				</div>
 			</div>

@@ -27,5 +27,5 @@ public interface IOrgService {
 	
 	public void deleteOrg(String adminUser,String orgId) throws BusinessException;
 	
-	public void recoverOrg(String adminUser,String orgId) throws BusinessException;
+	public void updateOrg4Recover(String adminUser,String orgId) throws BusinessException;
 }

@@ -15,6 +15,7 @@ import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 
@@ -48,7 +49,12 @@ public class LoginServiceImpl implements ILoginService {
 		String preSql = ConfigSQLUtil.getCacheSql("mproject-login-getUserByUserName");
 		String sql = ConfigSQLUtil.preProcessSQL(preSql, userObj);
 		
-		List<Map<String,Object>> alUser = springJdbcDao.queryForList(sql);
+		List<Map<String,Object>> alUser = null;
+		try {
+			alUser = springJdbcDao.queryForList(sql);
+		}catch(DataAccessException dae) {
+			log.info(dae.getMessage());
+		}
 		if(alUser!=null && alUser.size()> 0) {
 			loginUser = alUser.get(0);
 		}

@@ -56,7 +56,7 @@ public class LogOperationUtil {
 		Map<String,Object> paramsMap = new HashMap<String,Object>();
 		paramsMap.put("id", UUIDGenerator.getUUID());
 		paramsMap.put("userName", userName);
-		paramsMap.put("loginDate", DateUtils.getNow(DateUtils.FORMAT_LONG));
+		paramsMap.put("operationDate", DateUtils.getNow(DateUtils.FORMAT_LONG));
 		paramsMap.put("operationModule", module);
 		paramsMap.put("operationDesc", operationDesc);
 		
