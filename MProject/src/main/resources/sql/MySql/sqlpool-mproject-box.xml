@@ -45,7 +45,7 @@
 		 	SELECT id, box_number, nfc_number, longitude, latitude, processor_num, enable_edit, 
 		 	(SELECT count(*) FROM t_machine_box_submit t2 WHERE t2.machine_box_id = b.id) AS submit_num, b.create_date 
 		 	FROM t_machine_box b
-		 	WHERE b.project_id = ':projectId' AND b.build_manager = ':userId' 
+		 	WHERE b.project_id = ':projectId' AND b.build_manager = ':userId' AND b.enable_edit = 'Y' 
 		 	AND exists (select machine_box_id from t_machine_box_submit s where s.machine_box_id = b.id )  
 		) ta order by create_date 
 		</content>
@@ -64,7 +64,7 @@
 		<description></description> 
 	</sql>
 	
-	<sql id="mproject-box-getUserNoSubmitBoxs" name="获取用户当前项目提交机箱验收进度">
+	<sql id="mproject-box-getUserNoSubmitBoxs" name="获取用户当前项目未提交机箱验收进度">
 		<content>
 		SELECT id, box_number, nfc_number, longitude, latitude, processor_num, enable_edit, 
 		 0 AS submit_num

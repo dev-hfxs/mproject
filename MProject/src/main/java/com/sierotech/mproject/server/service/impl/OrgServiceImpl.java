@@ -143,13 +143,13 @@ public class OrgServiceImpl implements IOrgService {
 			alOrgs = springJdbcDao.queryForList(selectSql);
 		} catch (DataAccessException dae) {
 			log.info(dae.getMessage());
-			throw new BusinessException("删除单位错误,获取单位访问数据库异常.");
+			throw new BusinessException("修改单位错误,获取单位访问数据库异常.");
 		}
 		Map<String, Object> oldOrgObj;
 		if (alOrgs != null && alOrgs.size() > 0) {
 			oldOrgObj = alOrgs.get(0);
 		} else {
-			throw new BusinessException("删除单位错误,未查询到单位.");
+			throw new BusinessException("修改单位错误,未查询到单位.");
 		}
 				
 		String preSql = ConfigSQLUtil.getCacheSql("mproject-org-updateOrg");
@@ -191,8 +191,24 @@ public class OrgServiceImpl implements IOrgService {
 			throw new BusinessException("删除单位错误,未查询到单位.");
 		}
 
-		// TODO 1 检查单位下面是否有施工经理,有在建的项目
-
+		// 检查单位下面是否有施工经理,有在建的项目
+		String getUsersInProjectPreSql = ConfigSQLUtil.getCacheSql("mproject-org-getOrgUserInProject");
+		String getUsersInProjectSql = ConfigSQLUtil.preProcessSQL(getUsersInProjectPreSql, paramsMap);
+		int num = 0;
+		try {
+			Map<String, Object> recordMap = springJdbcDao.queryForMap(getUsersInProjectSql);
+			if (recordMap != null) {
+				num = Integer.valueOf(recordMap.get("countNum").toString());
+			}
+		} catch (DataAccessException ex) {
+			log.info(ex.getMessage());
+		} catch (Exception ex) {
+			log.info(ex.getMessage());
+		}
+		if(num > 0) {
+			throw new BusinessException("该单位下面的人员有在建的项目, 不能删除.");
+		}
+		
 		String preUpdateSql = ConfigSQLUtil.getCacheSql("mproject-org-deleteOrgById");
 		paramsMap.clear();
 		paramsMap.put("orgId", orgId);

@@ -376,3 +376,16 @@ create table t_ip_info
    processor_id         varchar(32)                    null comment '使用IP的处理器ID' ,
    constraint pk_t_ip_info primary key (id)
 );
+
+/*==============================================================*/
+/* Table: t_attach_file                                         */
+/*==============================================================*/
+create table t_attach_file 
+(
+   id		        varchar(32)                    not null,
+   file_owner_obj	varchar(20)		       null comment '文件所属对象名称',
+   obj_id		varchar(32)			null comment '文件所属对象ID',
+   file_name		varchar(128)			null comment '文件名称',
+   file_path		varchar(128)			null comment '文件路径',
+   constraint pk_t_ip_info primary key (id)
+);

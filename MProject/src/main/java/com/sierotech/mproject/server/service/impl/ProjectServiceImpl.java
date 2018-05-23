@@ -159,7 +159,7 @@ public class ProjectServiceImpl implements IProjectService {
 			throw new BusinessException("修改项目,数据存储异常.");
 		}
 		// 记录日志
-		LogOperationUtil.logAdminOperation(adminUser, "项目管理", "修改项目:[" + projectObj.get("projectName").toString() + "].");
+		LogOperationUtil.logAdminOperation(adminUser, "项目管理", "修改前项目名["+ oldProjectObj.get("project_name") +"],修改后项目名[" + projectObj.get("projectName").toString() + "].");
 	}
 
 
@@ -358,6 +358,32 @@ public class ProjectServiceImpl implements IProjectService {
 			throw new BusinessException("修改施工经理应建机箱数错误,未找到对应的项目.");
 		}
 		
+		//获取施工经理已建的机箱数
+		int userBuildBoxNum = 0;
+		String buildBoxNumPreSql = ConfigSQLUtil.getCacheSql("mproject-project-getUserBuildBoxNum");
+		Map<String,Object> paramMap = new HashMap<String,Object>();
+		paramMap.clear();
+		paramMap.put("projectId", projectId);
+		paramMap.put("userId", userId);
+		String buildBoxNumSql = ConfigSQLUtil.preProcessSQL(buildBoxNumPreSql, paramMap);
+		Map<String, Object> recordMap = null;
+		try {
+			recordMap = springJdbcDao.queryForMap(buildBoxNumSql);			
+		} catch (DataAccessException dae) {
+			log.info(dae.getMessage());
+		}
+		if(recordMap != null && recordMap.get("countNum") != null) {
+			try {
+				userBuildBoxNum = Integer.parseInt(recordMap.get("countNum").toString());
+			}catch(NumberFormatException ne) {
+				log.info(ne.getMessage());
+			}
+		}
+		
+		if (allowBoxNum < userBuildBoxNum) {
+			throw new BusinessException("修改未通过,调整的机箱数小于施工经理已建机箱数.");
+		}
+		
 		// 获取项目的应建机箱数
 		int projectBoxNum = 0;
 		try {
@@ -367,7 +393,7 @@ public class ProjectServiceImpl implements IProjectService {
 		}
 		//获取项目已分配(其他施工经理)的机箱数
 		String allotBoxNumPreSql = ConfigSQLUtil.getCacheSql("mproject-project-getProjectHadAllotBoxNum");
-		Map<String,Object> paramMap = new HashMap<String,Object>();
+		paramMap.clear();
 		paramMap.put("projectId", projectId);
 		String allotBoxNumSql = ConfigSQLUtil.preProcessSQL(allotBoxNumPreSql, paramMap);
 		List<Map<String, Object>> alProjectAllotBoxs;
@@ -473,6 +499,41 @@ public class ProjectServiceImpl implements IProjectService {
 		} catch (DataAccessException dae) {
 			log.info(dae.getMessage());
 			throw new BusinessException("结束项目, 删除项目下未提交的机箱信息,访问数据库错误.");
+		}
+	}
+
+	
+	@Override
+	public void deleteProjectManager(String adminUser, String projectId) throws BusinessException {
+		//获取项目
+		String preSelectSql = ConfigSQLUtil.getCacheSql("mproject-project-queryProjectById");
+		Map<String, Object> paramsMap = new HashMap<String, Object>();
+		paramsMap.put("projectId", projectId);
+		String selectSql = ConfigSQLUtil.preProcessSQL(preSelectSql, paramsMap);
+		List<Map<String, Object>> alProjects;
+		try {
+			alProjects = springJdbcDao.queryForList(selectSql);
+		} catch (DataAccessException dae) {
+			log.info(dae.getMessage());
+			throw new BusinessException("移除项目经理,查找对应的项目错误.");
+		}
+		Map<String, Object> projectObj;
+		if (alProjects != null && alProjects.size() > 0) {
+			projectObj = alProjects.get(0);
+		} else {
+			throw new BusinessException("移除项目经理,未找到对应的项目.");
+		}
+				
+		//移除项目经理
+		String preUpdateSql = ConfigSQLUtil.getCacheSql("mproject-project-updateProject4NoManager");
+		paramsMap.clear();
+		paramsMap.put("projectId", projectId);
+		String updateSql = ConfigSQLUtil.preProcessSQL(preUpdateSql, paramsMap);
+		try {
+			springJdbcDao.update(updateSql);
+		} catch (DataAccessException dae) {
+			log.info(dae.getMessage());
+			throw new BusinessException("移除项目经理,数据库操作错误.");
 		}
 	}
 }

@@ -9,10 +9,13 @@
 package com.sierotech.mproject.server.control;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
@@ -21,6 +24,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.sierotech.mproject.common.BusinessException;
 import com.sierotech.mproject.common.utils.ControllerUtils;
+import com.sierotech.mproject.common.utils.JsonUtil;
 import com.sierotech.mproject.common.utils.UserTool;
 import com.sierotech.mproject.server.service.IBoxService;
 
@@ -35,6 +39,7 @@ import com.sierotech.mproject.server.service.IBoxService;
 @RequestMapping("/box/mgr/")
 @Scope("request")
 public class BoxMgrControl {
+	static final Logger log = LoggerFactory.getLogger(BoxMgrControl.class);
 	
 	@Autowired
 	IBoxService boxService;
@@ -234,8 +239,22 @@ public class BoxMgrControl {
 			result.put("msg", "确认验收机箱错误,缺少机箱ID.");
 			return result;
 		}
+		if(null == request.getParameter("fileInfos")) {
+			result.put("msg", "机箱验收确认, 未上传确认的附件.");
+			return result;
+		}
+		String fileInfos = request.getParameter("fileInfos");
+		List<Map> acceptFileList = null;
 		try {
-			boxService.updateBox4Accept(UserTool.getLoginUser(request).get("user_name"), request.getParameter("boxId"));
+			acceptFileList = JsonUtil.jsonToList(fileInfos, Map.class);
+		}catch(Exception e) {
+			log.info(e.getMessage());
+			result.put("msg", "机箱验收确认、上传验收文件错误.");
+			return result;
+		}
+		
+		try {
+			boxService.updateBox4Accept(UserTool.getLoginUser(request).get("user_name"), request.getParameter("boxId"), acceptFileList);
 		}catch(BusinessException be) {
 			result.put("msg", be.getMessage());
 			return result;

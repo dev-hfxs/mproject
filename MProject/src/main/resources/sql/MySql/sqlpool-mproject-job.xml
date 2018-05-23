@@ -64,15 +64,17 @@
 		<content>
 		 select p.id, concat('处理器(P)[', p.moxa_number, ']IP地址:') AS device_desc, 'P' AS device_type from t_processor p where exists (select machine_box_id from t_job j where j.machine_box_id = p.machine_box_id AND j.id = ':jobId')
 		 union 
-         select d.id, concat('P[', t0.moxa_number, ']-探测器NFC号[', d.nfc_number, ']位置描述:') AS device_desc, 'D' AS device_type from t_detector d 
-         LEFT JOIN t_processor t0 on d.processor_id = t0.id 
-         where d.processor_id IN (select id from t_processor t2 where exists (select machine_box_id from t_job j where j.machine_box_id = t2.machine_box_id AND j.id = ':jobId') )
+     	 select id,device_desc, device_type from (
+           select d.id, concat('处理器NFC[', t0.nfc_number, ']-探测器编号[', d.detector_seq, ']位置描述:') AS device_desc, 'D' AS device_type from t_detector d 
+           LEFT JOIN t_processor t0 on d.processor_id = t0.id 
+           where d.processor_id IN (select id from t_processor t2 where exists (select machine_box_id from t_job j where j.machine_box_id = t2.machine_box_id AND j.id = ':jobId') ) order by d.processor_id,d.detector_seq asc 
+    	) td 
 		</content>
 		<description></description>
 	</sql>
 	<sql id="mproject-job-getDebugJob4Device" name="调试工单处理获取处理器">
 		<content>
-		 select p.id, p.moxa_number from t_processor p where exists (select machine_box_id from t_job j where j.machine_box_id = p.machine_box_id AND j.id = ':jobId')
+		 select p.id, p.nfc_number from t_processor p where exists (select machine_box_id from t_job j where j.machine_box_id = p.machine_box_id AND j.id = ':jobId')
 		</content>
 		<description></description>
 	</sql>

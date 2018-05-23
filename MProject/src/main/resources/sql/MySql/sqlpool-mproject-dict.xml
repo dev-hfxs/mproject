@@ -2,56 +2,56 @@
 <sqls>
 	<sql id="mproject-dict-queryBoxNfcsAll" name="获取机箱的nfc序列号列表">
 		<content>
-		 SELECT nfc_code, number, create_date FROM t_nfc_code_machinebox WHERE 1=1 [ AND instr(nfc_code, ':nfcCode') > 0 ] 
+		 SELECT nfc_code, number, create_date FROM t_nfc_code_machinebox WHERE 1=1 [ AND instr(nfc_code, upper(':nfcCode')) > 0 ] 
 		</content>
 		<description></description>
 	</sql>
 
 	<sql id="mproject-dict-queryProcessorNfcsAll" name="获取处理器的nfc序列号列表">
 		<content>
-		 SELECT nfc_code, number,box_nfc_code, create_date FROM t_nfc_code_processor WHERE 1=1 [ AND instr(nfc_code, ':nfcCode') > 0 ] 
+		 SELECT nfc_code, number,box_nfc_code, create_date FROM t_nfc_code_processor WHERE 1=1 [ AND instr(nfc_code, upper(':nfcCode')) > 0 ] 
 		</content>
 		<description></description>
 	</sql>
 	
 	<sql id="mproject-dict-queryMoxaNfcsAll" name="获取Moxa的nfc序列号列表">
 		<content>
-		 SELECT nfc_code, number,box_nfc_code, create_date FROM t_nfc_code_moxa WHERE 1=1 [ AND instr(nfc_code, ':nfcCode') > 0 ] 
+		 SELECT nfc_code, number,box_nfc_code, create_date FROM t_nfc_code_moxa WHERE 1=1 [ AND instr(nfc_code, upper(':nfcCode')) > 0 ] 
 		</content>
 		<description></description>
 	</sql>
 	
 	<sql id="mproject-dict-queryDetectorNfcsAll" name="获取探测器的nfc序列号列表">
 		<content>
-		 SELECT nfc_code, number, create_date FROM t_nfc_code_detector WHERE 1=1 [ AND instr(nfc_code, ':nfcCode') > 0 ] 
+		 SELECT nfc_code, number, create_date FROM t_nfc_code_detector WHERE 1=1 [ AND instr(nfc_code, upper(':nfcCode')) > 0 ] 
 		</content>
 		<description></description>
 	</sql>
 	
 	<sql id="mproject-dict-queryBoxNfcByCode" name="根据nfc值获取机箱的nfc">
 		<content>
-		 SELECT nfc_code, number, create_date FROM t_nfc_code_machinebox WHERE nfc_code = ':nfcCode' 
+		 SELECT nfc_code, number, create_date FROM t_nfc_code_machinebox WHERE nfc_code = upper(':nfcCode')
 		</content>
 		<description></description>
 	</sql>
 
 	<sql id="mproject-dict-queryProcessorNfcByCode" name="根据nfc值获取处理器的nfc">
 		<content>
-		 SELECT nfc_code, number,box_nfc_code, create_date FROM t_nfc_code_processor WHERE nfc_code = ':nfcCode' 
+		 SELECT nfc_code, number,box_nfc_code, create_date FROM t_nfc_code_processor WHERE nfc_code = upper(':nfcCode')
 		</content>
 		<description></description>
 	</sql>
 	
 	<sql id="mproject-dict-queryMoxaNfcByCode" name="根据nfc值获取Moxa的nfc">
 		<content>
-		 SELECT nfc_code, number,box_nfc_code, create_date FROM t_nfc_code_moxa WHERE nfc_code = ':nfcCode' 
+		 SELECT nfc_code, number,box_nfc_code, create_date FROM t_nfc_code_moxa WHERE nfc_code = upper(':nfcCode')
 		</content>
 		<description></description>
 	</sql>
 	
 	<sql id="mproject-dict-queryDetectorNfcByCode" name="根据nfc值获取探测器的nfc">
 		<content>
-		 SELECT nfc_code, number, create_date FROM t_nfc_code_detector WHERE nfc_code = ':nfcCode' 
+		 SELECT nfc_code, number, create_date FROM t_nfc_code_detector WHERE nfc_code = upper(':nfcCode')  
 		</content>
 		<description></description>
 	</sql>

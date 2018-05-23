@@ -8,7 +8,7 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>项目列表</title>
+<title>登录日志查询</title>
 <meta http-equiv="Expires" content="0">
 <meta http-equiv="Pragma" content="no-cache">
 <meta http-equiv="Cache-control" content="no-cache">
@@ -24,27 +24,20 @@
 </style>
 </head>
 <body>
-<div style="text-align:left;padding:5px 0">
-	<a href="javascript:void(0)" class="easyui-linkbutton" onclick="doConfim()" style="width:80px;">确 定</a>
-	<a href="javascript:void(0)" class="easyui-linkbutton" onclick="doCancel()" style="width:80px;">取 消</a>
-</div>
 <div id="dgPanel" class="easyui-panel" data-options="fit:true">
 	<table id="dg" class="easyui-datagrid"  
-			data-options="singleSelect:true,rownumbers:true,pageSize:20,fit:true,url:'<%=path%>/comm/queryForPage.do',pagination:true,method:'post',toolbar:'#tb',multiSort:true">
+			data-options="singleSelect:true,rownumbers:true,pageSize:20,fit:true,url:'<%=path%>/comm/queryForPage.do',pagination:true,toolbar:'#tb',method:'post',multiSort:true">
 		<thead>
 			<tr>
-				<th data-options="field:'project_number',width:100,sortable:true">项目编号</th>
-				<th data-options="field:'project_name',width:200,sortable:true">项目名称</th>
-				<th data-options="field:'contract_number',width:100,sortable:true">合同号</th>
-				<th data-options="field:'project_manager',width:200">项目经理</th>
-				<th data-options="field:'create_date',width:150,sortable:true">创建时间</th>
-				<th data-options="field:'status',width:60,formatter:showStatusName,sortable:true">项目状态</th>
+				<th data-options="field:'user_name',width:200,sortable:true">用户名</th>
+				<th data-options="field:'login_date',width:180,sortable:true">登录时间</th>
+				<th data-options="field:'client_ip',width:180">客户端IP</th>
 			</tr>
 		</thead>
 	</table>
 </div>
 <div id="tb" style="padding:2px 5px;">
-		<input id="inpKey" class="easyui-textbox"  prompt="项目名" style="width:150px">
+		<input id="inpKey" class="easyui-textbox"  prompt="用户名" style="width:150px">
 		<a href="#" class="easyui-linkbutton" onclick="doSearch()" iconCls="icon-search">查询&nbsp;&nbsp;</a>
 </div>
 <script>
@@ -53,7 +46,7 @@ $(function() {
 	var pageNum = "<%=pageNum%>";
 	var pageSize = "<%=pageSize%>";
 	var queryParams = $('#dg').datagrid('options').queryParams;
-	queryParams.sqlId = 'mproject-project-queryProjects';
+	queryParams.sqlId = 'mproject-log-getSessionLog';
 	if(pageNum != null && pageNum != 'null' && pageNum != ''){
 		$('#dg').datagrid('options').pageNumber = pageNum;
 	}
@@ -63,41 +56,15 @@ $(function() {
 	//$('#dg').datagrid('hideColumn', 'status'); 
 });
 
-function showStatusName(val,row){
-	if (val == 'I'){
-		return '<span>在建</span>';
-	} else if (val =='F'){
-		return '<span>完成</span>';
-	}else{
-		return val;
-	}
-}
-
 function doSearch(){
 	var charKey = $("#inpKey" ).val();
 	var queryParams = $('#dg').datagrid('options').queryParams;
-	queryParams.sqlId = 'mproject-project-queryProjects';
-	queryParams.projectName = charKey;
+	queryParams.sqlId = 'mproject-log-getSessionLog';
+	queryParams.userName = charKey;
 	$('#dg').datagrid('loadData',{total:0,rows:[]});
 	$('#dg').datagrid('reload');
 }
 
-
-function doConfim(){
-	var row = $('#dg').datagrid('getSelected');
-	if (row){
-		// 返回选择的数据信息
-		var projectName = row.project_name;
-		var params = {type:'project',id:row.id, project_name:projectName};
-		parent.okResponse(params);
-	}else{
-		$.messager.alert('提示', "未选择数据!");
-	}
-}
-
-function doCancel(){
-	parent.closeDialog();
-}
 </script>
 </body>
 </html>

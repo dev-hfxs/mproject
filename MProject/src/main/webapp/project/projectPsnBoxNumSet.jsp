@@ -10,6 +10,10 @@
 <head>
 <meta charset="UTF-8">
 <title>修改施工经理应建机箱数</title>
+<meta http-equiv="Expires" content="0">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Cache-control" content="no-cache">
+<meta http-equiv="Cache" content="no-cache">
 <script type="text/javascript"	src="<%=path%>/js/jquery/jquery-3.3.1.min.js"></script>
 <link rel="stylesheet" type="text/css"	href="<%=path%>/js/easyui/themes/default/easyui.css">
 <link rel="stylesheet" type="text/css"	href="<%=path%>/js/easyui/themes/icon.css">
@@ -18,12 +22,12 @@
 <script type="text/javascript"	src="<%=path%>/js/common.js"></script>
 </head>
 <body>
-	<div style="margin: 20px 0;"></div>
+	<div style="margin: 20px 20px;"></div>
 	<div class="easyui-panel"
-		style="width: 100%; max-width: 460px; padding: 10px 10px; border-width:0" >
+		style="width: 100%; max-width: 460px; padding: 0px 10px; border-width:0" >
 		<form id="ff" method="post" >
 			<div style="margin-bottom:20px">
-				<input class="easyui-numberbox" id="allowBoxNum" name="allowBoxNum" iconWidth="28" style="width:100%;height:28px;" data-options="label:'应建机箱数:',required:true,validType:'length[1,8]'">
+				<input class="easyui-numberbox" id="allowBoxNum" name="allowBoxNum" iconWidth="28" style="width:200px;height:28px;" data-options="label:'应建机箱数:',required:true,validType:'length[1,8]'">
 			</div>
 		</form>
 		<!-- -->

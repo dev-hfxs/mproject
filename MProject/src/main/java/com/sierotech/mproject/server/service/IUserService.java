@@ -6,8 +6,8 @@ import com.sierotech.mproject.common.BusinessException;
 
 public interface IUserService {
 	//
-	public boolean checkUserExist(String userId, String userName) throws BusinessException;
-
+	public boolean checkUserExist(String userId, String userName, String column ) throws BusinessException;
+	
 	public void addUser(String adminUser,Map<String,Object> userObj) throws BusinessException;
 	
 	public void updateUser(String adminUser,Map<String,Object> userObj) throws BusinessException;

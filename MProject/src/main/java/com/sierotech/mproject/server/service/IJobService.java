@@ -26,6 +26,8 @@ public interface IJobService {
 	
 	public void updateJob(String curUser, String jobId, String jobStatus, String jobDesc, String boxPos,Map<String,String> installOptions, List<Map> detectorPosList);
 	
-	public void updateJob(String curUser, String jobId, String jobStatus, String jobDesc, List<Map> processIpList,  List<Map> configInfoList,  List<Map> detectorInfoList);
+	public void updateJob(String curUser, String jobId, String jobStatus, String jobDesc, List<Map> processIpList,  List<Map> configInfoList,  List<Map> detectorInfoList, Map<String, String> debugOptionMap);
+	
+	public void updateJob4Revoke(String adminUser, String jobId) throws BusinessException;
 	
 }

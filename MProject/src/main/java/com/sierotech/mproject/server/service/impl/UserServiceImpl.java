@@ -42,7 +42,7 @@ public class UserServiceImpl implements IUserService {
 	private JdbcTemplate springJdbcDao;
 
 	@Override
-	public boolean checkUserExist(String userId, String userName) throws BusinessException {
+	public boolean checkUserExist(String userId, String userName, String column) throws BusinessException {
 		boolean result = true;
 		if (null == userId) {
 			return true;
@@ -52,9 +52,17 @@ public class UserServiceImpl implements IUserService {
 		}
 		Map<String, Object> paramsMap = new HashMap<String, Object>();
 		paramsMap.put("userId", userId);
-		paramsMap.put("userName", userName);
-
-		String preSql = ConfigSQLUtil.getCacheSql("mproject-user-checkUserExistsByUserName");
+		String sqlKey = "mproject-user-checkUserExistsByUserName";
+		if("fullName".equals(column)) {
+			paramsMap.put("fullName", userName);
+			sqlKey = "mproject-user-checkUserExistsByFullName";
+		}else if ("userName".equals(column)) {
+			paramsMap.put("userName", userName);
+			sqlKey = "mproject-user-checkUserExistsByUserName";
+		}else {
+			return true;
+		}
+		String preSql = ConfigSQLUtil.getCacheSql(sqlKey);
 		String sql = ConfigSQLUtil.preProcessSQL(preSql, paramsMap);
 		try {
 			Map<String, Object> recordMap = springJdbcDao.queryForMap(sql);
@@ -98,7 +106,7 @@ public class UserServiceImpl implements IUserService {
 			throw new BusinessException("添加用户参数错误,缺少用户联系电话.");
 		}
 		// 检查用户名是否重复
-		boolean userExists = checkUserExist("", userObj.get("userName").toString());
+		boolean userExists = checkUserExist("", userObj.get("userName").toString(), "userName");
 		if (userExists) {
 			throw new BusinessException("用户名已存在!");
 		}
@@ -147,7 +155,7 @@ public class UserServiceImpl implements IUserService {
 			throw new BusinessException("修改用户参数错误,缺少用户联系电话.");
 		}
 		// 检查用户名是否重复
-		boolean userExists = checkUserExist(userObj.get("id").toString(), userObj.get("userName").toString());
+		boolean userExists = checkUserExist(userObj.get("id").toString(), userObj.get("userName").toString(), "userName");
 		if (userExists) {
 			throw new BusinessException("用户名已存在!");
 		}

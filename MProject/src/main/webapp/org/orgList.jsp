@@ -9,6 +9,10 @@
 <head>
 <meta charset="UTF-8">
 <title>单位列表</title>
+<meta http-equiv="Expires" content="0">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Cache-control" content="no-cache">
+<meta http-equiv="Cache" content="no-cache">
 <script type="text/javascript" src="<%=path%>/js/jquery/jquery-3.3.1.min.js"></script>
 <link rel="stylesheet" type="text/css" href="<%=path%>/js/easyui/themes/default/easyui.css">
 <link rel="stylesheet" type="text/css" href="<%=path%>/js/easyui/themes/icon.css">

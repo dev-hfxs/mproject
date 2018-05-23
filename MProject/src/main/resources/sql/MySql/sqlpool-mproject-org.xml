@@ -80,4 +80,13 @@
 		</description>
 	</sql>
 	
+	<sql id="mproject-org-getOrgUserInProject" name="获取单位下关联在建项目的用户数">
+		<content>
+		SELECT count(*) as countNum FROM t_user u 
+		WHERE u.org_id = ':orgId' and exists (select user_id from t_project_personnel t0 where exists ( select id from t_project t2 where t2.status = 'I' and t0.project_id = t2.id) and t0.user_id = u.id )  
+		</content>
+		<description>
+		</description>
+	</sql>
+	
 </sqls>

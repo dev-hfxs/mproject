@@ -9,6 +9,10 @@
 <head>
 <meta charset="UTF-8">
 <title>修改记录查询</title>
+<meta http-equiv="Expires" content="0">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Cache-control" content="no-cache">
+<meta http-equiv="Cache" content="no-cache">
 <script type="text/javascript" src="<%=path%>/js/jquery/jquery-3.3.1.min.js"></script>
 <link rel="stylesheet" type="text/css" href="<%=path%>/js/easyui/themes/default/easyui.css">
 <link rel="stylesheet" type="text/css" href="<%=path%>/js/easyui/themes/icon.css">
@@ -22,22 +26,44 @@
 <body>
 <div id="dgPanel" class="easyui-panel" data-options="fit:true">
 	<table id="dg" class="easyui-datagrid"  
-			data-options="singleSelect:true,rownumbers:true,pageSize:20,fit:true,url:'<%=path%>/comm/queryForPage.do',pagination:true,method:'post',multiSort:true">
+			data-options="singleSelect:true,rownumbers:true,pageSize:20,fit:true,url:'<%=path%>/comm/queryForPage.do',pagination:true,method:'post',toolbar:'#tb',multiSort:true">
 		<thead>
 			<tr>
-				<th data-options="field:'user_name',width:180,sortable:true">修改人</th>
-				<th data-options="field:'operation_part',width:200,sortable:true">修改部分</th>
-				<th data-options="field:'update_field',width:200,sortable:true,formatter:fmUpdateField">修改字段</th>
-				<th data-options="field:'old_value',width:200,sortable:true">修改前内容</th>
+				<th data-options="field:'user_name',width:180">修改人</th>
+				<th data-options="field:'operation_part',width:200, formatter:fmOperationType">修改部分</th>
+				<th data-options="field:'update_field',width:200,formatter:fmUpdateField">修改字段</th>
+				<th data-options="field:'old_value',width:200">修改前内容</th>
 				<th data-options="field:'new_value',width:200">修改后内容</th>
 				<th data-options="field:'operation_date',width:200">修改时间</th>
 			</tr>
 		</thead>
 	</table>
 </div>
+<div id="tb" style="text-align: left; padding: 1px 0">
+		&nbsp;<input type="text" id="operationPart" name="operationPart"></input>
+</div>
 <script>
 
+var partOptions = [{'name':'','text':'所有','selected':true},{'name':'box','text':'机箱'},{ 'name':'processor', 'text':'处理器'},{ 'name':'detector', 'text':'探测器'}];
+
 $(function() {
+	$('#operationPart').combobox({
+	    data: partOptions,
+	    valueField:'name',
+	    textField:'text',
+	    label:'修改部分:',
+	    panelHeight:'auto',
+	    width:'250px',
+	    onChange:function(){
+	    	var curValue =  $(this).combobox('getValue');
+	    	var queryParams = $('#dg').datagrid('options').queryParams;
+	    	queryParams.sqlId = 'mproject-log-getUpdateInfoLog';
+	    	queryParams.operationPart = curValue;
+	    	$('#dg').datagrid('loadData',{total:0,rows:[]});
+	    	$('#dg').datagrid('reload');
+	    }
+	});
+	
 	var pageNum = "<%=pageNum%>";
 	var pageSize = "<%=pageSize%>";
 	var queryParams = $('#dg').datagrid('options').queryParams;
@@ -75,13 +101,13 @@ function fmUpdateField(val,row){
 	}
 }
 
-function showTypeName(val,row){
-	if (val == 'A'){
-		return '<span>安装工单</span>';
-	} else if (val =='T'){
-		return '<span>调试工单</span>';
-	} else if (val =='Q'){
-		return '<span>其他工单</span>';
+function fmOperationType(val,row){
+	if (val == 'box'){
+		return '<span>机箱</span>';
+	} else if (val =='processor'){
+		return '<span>处理器</span>';
+	} else if (val =='detector'){
+		return '<span>探测器</span>';
 	}else{
 		return val;
 	}

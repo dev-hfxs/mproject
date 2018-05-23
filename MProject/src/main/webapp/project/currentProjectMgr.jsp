@@ -9,6 +9,10 @@
 <head>
 <meta charset="UTF-8">
 <title>当前项目管理</title>
+<meta http-equiv="Expires" content="0">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Cache-control" content="no-cache">
+<meta http-equiv="Cache" content="no-cache">
 <script type="text/javascript" src="<%=path%>/js/jquery/jquery-3.3.1.min.js"></script>
 <link rel="stylesheet" type="text/css" href="<%=path%>/js/easyui/themes/default/easyui.css">
 <link rel="stylesheet" type="text/css" href="<%=path%>/js/easyui/themes/icon.css">
@@ -66,32 +70,34 @@ function showButtons(val,row){
 		curJobProcessing = true;
 	}
 	var columnItem = '';
-	if(row.pm_confirm_date != null){
+	if(row.pm_confirm_date != null && row.pm_confirm_date.length > 0){
+		
 		//已验收
 	}else{
 		if(row.submit_num > 0){
-			//未验收且提交过
-			if(curJobProcessing){
-				columnItem = columnItem + '<span><a href="javascript:void(0)" class="easyui-linkbutton" onclick="publishJob(1,\''+row.project_id+'\',\''+ row.id + '\')" style="width:80px;">发布工单</a></span>&nbsp;&nbsp;'
-			}else{
-				columnItem = columnItem + '<span><a href="javascript:void(0)" class="easyui-linkbutton" onclick="publishJob(0,\''+row.project_id+'\',\''+ row.id + '\')" style="width:80px;">发布工单</a></span>&nbsp;&nbsp;'
-			}
-			
 			if(row.enable_edit =='N'){
-				//提交过且没有验收可允许修改
-				columnItem = columnItem + '<span><a href="javascript:void(0)" class="easyui-linkbutton" onclick="doEnableEdit(\''+row.project_id+'\',\''+ row.id + '\')" style="width:80px;">允许修改</a></span>&nbsp;&nbsp;';
+				//提交过且没有验收,且未设置允许修改
 				if(curJobProcessing){
 					columnItem = columnItem + '<span><a href="javascript:void(0)" class="easyui-linkbutton" onclick="doAccept(1,\''+row.project_id+'\',\''+ row.id + '\')" style="width:80px;">确认验收</a></span>&nbsp;&nbsp;';
 				}else{
+					columnItem = columnItem + '<span><a href="javascript:void(0)" class="easyui-linkbutton" onclick="doEnableEdit(\''+row.project_id+'\',\''+ row.id + '\')" style="width:80px;">允许修改</a></span>&nbsp;&nbsp;';
+					columnItem = columnItem + '<span><a href="javascript:void(0)" class="easyui-linkbutton" onclick="publishJob(0,\''+row.project_id+'\',\''+ row.id + '\')" style="width:80px;">发布工单</a></span>&nbsp;&nbsp;';
 					columnItem = columnItem + '<span><a href="javascript:void(0)" class="easyui-linkbutton" onclick="doAccept(0,\''+row.project_id+'\',\''+ row.id + '\')" style="width:80px;">确认验收</a></span>&nbsp;&nbsp;';
-				}	
+				}
+			}else if (row.enable_edit =='Y'){
+				// 允许修改 后不显示操作( 限制发布工单、确认验收)
+			}else{
+				// 提交过且未验收
+				if(curJobProcessing){
+					columnItem = columnItem + '<span><a href="javascript:void(0)" class="easyui-linkbutton" onclick="doAccept(1,\''+row.project_id+'\',\''+ row.id + '\')" style="width:80px;">确认验收</a></span>&nbsp;&nbsp;';
+				}else{
+					columnItem = columnItem + '<span><a href="javascript:void(0)" class="easyui-linkbutton" onclick="doEnableEdit(\''+row.project_id+'\',\''+ row.id + '\')" style="width:80px;">允许修改</a></span>&nbsp;&nbsp;';
+					columnItem = columnItem + '<span><a href="javascript:void(0)" class="easyui-linkbutton" onclick="publishJob(0,\''+row.project_id+'\',\''+ row.id + '\')" style="width:80px;">发布工单</a></span>&nbsp;&nbsp;';
+					columnItem = columnItem + '<span><a href="javascript:void(0)" class="easyui-linkbutton" onclick="doAccept(0,\''+row.project_id+'\',\''+ row.id + '\')" style="width:80px;">确认验收</a></span>&nbsp;&nbsp;';
+				}
 			}
 		}
 	}
-	//TODO测试先放开发布工单
-	//if(columnItem == ''){
-	//	columnItem = columnItem + '<span><a href="javascript:void(0)" class="easyui-linkbutton" onclick="publishJob(\''+row.project_id+'\',\''+ row.id + '\')" style="width:80px;">发布工单</a></span>&nbsp;&nbsp;'
-	//}
 	
 	return columnItem;
 }
@@ -113,6 +119,10 @@ function showCurJob(val,row){
 			columnItem = columnItem + ' : 完成';
 		}else if(row.job_status == 'Q'){
 			columnItem = columnItem + ' : 问题工单';
+		}else if(row.job_status == 'N'){
+			columnItem = columnItem + ' : 未完成';
+		}else if(row.job_status == 'C'){
+			columnItem = columnItem + ' : 取消';
 		}
 	}else{
 		columnItem = '无';
@@ -165,34 +175,27 @@ function doAccept(curJobs,projectId,boxId){
 		return;
 	}
 	
-	$.messager.confirm('确认', '确认验收?', function(r){
-		if(r){
-			$.ajax( {
-			    url:'<%=path%>/box/mgr/accept.do',
-			    data:{
-			    	'projectId':projectId,
-			    	'boxId':boxId
-			    },
-			    type:'post',
-			    async:false,
-			    dataType:'json',
-			    success:function(data) {
-			    	if(data.returnCode == "success"){
-			    		$.messager.alert('提示','操作成功','info',function(){
-			    			$('#dg').datagrid('reload');
-			    		});
-			    	}else{
-			    		$.messager.alert('提示',data.msg);
-			    	}
-			    },
-			    error : function(data) {
-			    	$.messager.alert('异常',data.responseText);
-		        }
-			});
+	var content = '<iframe src="<%=path%>/box/boxAccept.jsp?boxId='+boxId+'" width="100%" height="100%" frameborder="0" scrolling="no"></iframe>';
+	var boarddiv = '<div id="msgwindow" title="机箱确认验收" style="overflow:hidden;"></div>'// style="overflow:hidden;"可以去掉滚动条
+	$(document.body).append(boarddiv);
+	var win = $('#msgwindow').dialog({
+		content : content,
+		width : '560',
+		height : '420',
+		modal : true,
+		title : '机箱确认验收',
+		onClose : function() {
+			$(this).dialog('destroy');
 		}
 	});
+	win.dialog('open');
+	win.window('center');
 }
 
+function okResponse(){
+	$("#msgwindow").dialog('destroy');
+	$('#dg').datagrid('reload');
+}
 
 function doSearch(){
 	var charKey = $("#inpKey" ).val();

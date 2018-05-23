@@ -9,6 +9,10 @@
 <head>
 <meta charset="UTF-8">
 <title>用户列表</title>
+<meta http-equiv="Expires" content="0">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Cache-control" content="no-cache">
+<meta http-equiv="Cache" content="no-cache">
 <script type="text/javascript" src="<%=path%>/js/jquery/jquery-3.3.1.min.js"></script>
 <link rel="stylesheet" type="text/css" href="<%=path%>/js/easyui/themes/default/easyui.css">
 <link rel="stylesheet" type="text/css" href="<%=path%>/js/easyui/themes/icon.css">
@@ -63,7 +67,8 @@ function doConfim(){
 	var row = $('#dg').datagrid('getSelected');
 	if (row){
 		// 返回选择的数据信息
-		var userName = row.user_name + "/" + row.full_name;
+		//var userName = row.user_name + "/" + row.full_name;
+		var userName =  row.full_name;
 		var params = {id:row.id,user_name:userName};
 		parent.okResponse(params);
 	}else{

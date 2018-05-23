@@ -14,20 +14,23 @@ INSERT INTO t_role(id,role_name,role_type,home_page,role_desc) VALUES('r0dd98063
 
 /* 初始用户 */
 
-INSERT INTO t_user(id,user_name,full_name,id_number,org_id,contact_number,role_id,status,password,init_password,sex) VALUES ('u8952c8666964e07a9a285b10d706a61','grace.wang@sierotech.com','王蓓','000000000000000000','o3f25612335a4d188020d617801ea7bf','00000000000','r0dd980638bc43efb2e01d362db32151','N','0000000','Y','F');
+INSERT INTO t_user(id,user_name,full_name,id_number,org_id,contact_number,role_id,status,password,init_password,sex) VALUES ('u8952c8666964e07a9a285b10d706a61','grace.wang@sierotech.com','王蓓','000000000000000000','o3f25612335a4d188020d617801ea7bf','00000000','r0dd980638bc43efb2e01d362db32151','N','dd4b21e9ef71e1291183a46b913ae6f2','Y','F');
 
-INSERT INTO t_user(id,user_name,full_name,id_number,org_id,contact_number,role_id,status,password,init_password,sex) VALUES ('u8952c8666964e07a9a285b10d706a62','angel.liu@sierotech.com','刘丽静','000000000000000000','o3f25612335a4d188020d617801ea7bf','00000000000','r0dd980638bc43efb2e01d362db32152','N','0000000','Y','F');
+INSERT INTO t_user(id,user_name,full_name,id_number,org_id,contact_number,role_id,status,password,init_password,sex) VALUES ('u8952c8666964e07a9a285b10d706a62','angel.liu@sierotech.com','刘丽静','000000000000000000','o3f25612335a4d188020d617801ea7bf','00000000','r0dd980638bc43efb2e01d362db32152','N','dd4b21e9ef71e1291183a46b913ae6f2','Y','F');
 
-INSERT INTO t_user(id,user_name,full_name,id_number,org_id,contact_number,role_id,status,password,init_password,sex) VALUES ('u8952c8666964e07a9a285b10d706a63','emily.yuan@sierotech.com','袁春会','000000000000000000','o3f25612335a4d188020d617801ea7bf','00000000000','r0dd980638bc43efb2e01d362db32152','N','0000000','Y','F');
+INSERT INTO t_user(id,user_name,full_name,id_number,org_id,contact_number,role_id,status,password,init_password,sex) VALUES ('u8952c8666964e07a9a285b10d706a63','emily.yuan@sierotech.com','袁春会','000000000000000000','o3f25612335a4d188020d617801ea7bf','00000000','r0dd980638bc43efb2e01d362db32152','N','dd4b21e9ef71e1291183a46b913ae6f2','Y','F');
 
-INSERT INTO t_user(id,user_name,full_name,id_number,org_id,contact_number,role_id,status,password,init_password,sex) VALUES ('u8952c8666964e07a9a285b10d706a64','jianli.yin@sierotech.com','尹建利','000000000000000000','o3f25612335a4d188020d617801ea7bf','00000000000','r0dd980638bc43efb2e01d362db32153','N','0000000','Y','M');
+INSERT INTO t_user(id,user_name,full_name,id_number,org_id,contact_number,role_id,status,password,init_password,sex) VALUES ('u8952c8666964e07a9a285b10d706a64','jianli.yin@sierotech.com','尹建利','000000000000000000','o3f25612335a4d188020d617801ea7bf','00000000','r0dd980638bc43efb2e01d362db32153','N','dd4b21e9ef71e1291183a46b913ae6f2','Y','M');
 
-INSERT INTO t_user(id,user_name,full_name,id_number,org_id,contact_number,role_id,status,password,init_password,sex) VALUES ('u8952c8666964e07a9a285b10d706a65','shuai.chang@sierotech.com','常帅','000000000000000000','o3f25612335a4d188020d617801ea7bf','00000000000','r0dd980638bc43efb2e01d362db32153','N','0000000','Y','M');
+INSERT INTO t_user(id,user_name,full_name,id_number,org_id,contact_number,role_id,status,password,init_password,sex) VALUES ('u8952c8666964e07a9a285b10d706a65','shuai.chang@sierotech.com','常帅','000000000000000000','o3f25612335a4d188020d617801ea7bf','00000000','r0dd980638bc43efb2e01d362db32153','N','dd4b21e9ef71e1291183a46b913ae6f2','Y','M');
 
-INSERT INTO t_user(id,user_name,full_name,id_number,org_id,contact_number,role_id,status,password,init_password,sex) VALUES ('u8952c8666964e07a9a285b10d706a66','jianqiang.liu@sierotech.com','刘建强','000000000000000000','o3f25612335a4d188020d617801ea7bf','00000000000','r0dd980638bc43efb2e01d362db32153','N','0000000','Y','M');
+INSERT INTO t_user(id,user_name,full_name,id_number,org_id,contact_number,role_id,status,password,init_password,sex) VALUES ('u8952c8666964e07a9a285b10d706a66','jianqiang.liu@sierotech.com','刘建强','000000000000000000','o3f25612335a4d188020d617801ea7bf','00000000','r0dd980638bc43efb2e01d362db32153','N','dd4b21e9ef71e1291183a46b913ae6f2','Y','M');
 
-INSERT INTO t_user(id,user_name,full_name,id_number,org_id,contact_number,role_id,status,password,init_password,sex) VALUES ('u8952c8666964e07a9a285b10d706a67','zhijie.ren@sierotech.com','任志杰','000000000000000000','o3f25612335a4d188020d617801ea7bf','00000000000','r0dd980638bc43efb2e01d362db32153','N','0000000','Y','M');
+INSERT INTO t_user(id,user_name,full_name,id_number,org_id,contact_number,role_id,status,password,init_password,sex) VALUES ('u8952c8666964e07a9a285b10d706a67','zhijie.ren@sierotech.com','任志杰','000000000000000000','o3f25612335a4d188020d617801ea7bf','00000000','r0dd980638bc43efb2e01d362db32153','N','dd4b21e9ef71e1291183a46b913ae6f2','Y','M');
 
+INSERT INTO t_user(id,user_name,full_name,id_number,org_id,contact_number,role_id,status,password,init_password,sex) VALUES ('u8952c8666964e07a9a285b10d706a71','chao.sun@sierotech.com','孙超','000000000000000000','o3f25612335a4d188020d617801ea7bf','00000000','r0dd980638bc43efb2e01d362db32153','N','dd4b21e9ef71e1291183a46b913ae6f2','Y','M');
+
+INSERT INTO t_user(id,user_name,full_name,id_number,org_id,contact_number,role_id,status,password,init_password,sex) VALUES ('u8952c8666964e07a9a285b10d706a72','wenliang.sun@sierotech.com','孙文亮','000000000000000000','o3f25612335a4d188020d617801ea7bf','00000000','r0dd980638bc43efb2e01d362db32153','N','dd4b21e9ef71e1291183a46b913ae6f2','Y','M');
 
 /* 初始菜单 */
 
@@ -74,8 +77,12 @@ INSERT INTO  t_menu(id,menu_name,menu_code,menu_url,icon_url,parent_id,order_num
 
 INSERT INTO  t_menu(id,menu_name,menu_code,menu_url,icon_url,parent_id,order_num) VALUES ('mf310252694f4bdt9fa3e1xce9df9688','IP管理','m.ip.mgr','','','ROOT',7);
 INSERT INTO  t_menu(id,menu_name,menu_code,menu_url,icon_url,parent_id,order_num) VALUES ('mf3102526cmf4bdt9fa3e1xce9df7680','IP列表','m.ip.mgr','/ip/ipList.jsp','','mf310252694f4bdt9fa3e1xce9df9688',7);
-
 INSERT INTO  t_menu(id,menu_name,menu_code,menu_url,icon_url,parent_id,order_num) VALUES ('m111222005b54f8fb3895356b0c09c70','IP地址使用','m.project.ip.use','/ip/ipUseList.jsp','','ma900252694f4bd99fa3e16ce9df3cd5',597);
+
+INSERT INTO  t_menu(id,menu_name,menu_code,menu_url,icon_url,parent_id,order_num) VALUES ('mf3102526t2f4bdt9fa3e1xce9df5945','查看日志','m.log.view','','','ROOT',8);
+INSERT INTO  t_menu(id,menu_name,menu_code,menu_url,icon_url,parent_id,order_num) VALUES ('mf3102526t2f4bdt9fa3e1exe9df5931','用户登录日志','m.session.log.view','/log/logSession.jsp','','mf3102526t2f4bdt9fa3e1xce9df5945',81);
+INSERT INTO  t_menu(id,menu_name,menu_code,menu_url,icon_url,parent_id,order_num) VALUES ('mf3102526t2f4bdt9fa3e1txt9df5977','管理员操作日志','m.admin.log.view','/log/logAdminOperation.jsp','','mf3102526t2f4bdt9fa3e1xce9df5945',82);
+
 
 /* 初始角色权限 */
 /* 超级管理员拥有的菜单 */
@@ -122,6 +129,12 @@ INSERT INTO  t_role_res(id,role_id,res_type,res_id) VALUES ('rr5abe13b3ae4f459cf
 /* 管理员增加的IP管理*/
 INSERT INTO  t_role_res(id,role_id,res_type,res_id) VALUES ('rr5abe13b3ae89019cf554859d8d3071','r0dd980638bc43efb2e01d362db32152','M','mf310252694f4bdt9fa3e1xce9df9688');
 INSERT INTO  t_role_res(id,role_id,res_type,res_id) VALUES ('rr5a3721bxae79639cf554859d8dc065','r0dd980638bc43efb2e01d362db32152','M','mf3102526cmf4bdt9fa3e1xce9df7680');
+
+
+/* 管理员增加的查看日志*/
+INSERT INTO  t_role_res(id,role_id,res_type,res_id) VALUES ('rr5abe13b3ae89019cf554859d1f3030','r0dd980638bc43efb2e01d362db32152','M','mf3102526t2f4bdt9fa3e1xce9df5945');
+INSERT INTO  t_role_res(id,role_id,res_type,res_id) VALUES ('rr5a3721bxae79639cf554859d8x8787','r0dd980638bc43efb2e01d362db32152','M','mf3102526t2f4bdt9fa3e1exe9df5931');
+INSERT INTO  t_role_res(id,role_id,res_type,res_id) VALUES ('rr5a3721bxae79639cf554859d9y8386','r0dd980638bc43efb2e01d362db32152','M','mf3102526t2f4bdt9fa3e1txt9df5977');
 
 
 /* 系统工程师拥有的菜单 */

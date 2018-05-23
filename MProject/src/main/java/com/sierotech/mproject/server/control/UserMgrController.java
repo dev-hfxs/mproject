@@ -54,9 +54,10 @@ public class UserMgrController {
 			result.put("msg", "用户名验证参数错误,缺少用户名.");
 			return result;
 		}
+		String nameColumn = request.getParameter("nameColumn");
 		boolean userExist = true;
 		try {
-			userExist = userService.checkUserExist(userId, userName);
+			userExist = userService.checkUserExist(userId, userName, nameColumn);
 		}catch(BusinessException be) {
 			msg = be.getMessage();
 		}

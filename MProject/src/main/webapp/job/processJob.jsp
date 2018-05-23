@@ -11,6 +11,10 @@
 <head>
 <meta charset="UTF-8">
 <title>处理工单</title>
+<meta http-equiv="Expires" content="0">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Cache-control" content="no-cache">
+<meta http-equiv="Cache" content="no-cache">
 <script type="text/javascript"	src="<%=path%>/js/jquery/jquery-3.3.1.min.js"></script>
 <link rel="stylesheet" type="text/css"	href="<%=path%>/js/easyui/themes/default/easyui.css">
 <link rel="stylesheet" type="text/css"	href="<%=path%>/js/easyui/themes/icon.css">
@@ -35,7 +39,7 @@
 <div class="easyui-panel" style="width: 100%; height:520px; padding: 0px 0px; border-width:0" >
 	<!-- -->
 	<div style="width:auto;height:460px;text-align: left; padding: 5px 0">
-		<div style="margin-bottom:20px"> 
+		<div style="margin-bottom:10px"> 
 			<input type="radio" id="jobStatusF" name="jobStatus" value="F" checked="true"><span id="jobStatusSpanF">完成&nbsp;&nbsp;&nbsp;&nbsp;</span>
 			<input type="radio" id="jobStatusN" name="jobStatus" value="N"><span id="jobStatusSpanN">未完成&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
 			<input type="radio" id="jobStatusQ" name="jobStatus" value="Q"><span id="jobStatusSpanQ">问题工单</span>
@@ -50,6 +54,8 @@
 					<td><input type="checkbox" name="installOption" value="JinWeiDu"><span>所有经纬度正确</span></td>
 					<td>&nbsp;&nbsp;&nbsp;&nbsp;</td>
 					<td><input type="checkbox" name="installOption" value="JieXian"><span>所有接线完好</span></td>
+					<td>&nbsp;&nbsp;&nbsp;&nbsp;</td>
+					<td><input type="checkbox" name="installOption" value="RuoDianGuDing"><span>弱电箱安装固定</span></td>
 				</tr>
 				<tr>
 					<td><input type="checkbox" name="installOption" value="BangZha"><span>所有绑扎完好</span></td>
@@ -57,9 +63,12 @@
 					<td><input type="checkbox" name="installOption" value="LuoSiJinGu"><span>螺丝紧固程度良好</span></td>
 					<td>&nbsp;&nbsp;&nbsp;&nbsp;</td>
 					<td><input type="checkbox" name="installOption" value="TanCeQiShangXian"><span>所有探测器上线</span></td>
-					<td></td><td></td>
+					<td>&nbsp;&nbsp;&nbsp;&nbsp;</td>
+					<td><input type="checkbox" name="installOption" value="FangLeiJieDi"><span>金属管防雷接地</span></td>
+					<td>&nbsp;&nbsp;&nbsp;&nbsp;</td>
+					<td><input type="checkbox" name="installOption" value="JiLuBiaoQueRen"><span>设备安装记录表确认</span></td>
 				</tr>
-				<tr><td>&nbsp;</td><td></td><td></td></tr>
+				
 			</table>
 			<table id="boxAndDetectorOptionTb" class="datagrid-btable">
 					<!-- 
@@ -77,10 +86,20 @@
 			</table>
 		</div>
 		<div id="debugOptionPanel" class="datagrid-body" style="margin-bottom: 5px;height:250px;overflow-x:auto;overflow-y: auto;display:none">
-			
+			<table>
+				<tr>
+					<td><input type="checkbox" name="debugOption" value="TanCeQiShangXian"><span>所有探测器在线</span></td>
+					<td>&nbsp;&nbsp;&nbsp;&nbsp;</td>
+					<td><input type="checkbox" name="debugOption" value="TanCeQiShunXu"><span>所有探测器按顺序安装</span></td>
+					<td>&nbsp;&nbsp;&nbsp;&nbsp;</td>
+					<td><input type="checkbox" name="debugOption" value="BoXingZhengChang"><span>波形软件运行正常</span></td>
+					<td>&nbsp;&nbsp;&nbsp;&nbsp;</td>
+					<td><input type="checkbox" name="debugOption" value="ShenGuangZhengChang"><span>声光报警联动正常</span></td>
+				</tr>
+			</table><br>
 			<table id="debugOptionTb" class="datagrid-btable">
 				<tr>
-					<td style="width:140px">处理器MOXA-NFC号&nbsp;</td>
+					<td style="width:140px">处理器NFC序列号&nbsp;</td>
 					<td style="width:140px">处理器IP&nbsp;</td>
 					<td style="width:200px">&nbsp配置文件</td>
 					<td style="width:200px">探测器信息</td>
@@ -168,7 +187,7 @@
 					if(data != null){
 			    		$.each(data,function(i,item){
 			    			tableHtml = '';
-			    			tableHtml = '<tr><td>' + item.moxa_number + '</td><td><input style="width:80%" type="text" class="textbox-text" intype="ip" id="input_'+item.id+'" value="0.0.0.0" readonly="readonly" onchange="maskIp(this)"><input type="checkbox" linkId="'+item.id+'" name="chkHadIP" title="是否分配IP"></td>';
+			    			tableHtml = '<tr><td>' + item.nfc_number + '</td><td><input style="width:80%" type="text" class="textbox-text" intype="ip" id="input_'+item.id+'" value="0.0.0.0" readonly="readonly" onchange="maskIp(this)"><input type="checkbox" linkId="'+item.id+'" name="chkHadIP" title="是否分配IP"></td>';
 			    			tableHtml = tableHtml + '<td><form id="f_configFile_'+item.id+'"><input type="hidden" name="file-id" value="configfile_'+item.id+'"><input intype="file" type="text" name="configFile_' + item.id + '" style="width:100%"></form></td><td><form id="f_detectorFile_'+item.id+'"><input type="hidden" name="file-id" value="detectorfile_'+item.id+'"><input intype="file" type="text" name="detectorFile_'+item.id+'" style="width:100%"></form></td></tr>';
 							$('#debugOptionTb').append(tableHtml);
 			    		});
@@ -215,7 +234,7 @@
 					checkErrorMsgMap.remove(fileObjId,'1');
 					$("#"+fileObjId).prev("input").removeClass("warning-text");
 					$.ajax({
-					     url: "<%=path%>/file/upload/temp.do",
+					     url: "<%=path%>/file/upload/configFile.do",
 					     type: 'POST',
 					     cache: false,
 					     data: new FormData($('#'+frmId)[0]),
@@ -242,6 +261,10 @@
 		});
 		
 		$("[type='checkbox'][name='installOption']").next("span").click(function(){
+			$(this).prev().trigger("click");
+		});
+		
+		$("[type='checkbox'][name='debugOption']").next("span").click(function(){
 			$(this).prev().trigger("click");
 		});
 		
@@ -312,7 +335,7 @@
 					installOptionObj[item.value] = $(this).is(":checked");
 				});
 				if(optionOk == false){
-					$.messager.alert('提示','完成安装工单,安装选项需要确认且勾选为是.');
+					$.messager.alert('提示','安装工单完成, 安装选项需要确认且勾选为是.');
 					return;
 				}
 				var boxPos = $("[intype='boxPos']").val();
@@ -351,6 +374,20 @@
 			submitUrl = '<%=path%>/job/mgr/process/install.do';
 		}else if(jobType == 'T'){
 			if(jobStatus == 'F'){
+				//获取调试选项
+				var debugOptionObj = {};
+				var debugOptionOk = true;
+				$("[type='checkbox'][name='debugOption']").each(function(i,item){
+					if($(this).is(":checked") == false){
+						debugOptionOk = false;
+						return false;
+					}
+					debugOptionObj[item.value] = $(this).is(":checked");
+				});
+				if(debugOptionOk == false){
+					$.messager.alert('提示','调试工单完成,调试选项需要确认且勾选为是.');
+					return;
+				}
 				//检查IP输入输入是否正确
 				if(checkErrorMsgMap.size() > 0){
 					$.messager.alert('提示','IP输入有误,请检查.');
@@ -408,6 +445,7 @@
 					$.messager.alert('提示','未选择文件.');
 					return;
 				}
+				submitData['debugOption'] = JSON.stringify(debugOptionObj);
 				submitData['processorInfo'] = JSON.stringify(processorInfoArr);
 				submitData['configFile'] = JSON.stringify(processorConfigs);
 				submitData['detectorInfo'] = JSON.stringify(detectorInfos);
@@ -438,7 +476,9 @@
 			    dataType:'json',
 			    success:function(data) {
 			    	if(data.returnCode == "success"){
-			    		parent.okResponse();
+			    		$.messager.alert('提示','处理成功!','info',function(){
+			    			parent.okResponse();
+			    		});			    		
 			    	}else{
 			    		$.messager.alert('提示',data.msg);
 			    	}

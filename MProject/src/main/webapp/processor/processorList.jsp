@@ -11,6 +11,10 @@
 <head>
 <meta charset="UTF-8">
 <title>处理器列表</title>
+<meta http-equiv="Expires" content="0">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Cache-control" content="no-cache">
+<meta http-equiv="Cache" content="no-cache">
 <script type="text/javascript" src="<%=path%>/js/jquery/jquery-3.3.1.min.js"></script>
 <link rel="stylesheet" type="text/css" href="<%=path%>/js/easyui/themes/default/easyui.css">
 <link rel="stylesheet" type="text/css" href="<%=path%>/js/easyui/themes/icon.css">
@@ -51,7 +55,9 @@
 				<tr>
 					<th data-options="field:'nfc_number',width:200,sortable:true">探测器NFC序列号</th>
 					<th data-options="field:'detector_seq',width:200,sortable:true">探测器编号</th>
+					<!-- 
 					<th data-options="field:'detector_id',width:200,sortable:true">探测器ID</th>
+					 -->
 					<th data-options="field:'longitude',width:100,sortable:true">经度</th>
 					<th data-options="field:'latitude',width:200">纬度</th>
 					<th data-options="field:'start_point',width:100,formatter:showStatus">起点</th>
@@ -117,7 +123,7 @@ function showDetectorButtons(val,row){
 
 function addProcessor(){
 	var datas = $('#dg').datagrid('getData');
-	if(datas != null && datas.rows!=null && datas.rows.length > 2){
+	if(datas != null && datas.rows!=null && datas.rows.length >= 2){
 		$.messager.alert('提示','单个机箱下面不能维护2个以上的处理器!');
 		return;
 	}

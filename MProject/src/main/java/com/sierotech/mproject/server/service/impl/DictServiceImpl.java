@@ -65,7 +65,7 @@ public class DictServiceImpl implements IDictService {
 					if(data.get("nfc_code") == null || "".equals(data.get("nfc_code"))) {
 						continue;
 					}
-					String nfcCode = data.get("nfc_code").toString();
+					String nfcCode = data.get("nfc_code").toString().toUpperCase();
 					String number = data.get("number") == null ? "" : data.get("number").toString();
 					String box_nfc_code = data.get("box_nfc_code")==null ? "" : data.get("box_nfc_code").toString();
 					sbInsert.setLength(0);
@@ -90,7 +90,7 @@ public class DictServiceImpl implements IDictService {
 					if(data.get("nfc_code") == null || "".equals(data.get("nfc_code"))) {
 						continue;
 					}
-					String nfcCode = data.get("nfc_code").toString();
+					String nfcCode = data.get("nfc_code").toString().toUpperCase();
 					String number = data.get("number").toString();
 					sbInsert.setLength(0);
 					sbInsert.append(" insert into ").append(tableName).append(" (nfc_code,number,create_date) values(");

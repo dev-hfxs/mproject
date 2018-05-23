@@ -261,4 +261,27 @@ public class ProjectMgrControl {
 		result.put("msg", "");
 		return result;
 	}
+	
+	@RequestMapping(value = "/deleteManager")
+	@ResponseBody
+	public Map<String, String> deleteManager(HttpServletRequest request) {
+		Map<String, String> result = new HashMap<String, String>();
+		result.put("returnCode", "fail");
+		String projectId = request.getParameter("projectId").toString();
+		
+		if(null == projectId) {
+			result.put("msg", "移除项目经理,缺少项目ID.");
+			return result;
+		}
+		
+		try {
+			projectService.deleteProjectManager(UserTool.getLoginUser(request).get("user_name"), projectId);
+		}catch(BusinessException be) {
+			result.put("msg", be.getMessage());
+			return result;
+		}
+		result.put("returnCode", "success");
+		result.put("msg", "");
+		return result;
+	}
 }

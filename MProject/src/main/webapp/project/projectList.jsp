@@ -9,6 +9,10 @@
 <head>
 <meta charset="UTF-8">
 <title>项目列表</title>
+<meta http-equiv="Expires" content="0">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Cache-control" content="no-cache">
+<meta http-equiv="Cache" content="no-cache">
 <script type="text/javascript" src="<%=path%>/js/jquery/jquery-3.3.1.min.js"></script>
 <link rel="stylesheet" type="text/css" href="<%=path%>/js/easyui/themes/default/easyui.css">
 <link rel="stylesheet" type="text/css" href="<%=path%>/js/easyui/themes/icon.css">
@@ -28,10 +32,10 @@
 				<th data-options="field:'project_number',width:100,sortable:true">项目编号</th>
 				<th data-options="field:'project_name',width:200,sortable:true">项目名称</th>
 				<th data-options="field:'contract_number',width:100,sortable:true">合同号</th>
-				<th data-options="field:'project_manager',width:200">项目经理</th>
+				<th data-options="field:'project_manager',width:200,formatter:fmManager">项目经理</th>
 				<th data-options="field:'creator',width:100">创建人</th>
 				<th data-options="field:'create_date',width:150,sortable:true">创建时间</th>
-				<th data-options="field:'status',width:60,formatter:showStatusName,sortable:true">项目状态</th>
+				<th data-options="field:'status',width:80,formatter:showStatusName,sortable:true">项目状态</th>
 				<th data-options="field:'id',width:150,align:'left',formatter:showButtons">操作</th>
 			</tr>
 		</thead>
@@ -109,6 +113,20 @@ function showStatusName(val,row){
 	}
 }
 
+function fmManager(val,row){
+	var columnHtml = '';
+	if (row.status =='F'){
+		if(val != null && val.length > 1){
+			columnHtml = '<span>'+val+'</span>&nbsp;&nbsp;&nbsp;&nbsp;'+'<span><a href="javascript:void(0)" class="easyui-linkbutton" onclick="deleteManager(\''+row.id+'\')" style="width:80px;">移除项目经理</a></span>';
+		}else{
+			columnHtml = val;
+		}
+	}else{
+		columnHtml = val;
+	}
+	return columnHtml;
+}
+
 function showButtons(val,row){
 	var columnItem = '<span><a href="javascript:void(0)" class="easyui-linkbutton" onclick="javascript:doUpdate(\''+val+'\')" style="width:80px;">修 改</a></span>&nbsp;&nbsp;'
                    + '<span><a href="javascript:void(0)" class="easyui-linkbutton" onclick="doView(\''+val+'\')" style="width:80px;">查看内容</a></span>&nbsp;&nbsp;';
@@ -125,6 +143,34 @@ function doUpdate(val){
     var pageSize = options.pageSize;
 	var curUrl = "<%=path%>/project/projectEdit.jsp?id="+val+"&pageNum="+pageNum + "&pageSize="+pageSize;
 	parent.loadUrl(curUrl);
+}
+
+function deleteManager(val){
+	$.messager.confirm('确认', '确认移除项目经理?', function(r){
+		if(r){
+			$.ajax( {
+			    url:'<%=path%>/project/mgr/deleteManager.do',
+			    data:{
+			    	'projectId':val
+			    },
+			    type:'post',
+			    async:false,
+			    dataType:'json',
+			    success:function(data) {
+			    	if(data.returnCode == "success"){
+			    		$.messager.alert('提示','操作成功!','info',function(){
+			    			$('#dg').datagrid('reload');
+			    		});
+			    	}else{
+			    		$.messager.alert('提示',data.msg);
+			    	}
+			    },
+			    error : function(data) {
+			    	$.messager.alert('异常',data.responseText);
+		        }
+			});
+		}
+	});
 }
 
 function closeProject(val){

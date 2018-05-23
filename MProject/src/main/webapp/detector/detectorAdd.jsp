@@ -8,6 +8,10 @@
 <head>
 <meta charset="UTF-8">
 <title>添加探测器</title>
+<meta http-equiv="Expires" content="0">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Cache-control" content="no-cache">
+<meta http-equiv="Cache" content="no-cache">
 <script type="text/javascript"	src="<%=path%>/js/jquery/jquery.min.js"></script>
 <link rel="stylesheet" type="text/css"	href="<%=path%>/js/easyui/themes/default/easyui.css">
 <link rel="stylesheet" type="text/css"	href="<%=path%>/js/easyui/themes/icon.css">
@@ -33,11 +37,12 @@
 			<input class="easyui-textbox" id="nfcNumber" name="nfcNumber" style="width: 90%"
 				data-options="label:'探测器NFC序列号:',required:true,validType:'length[14,14]'">
 		</div>
-		<!-- -->
+		<!-- 
 		<div style="margin-bottom: 20px">
 			<input class="easyui-textbox" id="detectorId" name="detectorId" style="width: 90%"
 				data-options="label:'探测器ID:',validType:'length[1,3]'">
 		</div>
+		-->
 		<div style="margin-bottom: 20px">
 			<input class="easyui-textbox" id="longitude" name="longitude" style="width: 90%"
 				data-options="label:'经度 :',required:true,validType:'checkLng'">
@@ -101,7 +106,6 @@ function submitForm() {
 	    data:{
 	    	'detectorId':'',
 	    	'processorId':'<%=processorId%>',
-	    	'detectorId':$("#detectorId").val(),
 	    	'detectorSeq':$("#detectorSeq").val(),
 	    	'nfcNumber':$("#nfcNumber").val(),
 	    	'longitude':$("#longitude").val(),
@@ -218,6 +222,8 @@ $(function() {
 	    }
 	});
 	
+	$("#nfcNumber").textbox('textbox').bind("keyup", function () { $(this).val($(this).val().toUpperCase());})
+	
 	$("#detectorSeq").textbox({
 		 onChange: function(value) {
 			if(dictNfcCodeSeq!= null && dictNfcCodeSeq.length > 0){
@@ -251,9 +257,9 @@ $.extend($.fn.validatebox.defaults.rules, {
     },
     checkDCode: { //验证探测器编号
         validator: function(value, param){
-         return  /^((00[1-9])|(0[1-9][0-9])|(1[0-1][0-9])|(12[0-8])){1}$/.test(value);
+         return  /^((00[1-9])|(0[1-9][0-9])|(1[0-9][0-9])|(2[0-3][0-9])|240){1}$/.test(value);
         },
-        message: '探测器编号为001-128的数字组成!'
+        message: '探测器编号为001-240的数字组成!'
     }
 });
 </script>

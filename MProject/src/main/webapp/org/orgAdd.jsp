@@ -7,6 +7,10 @@
 <head>
 <meta charset="UTF-8">
 <title>添加单位</title>
+<meta http-equiv="Expires" content="0">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Cache-control" content="no-cache">
+<meta http-equiv="Cache" content="no-cache">
 <script type="text/javascript"	src="<%=path%>/js/jquery/jquery-3.3.1.min.js"></script>
 <link rel="stylesheet" type="text/css"	href="<%=path%>/js/easyui/themes/default/easyui.css">
 <link rel="stylesheet" type="text/css"	href="<%=path%>/js/easyui/themes/icon.css">
@@ -27,7 +31,7 @@
 					</div>
 					<div style="margin-bottom: 20px">
 						<input class="easyui-textbox" id="address" name="address" style="width: 100%"
-							data-options="label:'地  址 :',validType:'length[0,60]'">
+							data-options="label:'地  址 :',validType:'length[0,80]'">
 					</div>
 					<div style="margin-bottom: 20px">
 						<input class="easyui-textbox" id="telephone" name="telephone" style="width: 100%"
@@ -61,7 +65,7 @@
 					</div>
 					<div style="margin-bottom: 20px">
 						<input class="easyui-textbox" id="openBank" name="openBank" style="width: 100%"
-							data-options="label:'开户银行 :',validType:'length[0,20]'">
+							data-options="label:'开户银行 :',validType:'length[0,25]'">
 					</div>
 					<div style="margin-bottom: 20px">
 						<input class="easyui-textbox" id="contacts" name="contacts" style="width: 100%"

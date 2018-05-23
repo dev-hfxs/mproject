@@ -5,12 +5,14 @@
 		 SELECT a.id, a.ip, a.gateway, a.net_mask, a.project_id, a.status, a.net_name, a.create_date, b.project_name  
 		 FROM t_ip_info a
 		 LEFT JOIN t_project b ON a.project_id = b.id  
-		 WHERE 1 = 1 [ AND instr(a.ip,':ip') > 0 ] 
+		 WHERE 1 = 1 [ AND instr(a.ip,':ip') > 0 ] order by a.net_name 
 		</content>
 		<description></description>
 	</sql>
 	<sql id="mproject-ip-getCanUseIPList" name="获取用户可用的IP列表">
 		<content>
+		SELECT id, ip, gateway, net_mask, project_id, status, net_name, create_date, processor_id, project_name
+		FROM (
 		 SELECT a.id, a.ip, a.gateway, a.net_mask, a.project_id, a.status, a.net_name, a.create_date,a.processor_id, b.project_name  
 		 FROM t_ip_info a
 		 LEFT JOIN t_project b ON a.project_id = b.id  
@@ -19,7 +21,8 @@
 		 SELECT a.id, a.ip, a.gateway, a.net_mask, a.project_id, a.status, a.net_name, a.create_date,a.processor_id, b.project_name  
 		 FROM t_ip_info a
 		 LEFT JOIN t_project b ON a.project_id = b.id  
-		 WHERE a.status IN ('Y','L','Q') and mark_user = ':userId' [ and a.project_id = ':projectId' ] 	 
+		 WHERE a.status IN ('Y','L','Q') and mark_user = ':userId' [ and a.project_id = ':projectId' ] 	
+		 ) td order by net_name 
 		</content>
 		<description></description>
 	</sql>

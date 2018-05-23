@@ -8,6 +8,10 @@
 <head>
 <meta charset="UTF-8">
 <title>修改处理器</title>
+<meta http-equiv="Expires" content="0">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Cache-control" content="no-cache">
+<meta http-equiv="Cache" content="no-cache">
 <script type="text/javascript"	src="<%=path%>/js/jquery/jquery-3.3.1.min.js"></script>
 <link rel="stylesheet" type="text/css"	href="<%=path%>/js/easyui/themes/default/easyui.css">
 <link rel="stylesheet" type="text/css"	href="<%=path%>/js/easyui/themes/icon.css">
@@ -31,11 +35,11 @@
 		</div>
 		<div style="margin-bottom: 20px;width: 100%">
 			<input class="easyui-textbox" id="nfcNumber" name="nfcNumber" style="width: 100%"
-				data-options="label:'处理器NFC序列号:',required:true,validType:'length[1,20]'">
+				data-options="label:'处理器NFC序列号:',required:true,validType:'length[14,14]'">
 		</div>
 		<div style="margin-bottom: 20px">
 			<input class="easyui-textbox" id="moxaNumber" name="moxaNumber" style="width: 100%"
-				data-options="label:'MOXA-NFC序列号:',required:true,validType:'length[1,20]'">
+				data-options="label:'MOXA-NFC序列号:',required:true,validType:'length[14,14]'">
 		</div>
 		<div style="margin-bottom: 20px;width: 100%">
 			<input class="easyui-textbox" id="detectorNum" name="detectorNum" style="width: 100%"
@@ -52,8 +56,8 @@
 </div>
 	
 <script>
-var pNfcCodeValid = false;
-var mNfcCodeValid = false;
+var pNfcCodeValid = true;
+var mNfcCodeValid = true;
 
 function submitForm() {
 	if($("#ff").form('validate') == false){
@@ -186,6 +190,9 @@ $(function() {
 	    	}
 	    }
 	});
+	
+	$("#nfcNumber").textbox('textbox').bind("keyup", function () { $(this).val($(this).val().toUpperCase());})
+	$("#moxaNumber").textbox('textbox').bind("keyup", function () { $(this).val($(this).val().toUpperCase());})
 });
 
 $.extend($.fn.validatebox.defaults.rules, {            
@@ -197,10 +204,10 @@ $.extend($.fn.validatebox.defaults.rules, {
         message : 'IP地址格式不正确'
 	},
 	checkDNum: { //验证探测器数量
-        validator: function(value, param){
-         return  /^([1-9]|[1-9][0-9]|1[0-1][0-9]|1[2][0-8])$/.test(value);
-        },
-        message: '一个处理器可设置1-128个探测器!'
+		 validator: function(value, param){
+	         return  /^([1-9]|[1-9][0-9]|1[0-9][0-9]|2[0-3][0-9]|240)$/.test(value);
+	        },
+	        message: '一个处理器可设置1-240个探测器!'
     }
 });
 </script>

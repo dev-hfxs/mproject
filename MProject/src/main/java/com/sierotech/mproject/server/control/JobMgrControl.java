@@ -181,21 +181,34 @@ public class JobMgrControl {
 			}
 		}else if("F".equalsIgnoreCase(jobStatus)) {
 			//工单完成,获取工单填写的附件(处理器配置信息、探测器信息)
+			String debugOption = request.getParameter("debugOption");
 			String processorInfo = request.getParameter("processorInfo");
 			String configFile = request.getParameter("configFile");
 			String detectorInfo = request.getParameter("detectorInfo");
 			if(processorInfo == null) {
-				result.put("msg", "处理调试工单错误,处理器IP信息为空.");
+				result.put("msg", "处理调试工单错误, 处理器IP信息为空.");
 				return result;
 			}
 			if(configFile == null) {
-				result.put("msg", "处理调试工单错误,处理器配置附件为空.");
+				result.put("msg", "处理调试工单错误, 处理器配置附件为空.");
 				return result;
 			}
 			if(detectorInfo == null) {
-				result.put("msg", "处理调试工单错误,探测器附件信息为空.");
+				result.put("msg", "处理调试工单错误, 探测器附件信息为空.");
 				return result;
 			}
+			if(debugOption == null) {
+				result.put("msg", "处理调试工单错误, 调试工单选项为空.");
+				return result;
+			}
+			Map<String,String> debugOptionMap = null;
+			try {
+				debugOptionMap = JsonUtil.jsonToMap(debugOption, false);
+			}catch(Exception e) {
+				result.put("msg", "调试工单选项参数格式错误.");
+				return result;
+			}
+			
 			List<Map> configFileList = null;
 			List<Map> detectorInfoList = null;
 			List<Map> processorIpList = null;
@@ -210,7 +223,7 @@ public class JobMgrControl {
 			}
 			try {
 				String curUserId = UserTool.getLoginUser(request).get("id");
-				jobService.updateJob(curUserId, jobId, jobStatus, "", processorIpList, configFileList, detectorInfoList);
+				jobService.updateJob(curUserId, jobId, jobStatus, "", processorIpList, configFileList, detectorInfoList, debugOptionMap);
 			}catch(BusinessException be) {
 				result.put("msg", be.getMessage());
 				return result;
@@ -243,6 +256,28 @@ public class JobMgrControl {
 		}
 		try {
 			jobService.updateJob(jobId, jobStatus, jobDesc);
+		}catch(BusinessException be) {
+			result.put("msg", be.getMessage());
+			return result;
+		}
+		
+		result.put("returnCode", "success");
+		result.put("msg", "");
+		return result;
+	}
+	
+	@RequestMapping(value = "/revokeJob")
+	@ResponseBody
+	public Map<String, String> revokeJob(HttpServletRequest request) {
+		Map<String, String> result = new HashMap<String, String>();
+		String jobId = request.getParameter("jobId");
+		if(null == jobId) {
+			result.put("msg", "取消工单错误, 缺少工单ID.");
+			return result;
+		}
+		String curUserId = UserTool.getLoginUser(request).get("id");
+		try {
+			jobService.updateJob4Revoke(curUserId, jobId);
 		}catch(BusinessException be) {
 			result.put("msg", be.getMessage());
 			return result;

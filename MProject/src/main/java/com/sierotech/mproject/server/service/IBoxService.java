@@ -8,6 +8,7 @@
  */
 package com.sierotech.mproject.server.service;
 
+import java.util.List;
 import java.util.Map;
 
 import com.sierotech.mproject.common.BusinessException;
@@ -31,6 +32,6 @@ public interface IBoxService {
 	
 	public void updateBox4Edit(String curUser, String boxId) throws BusinessException;
 	
-	public void updateBox4Accept(String curUser, String boxId) throws BusinessException;
+	public void updateBox4Accept(String curUser, String boxId, List<Map> acceptFileList) throws BusinessException;
 	
 }

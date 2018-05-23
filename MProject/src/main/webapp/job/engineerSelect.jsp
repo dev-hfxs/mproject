@@ -12,6 +12,10 @@
 <head>
 <meta charset="UTF-8">
 <title>选择工单工程师</title>
+<meta http-equiv="Expires" content="0">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Cache-control" content="no-cache">
+<meta http-equiv="Cache" content="no-cache">
 <script type="text/javascript" src="<%=path%>/js/jquery/jquery-3.3.1.min.js"></script>
 <link rel="stylesheet" type="text/css" href="<%=path%>/js/easyui/themes/default/easyui.css">
 <link rel="stylesheet" type="text/css" href="<%=path%>/js/easyui/themes/icon.css">
@@ -54,19 +58,17 @@ $(function() {
 	var jobType = "<%=jobType%>";
 	
 	var queryParams = $('#dg').datagrid('options').queryParams;
-	queryParams.sqlId = 'mproject-user-getUsersForJobEngineer';
+	queryParams.sqlId = 'mproject-user-getUsersForInstallJobEngineer';
 	queryParams.projectId = '${curProjectId}';
 	queryParams.machineBoxId =  "<%=boxId%>";
 	if("A" == jobType){
-		queryParams.roleType2 = 'I';
+		queryParams.sqlId = 'mproject-user-getUsersForInstallJobEngineer';
 	}
 	if("T" == jobType){
-		queryParams.roleType4 = 'D';
-	}
-	
+		queryParams.sqlId = 'mproject-user-getUsersForDebugJobEngineer';
+	}	
 	if("Q" == jobType){
-		queryParams.roleType2 = 'I';
-		queryParams.roleType4 = 'D';
+		queryParams.sqlId = 'mproject-user-getUsersForOtherJobEngineer';
 	}
 	
 	if(pageNum != null && pageNum != 'null' && pageNum != ''){
@@ -80,7 +82,8 @@ $(function() {
 function doConfim(){
 	var row = $('#dg').datagrid('getSelected');
 	if (row){
-		var userName = row.user_name + "/" + row.full_name;
+		//var userName = row.user_name + "/" + row.full_name;
+		var userName = row.full_name;
 		// 返回选择的人员
 		var params = {id:row.id,user_name:userName};
 		parent.okResponse(params);

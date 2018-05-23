@@ -133,6 +133,14 @@
 		</description>
 	</sql>
 	
+	<sql id="mproject-project-getUserBuildBoxNum" name="获取用户已建立的机箱数">
+		<content>
+		SELECT  count(*) AS countNum FROM t_machine_box WHERE project_id = ':projectId' and  build_manager = ':userId' 
+		</content>
+		<description>
+		</description>
+	</sql>
+	
 	<sql id="mproject-project-getCurProjectBoxList4Engineer" name="获取项目项目经理当前项目下的机箱">
 		<content>
 		SELECT b.id, b.box_number, b.nfc_number, b.create_date, b.longitude, b.latitude, b.pos_desc, b.processor_num, b.build_manager,b.project_id, b.enable_edit, u.user_name,
@@ -251,4 +259,11 @@
 		</description>
 	</sql>
 	
+	<sql id="mproject-project-updateProject4NoManager" name="移除项目经理">
+		<content>
+		UPDATE t_project set  project_manager = '' where id = ':projectId' 
+		</content>
+		<description>
+		</description>
+	</sql>
 </sqls>

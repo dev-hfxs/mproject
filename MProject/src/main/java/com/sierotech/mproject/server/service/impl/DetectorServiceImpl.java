@@ -75,7 +75,7 @@ public class DetectorServiceImpl implements IDetectorService{
 			}catch(NumberFormatException ne) {
 				log.info(ne.getMessage());
 			}
-			if(count >= 128) {
+			if(count > 240) {
 				throw new BusinessException("添加探测器错误, 当前处理器探测器数已到上限.");
 			}
 		}
@@ -157,8 +157,8 @@ public class DetectorServiceImpl implements IDetectorService{
 	public void update4ImportDetector(String curUser,String processorId,boolean ignoreExistsData, boolean enableReplace, List<Map<String, String>> datas)
 			throws BusinessException {
 		if(datas!= null && datas.size() >0) {
-			if(datas.size() > 128) {
-				throw new BusinessException("导入探测器错误, 文件中的数据行超出128，单个处理器下的探测器不能超过128个.");
+			if(datas.size() > 240) {
+				throw new BusinessException("导入探测器错误, 文件中的数据行超出240，单个处理器下的探测器不能超过240个.");
 			}
 			
 			//检查文件中的探测器nfc序列号、编号是否存在
@@ -168,11 +168,11 @@ public class DetectorServiceImpl implements IDetectorService{
 			for(Map<String, String> data : datas) {
 				checkSql.setLength(0);
 				String longitude = data.get("longitude");
-				if(longitude == null || longitude.indexOf(".") < 1 || longitude.length() < 8) {
+				if(longitude == null || longitude.indexOf(".") < 1 || longitude.substring(longitude.lastIndexOf(".")).length() < 7) {
 					throw new BusinessException("导入探测器错误, 文件中的经度" + longitude + "精度不正确.");
 				}
 				String latitude = data.get("latitude");
-				if(latitude == null || latitude.indexOf(".") < 1 || latitude.length() < 8) {
+				if(latitude == null || latitude.indexOf(".") < 1 || latitude.substring(latitude.lastIndexOf(".")).length() < 7) {
 					throw new BusinessException("导入探测器错误, 文件中的纬度" + longitude + "精度不正确.");
 				}
 				
@@ -230,7 +230,8 @@ public class DetectorServiceImpl implements IDetectorService{
 				}
 				importDataSql.append(" insert into t_detector(id,detector_id, detector_seq,processor_id,nfc_number,longitude,latitude,start_point,end_point) values (");
 				importDataSql.append(" '").append(UUIDGenerator.getUUID()).append("'");
-				importDataSql.append(",'").append(data.get("detector_id")).append("'");
+				// importDataSql.append(",'").append(data.get("detector_id")).append("'");
+				importDataSql.append(",'").append("").append("'");
 				importDataSql.append(",'").append(detectorSeq).append("'");
 				importDataSql.append(",'").append(processorId).append("'");
 				importDataSql.append(",'").append(data.get("nfc_number")).append("'");

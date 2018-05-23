@@ -9,6 +9,10 @@
 <head>
 <meta charset="UTF-8">
 <title>人员管理</title>
+<meta http-equiv="Expires" content="0">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Cache-control" content="no-cache">
+<meta http-equiv="Cache" content="no-cache">
 <script type="text/javascript" src="<%=path%>/js/jquery/jquery-3.3.1.min.js"></script>
 <link rel="stylesheet" type="text/css" href="<%=path%>/js/easyui/themes/default/easyui.css">
 <link rel="stylesheet" type="text/css" href="<%=path%>/js/easyui/themes/icon.css">
@@ -77,7 +81,7 @@ function resetNum(projectId,userId,allowBoxNum){
 	$(document.body).append(boarddiv);
 	var win = $('#msgwindow').dialog({
 		content : content,
-		width : '320',
+		width : '360',
 		height : '180',
 		modal : true,
 		title : '修改应建机箱数量',
@@ -144,8 +148,9 @@ function okResponse(result){
 	if(result == 'success'){
 		$("#msgwindow").dialog('destroy');
 		//刷新列表
-		$('#dg').datagrid('reload');
-		$.messager.alert('提示','添加成功!');
+		$.messager.alert('提示','添加成功!','info',function(){
+			$('#dg').datagrid('reload');
+		});
 	}
 }
 

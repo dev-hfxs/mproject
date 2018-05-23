@@ -8,6 +8,7 @@
  */
 package com.sierotech.mproject.server.service.impl;
 
+import java.io.File;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -24,6 +25,7 @@ import com.sierotech.mproject.common.utils.ConfigSQLUtil;
 import com.sierotech.mproject.common.utils.DateUtils;
 import com.sierotech.mproject.common.utils.LogOperationUtil;
 import com.sierotech.mproject.common.utils.UUIDGenerator;
+import com.sierotech.mproject.context.AppContext;
 import com.sierotech.mproject.server.service.IBoxService;
 
 /**
@@ -366,7 +368,7 @@ public class BoxServiceImpl implements IBoxService{
 	}
 
 	@Override
-	public void updateBox4Accept(String curUser, String boxId) throws BusinessException {
+	public void updateBox4Accept(String curUser, String boxId, List<Map> acceptFileList) throws BusinessException {
 		if (null == boxId) {
 			throw new BusinessException("确认验收机箱错误,机箱ID为空!");
 		}
@@ -430,6 +432,55 @@ public class BoxServiceImpl implements IBoxService{
 		}
 		if(alDatas != null && alDatas.size() > 0) {
 			throw new BusinessException("机箱下的处理器配置文件和探测器信息未上传.");
+		}
+		//保存机箱验收上传的附件
+		String tempUploadDir = AppContext.getUploadTempDir();
+		String uploadDir = AppContext.getUploadDir();
+		StringBuffer batchSql = new StringBuffer();
+		if(acceptFileList!=null && acceptFileList.size() > 0) {
+			String attachFilePreSql = ConfigSQLUtil.getCacheSql("mproject-attach-addFile");
+			for(Map acceptFileMap : acceptFileList) {
+				String id = acceptFileMap.get("id").toString();
+				String fileName = acceptFileMap.get("fileName").toString();
+				
+				//移动文件
+				String tempFileName = tempUploadDir + File.separator + "boxfile_" + id + "_" +  fileName;
+				String newFileName = uploadDir + File.separator + "acceptFile" +File.separator + id + File.separator + fileName;
+				String configFilePath = uploadDir + File.separator + "acceptFile" +File.separator+ id + File.separator + fileName;
+				File tempFile = new File(tempFileName);
+				File newFile = new File(newFileName);
+				// 判断目标路径是否存在，如果不存在就创建一个
+				if (!newFile.getParentFile().exists()) {
+					newFile.getParentFile().mkdirs();
+					
+				}
+				if(tempFile.exists()) {
+					tempFile.renameTo(newFile);
+				}
+				
+				
+				if(configFilePath != null  && configFilePath.indexOf("\\\\") < 1) {
+					configFilePath = configFilePath.replace("\\", "\\\\");
+				}
+				// 生成修改的 sql
+				paramsMap.clear();
+				paramsMap.put("id", UUIDGenerator.getUUID());
+				paramsMap.put("fileOwnerObj", "box");
+				paramsMap.put("objId", id);
+				paramsMap.put("fileName", fileName);
+				paramsMap.put("filePath", configFilePath);
+				
+				String attachFileSql = ConfigSQLUtil.preProcessSQL(attachFilePreSql, paramsMap);
+				batchSql.append(attachFileSql).append(";\n");				
+			}
+		}
+		if(batchSql.length() > 0) {
+			try {
+				springJdbcDao.batchUpdate(batchSql.toString().split("\n"));
+			} catch (DataAccessException ex) {
+				log.info(ex.getMessage());
+				throw new BusinessException("确认验收机箱错误，存储机箱验收文件操作数据库异常.");
+			}
 		}
 		
 		String updateBoxPreSql = ConfigSQLUtil.getCacheSql("mproject-box-updateBox4Accept");

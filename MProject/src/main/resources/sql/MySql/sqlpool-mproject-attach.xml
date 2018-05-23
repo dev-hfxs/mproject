@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sqls>
+	<sql id="mproject-attach-addFile" name="新增附件">
+		<content>
+		 INSERT INTO t_attach_file(id, file_owner_obj, obj_id, file_name, file_path) VALUES(':id', ':fileOwnerObj',':objId', ':fileName', ':filePath')
+		</content>
+		<description></description>
+	</sql>
+</sqls>

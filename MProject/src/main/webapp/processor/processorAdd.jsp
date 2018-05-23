@@ -9,6 +9,10 @@
 <head>
 <meta charset="UTF-8">
 <title>添加处理器</title>
+<meta http-equiv="Expires" content="0">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Cache-control" content="no-cache">
+<meta http-equiv="Cache" content="no-cache">
 <script type="text/javascript"	src="<%=path%>/js/jquery/jquery-3.3.1.min.js"></script>
 <link rel="stylesheet" type="text/css"	href="<%=path%>/js/easyui/themes/default/easyui.css">
 <link rel="stylesheet" type="text/css"	href="<%=path%>/js/easyui/themes/icon.css">
@@ -167,6 +171,8 @@ $(function() {
 	    }
 	});
 	
+	$("#nfcNumber").textbox('textbox').bind("keyup", function () { $(this).val($(this).val().toUpperCase());})
+	$("#moxaNumber").textbox('textbox').bind("keyup", function () { $(this).val($(this).val().toUpperCase());})
 });
 
 $.extend($.fn.validatebox.defaults.rules, {            
@@ -179,9 +185,9 @@ $.extend($.fn.validatebox.defaults.rules, {
 	},
 	checkDNum: { //验证探测器数量
         validator: function(value, param){
-         return  /^([1-9]|[1-9][0-9]|1[0-1][0-9]|1[2][0-8])$/.test(value);
+         return  /^([1-9]|[1-9][0-9]|1[0-9][0-9]|2[0-3][0-9]|240)$/.test(value);
         },
-        message: '一个处理器可设置1-128个探测器!'
+        message: '一个处理器可设置1-240个探测器!'
     }
 });
 </script>

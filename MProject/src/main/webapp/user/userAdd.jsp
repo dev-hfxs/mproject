@@ -7,6 +7,10 @@
 <head>
 <meta charset="UTF-8">
 <title>添加用户</title>
+<meta http-equiv="Expires" content="0">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Cache-control" content="no-cache">
+<meta http-equiv="Cache" content="no-cache">
 <script type="text/javascript"	src="<%=path%>/js/jquery/jquery-3.3.1.min.js"></script>
 <link rel="stylesheet" type="text/css"	href="<%=path%>/js/easyui/themes/default/easyui.css">
 <link rel="stylesheet" type="text/css"	href="<%=path%>/js/easyui/themes/icon.css">
@@ -61,6 +65,9 @@
 	</div>
 	
 	<script>
+	var userNameExist = false;
+	var fullNameExist = false;	
+	
 		function submitForm() {
 			if($("#ff").form('validate') == false){
 				$.messager.alert('输入错误','请检查输入项!');
@@ -80,37 +87,17 @@
 				return false;
 			}
 			
-			//检查用户名是否已存在
-			var userNameExist = false;
-			var userName = $("#userName").val();
-			
-			$.ajax( {
-			    url:'<%=path%>/user/mgr/checkUser.do',
-			    data:{
-			    	'id':'',
-			    	'userName':userName
-			    },
-			    type:'post',
-			    async:false,
-			    dataType:'json',
-			    success:function(data) {
-			    	if(data.userExist != null && data.userExist !='true'){
-			    		userNameExist = false;
-			    	}else{
-			    		userNameExist = true;
-			    		$.messager.alert('输入错误','用户名已存在，请修改用户名!');
-			    		return;
-			    	}
-			    },
-			    error : function(data) {
-			    	$.messager.alert('异常',data.responseText);
-		        }
-			});
+			//检查用户名是否已存在			
 			if(userNameExist == true){
+				$.messager.alert('提示','用户名已存在，请修改用户名!');
 				return;
 			}
-			// 提交保存
+			if(fullNameExist == true){
+				$.messager.alert('提示','用户姓名已存在，请修改用户姓名!');
+				return;
+			}
 			
+			// 提交保存
 			$.ajax( {
 			    url:'<%=path%>/user/mgr/add.do',
 			    data:{
@@ -154,6 +141,62 @@
                 
 				showMessageDialog("<%=path%>/org/orgSelect.jsp","选择用户所属单位",640,480,true);
             });
+			
+			$("#userName").textbox({  
+			    onChange: function(value) {
+			    	$.ajax( {
+					    url:'<%=path%>/user/mgr/checkUser.do',
+					    data:{
+					    	'id':'',
+					    	'nameColumn':'userName',
+					    	'userName':$(this).val()
+					    },
+					    type:'post',
+					    async:false,
+					    dataType:'json',
+					    success:function(data) {
+					    	if(data.userExist != null && data.userExist !='true'){
+					    		userNameExist = false;
+					    	}else{
+					    		userNameExist = true;
+					    		$.messager.alert('提示','用户名已存在，请修改用户名!');
+					    		return;
+					    	}
+					    },
+					    error : function(data) {
+					    	$.messager.alert('异常',data.responseText);
+				        }
+					});
+			    }
+			});
+			
+			$("#fullName").textbox({  
+			    onChange: function(value) {
+			    	$.ajax( {
+					    url:'<%=path%>/user/mgr/checkUser.do',
+					    data:{
+					    	'id':'',
+					    	'nameColumn':'fullName',
+					    	'userName':$(this).val()
+					    },
+					    type:'post',
+					    async:false,
+					    dataType:'json',
+					    success:function(data) {
+					    	if(data.userExist != null && data.userExist !='true'){
+					    		userNameExist = false;
+					    	}else{
+					    		userNameExist = true;
+					    		$.messager.alert('提示','用户姓名已存在，请修改用户姓名!');
+					    		return;
+					    	}
+					    },
+					    error : function(data) {
+					    	$.messager.alert('异常',data.responseText);
+				        }
+					});
+			    }
+			});
 		});
 		
 		$.extend($.fn.validatebox.defaults.rules, {

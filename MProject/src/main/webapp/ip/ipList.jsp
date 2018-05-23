@@ -9,6 +9,10 @@
 <head>
 <meta charset="UTF-8">
 <title>IP地址列表</title>
+<meta http-equiv="Expires" content="0">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Cache-control" content="no-cache">
+<meta http-equiv="Cache" content="no-cache">
 <script type="text/javascript" src="<%=path%>/js/jquery/jquery-3.3.1.min.js"></script>
 <link rel="stylesheet" type="text/css" href="<%=path%>/js/easyui/themes/default/easyui.css">
 <link rel="stylesheet" type="text/css" href="<%=path%>/js/easyui/themes/icon.css">
@@ -38,6 +42,8 @@
 		</thead>
 	</table>
 	<div id="tb" style="text-align: left; padding: 1px 0">
+		&nbsp;<input id="inpKey" class="easyui-textbox"  prompt="ip" style="width:150px">
+		<a href="#" class="easyui-linkbutton" onclick="doSearch()" iconCls="icon-search">查询&nbsp;&nbsp;</a>
 		&nbsp;<a href="javascript:void(0)" class="easyui-linkbutton"	onclick="doAdd()"  iconCls="icon-edit"  style="width: 80px">添加</a> &nbsp;
 		<a href="javascript:void(0)" class="easyui-linkbutton"	onclick="doImport()" iconCls="icon-filter" style="width: 80px">导入</a> &nbsp;
 	</div>
@@ -166,9 +172,14 @@
 	
 	function doSearch(){
 		var charKey = $("#inpKey" ).val();
+		var isValidIp = /^(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])$/.test(charKey);
+		if(isValidIp == false){
+			$.messager.alert('提示','输入的ip格式不正确.');
+			return;
+		}
 		var queryParams = $('#dg').datagrid('options').queryParams;
-		queryParams.sqlId = 'mproject-org-queryValidOrgs';
-		queryParams.orgName = charKey;
+		queryParams.sqlId = 'mproject-ip-getAllIPList';
+		queryParams.ip = charKey;
 		$('#dg').datagrid('loadData',{total:0,rows:[]});
 		$('#dg').datagrid('reload');
 	}

@@ -30,9 +30,24 @@
 		 ( SELECT full_name from t_user u where u.id = log.user_name) as user_name,
          case when operation_type='box' then '机箱' when operation_type='processor' then '处理器' when operation_type='detector' then '探测器' else operation_type end  as operation_type ,
          update_field 
-		 FROM t_operation_log log 
+		 FROM t_operation_log log where 1=1 [ and instr(operation_part, ':operationPart') > 0 ] 
 		</content>
 		<description></description>
 	</sql>
 	
+	<sql id="mproject-log-getSessionLog" name="获取用户登录日志">
+		<content>
+		 SELECT id, user_name, login_date, client_ip  
+		 FROM t_session_log where 1=1 [ and instr(user_name, ':userName') > 0 ] order by login_date desc
+		</content>
+		<description></description>
+	</sql>
+	
+	<sql id="mproject-log-getAdminLog" name="获取管理员操作日志">
+		<content>
+		 SELECT id, user_name, operation_date, operation_module, operation_desc   
+		 FROM t_admin_log where 1=1 [ and instr(user_name, ':userName') > 0 ]  order by operation_date desc 
+		</content>
+		<description></description>
+	</sql>
 </sqls>

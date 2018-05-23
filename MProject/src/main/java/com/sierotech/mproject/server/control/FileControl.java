@@ -86,7 +86,10 @@ public class FileControl {
 		return "success";
 	}
 	
-	@RequestMapping(value = "/upload/temp", method = RequestMethod.POST)
+	/*
+	 * 上传处理器配置文件
+	 * */
+	@RequestMapping(value = "/upload/configFile", method = RequestMethod.POST)
 	@ResponseBody
 	public String uploadTemp(HttpServletRequest request) {
 		
@@ -110,6 +113,42 @@ public class FileControl {
 					if (!"txt".equals(postfix)) {
 						throw new BusinessException("文件类型不正确,请选择txt文件.");
 					}
+					String newFileName = fileId + "_" + filename;
+					File filepath = new File(targetDir, newFileName);
+					// 判断路径是否存在，如果不存在就创建一个
+					if (!filepath.getParentFile().exists()) {
+						filepath.getParentFile().mkdirs();
+					}
+					// 将上传文件保存到目标文件当中
+					try {
+						fileT.transferTo(new File(targetDir + File.separator + newFileName));
+					} catch (Exception e) {
+						throw new BusinessException("文件存储错误.");
+					}
+				}
+			}	
+		}
+		return "success";
+	}
+	
+	/*
+	 * 上传机箱验收文件
+	 * */
+	@RequestMapping(value = "/upload/acceptFile", method = RequestMethod.POST)
+	@ResponseBody
+	public String uploadAcceptFile(HttpServletRequest request) {		
+		MultipartHttpServletRequest mreq = (MultipartHttpServletRequest ) request;
+		if(mreq.getFileMap()!=null) {
+			for(String key: mreq.getFileMap().keySet()) {
+				MultipartFile fileT = mreq.getFileMap().get(key);
+				
+				String targetDir = AppContext.getUploadTempDir();
+
+				// 如果文件不为空，写入上传路径
+				if (!fileT.isEmpty()) {
+					// 上传文件名
+					String filename = fileT.getOriginalFilename();
+					String fileId = request.getParameter("file-id");
 					String newFileName = fileId + "_" + filename;
 					File filepath = new File(targetDir, newFileName);
 					// 判断路径是否存在，如果不存在就创建一个

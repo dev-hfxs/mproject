@@ -9,6 +9,10 @@
 <head>
 <meta charset="UTF-8">
 <title>工单查询</title>
+<meta http-equiv="Expires" content="0">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Cache-control" content="no-cache">
+<meta http-equiv="Cache" content="no-cache">
 <script type="text/javascript" src="<%=path%>/js/jquery/jquery-3.3.1.min.js"></script>
 <link rel="stylesheet" type="text/css" href="<%=path%>/js/easyui/themes/default/easyui.css">
 <link rel="stylesheet" type="text/css" href="<%=path%>/js/easyui/themes/icon.css">
@@ -33,7 +37,7 @@
 				<th data-options="field:'job_type',width:100,formatter:showTypeName">工单类型</th>
 				<th data-options="field:'work_content',width:250,sortable:true">工作内容</th>
 				<th data-options="field:'status',width:100,formatter:showStatusName">工单状态</th>
-				<th data-options="field:'desc',width:320,sortable:true">描述</th>
+				<th data-options="field:'job_desc',width:320,sortable:true">描述</th>
 			</tr>
 		</thead>
 	</table>
