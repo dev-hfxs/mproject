@@ -30,9 +30,9 @@
 </head>
 <body>
 <div class="easyui-layout" data-options="fit:true,border:false">
-	<div data-options="region:'north',border:false" style="height:240px">
+	<div data-options="region:'north',border:false" style="height:200px">
 		<table id="dg" class="easyui-datagrid"  
-			data-options="singleSelect:true,rownumbers:true,pageSize:20,fit:true,url:'<%=path%>/comm/queryForPage.do',pagination:true,method:'post',multiSort:true,toolbar:'#tb'">
+			data-options="singleSelect:true,rownumbers:true,pageSize:10,fit:true,url:'<%=path%>/comm/queryForPage.do',pagination:true,method:'post',multiSort:true,toolbar:'#tb'">
 			<thead>
 				<tr>
 					<th data-options="field:'nfc_number',width:200,sortable:true">处理器NFC序列号</th>

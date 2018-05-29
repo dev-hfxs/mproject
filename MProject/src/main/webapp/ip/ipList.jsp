@@ -27,7 +27,7 @@
 <!--  -->
 <div id="dgPanel" class="easyui-panel" data-options="fit:true">
 	<table id="dg" class="easyui-datagrid"  
-			data-options="singleSelect:true,rownumbers:true,pageSize:20,fit:true,url:'<%=path%>/comm/queryForPage.do',pagination:true,method:'post',toolbar:'#tb', multiSort:true">
+			data-options="singleSelect:true,rownumbers:true,pageSize:30,fit:true,url:'<%=path%>/comm/queryForPage.do',pagination:true,method:'post',toolbar:'#tb', multiSort:true">
 		<thead>
 			<tr>
 				<th data-options="field:'net_name',width:250">网段名称</th>

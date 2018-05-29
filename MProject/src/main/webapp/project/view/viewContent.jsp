@@ -46,13 +46,18 @@
 				<th data-options="field:'debug_engineer',width:130,sortable:true">调试工程师</th>
 				<th data-options="field:'confirm_debug_date',width:130,sortable:true">调试确认时间</th>
 				<th data-options="field:'pm_confirm_date',width:130,sortable:true">项目经理确认时间</th>
+				<th data-options="field:'id',width:80,formatter:fmBoxFile">验收文件</th>
 			</tr>
 		</thead>
 	</table>
 	<div id="tb" style="padding:2px 5px;">
 		<input id="inpKey" class="easyui-textbox"  prompt="机箱编号" style="width:150px">
 		<a href="#" class="easyui-linkbutton" onclick="doSearch()" iconCls="icon-search">查询&nbsp;&nbsp;</a>
+		<!-- 
+		<a href="#" class="easyui-linkbutton" onclick="downloadFile()" iconCls="icon-search">下载&nbsp;&nbsp;</a>
+		-->
 	</div>
+	<div id="fileListDiv"></div>
 </div>
 <div id="dgPanelProcessor" class="easyui-panel" data-options="fit:true,border:0">
 	<table id="dg2" class="easyui-datagrid"  
@@ -64,6 +69,8 @@
 				<th data-options="field:'ip',width:100">IP地址</th>
 				<th data-options="field:'detector_num',width:150">下属探测器数量</th>
 				<th data-options="field:'box_nfc_number',width:130,sortable:true,formatter:fmBoxNFCNum">所属机箱NFC序列号</th>
+				<th data-options="field:'config_file',width:90,formatter:fmConfigFile">处理器配置文件</th>
+				<th data-options="field:'detector_file',width:90,formatter:fmDetectorFile">探测器信息</th>
 			</tr>
 		</thead>
 	</table>
@@ -197,6 +204,79 @@ function doSearch3(){
 	queryParams.nfcNumber = charKey;
 	$('#dg3').datagrid('loadData',{total:0,rows:[]});
 	$('#dg3').datagrid('reload');
+}
+
+function fmBoxFile(val,row){
+	var columnItem = '';
+	if(row.pm_confirm_date !=null && row.pm_confirm_date.length > 0){
+		columnItem = '<span><a href="javascript:void(0)" class="easyui-linkbutton" onclick="javascript:viewFile(\''+val+'\')" style="width:80px;">查看</a></span>&nbsp;&nbsp;';
+	}
+	return columnItem;
+}
+
+function fmConfigFile(val,row){
+	var columnItem = '';
+	if(row.config_file !=null && row.config_file.length > 0){
+		columnItem = '<span><a href="javascript:void(0)" class="easyui-linkbutton" onclick="javascript:downloadFile(\''+row.config_file+'\')" style="width:80px;">下载</a></span>&nbsp;&nbsp;';
+	}
+	return columnItem;
+}
+
+function fmDetectorFile(val,row){
+	var columnItem = '';
+	if(row.detector_file !=null && row.detector_file.length > 0){
+		columnItem = '<span><a href="javascript:void(0)" class="easyui-linkbutton" onclick="javascript:downloadFile(\''+row.detector_file+'\')" style="width:80px;">下载</a></span>&nbsp;&nbsp;';
+	}
+	return columnItem;
+}
+
+function viewFile(boxId){
+	//获取文件
+	$.ajax( {
+	    url:'<%=path%>/comm/queryForList.do',
+	    data:{
+	    	'sqlId':'mproject-box-getBoxAcceptFiles',
+	    	'boxId':boxId
+	    },
+	    type:'post',
+	    async:false,
+	    dataType:'json',
+	    success:function(data) {
+	    	if(data!=null && data.length > 0){
+	    		var divHtml = '<table border="0"><tr><td width="20px">&nbsp;</td><td width="200px">&nbsp;</td><td width="80px">&nbsp;</td></tr>';
+	    		$.each(data,function(i,item){
+	    			divHtml = divHtml + '<tr><td></td><td>' + item.file_name + '</td><td><a href="javascript:void(0)" class="easyui-linkbutton" onclick="javascript:downloadFile(\''+ item.file_path + '\')" >下载</a></td></tr>';
+	    		});
+	    		divHtml = divHtml + '</table>';
+	    		
+	    		$('#fileListDiv').empty();
+	    		$('#fileListDiv').append(divHtml);
+	    		$('#fileListDiv').window({
+	    		    width:600,
+	    		    height:400,
+	    		    title:'验收文件列表',
+	    		    collapsible:false,
+	    		    minimizable:false,
+	    		    maximizable:false,
+	    		    modal:true
+	    		});
+	    	}
+	    },
+	    error : function(data) {
+	    	$.messager.alert('异常',data.responseText);
+        }
+	});
+	
+}
+
+function downloadFile(fileName){
+	//var fileName = "/2018-05-23/configfile_ef65759764434da49d5bc44f44313f31_工作日志.txt";
+	//fileName = fileName.replace(new RegExp(/\\/g),"/");
+	var url = '<%=path%>/file/download.do';
+	var $form = $('<form method="POST" target="bank"><input type="hidden" name="filePath" value="'+fileName+'"></form>');
+    $form.attr('action', url);
+    $form.appendTo($('body'));
+    $form.submit();
 }
 </script>
 </body>

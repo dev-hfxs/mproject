@@ -26,7 +26,7 @@
 <body>
 <div id="dgPanel" class="easyui-panel" data-options="fit:true">
 	<table id="dg" class="easyui-datagrid"  
-			data-options="singleSelect:true,rownumbers:true,pageSize:20,fit:true,url:'<%=path%>/comm/queryForPage.do',pagination:true,method:'post',toolbar:'#tb',multiSort:true">
+			data-options="singleSelect:true,rownumbers:true,pageSize:30,fit:true,url:'<%=path%>/comm/queryForPage.do',pagination:true,method:'post',toolbar:'#tb',multiSort:true">
 		<thead>
 			<tr>
 				<th data-options="field:'status',width:100,formatter:showStatusName">工单状态</th>
@@ -38,7 +38,7 @@
 				<th data-options="field:'box_number',width:100,sortable:true">机箱编号</th>
 				<th data-options="field:'create_date',width:150">建立时间</th>
 				<th data-options="field:'job_desc',width:250,sortable:true">描述</th>
-				<th data-options="field:'id',width:150,align:'center',formatter:showButtons">操作</th>
+				<th data-options="field:'id',width:200,align:'center',formatter:showButtons">操作</th>
 			</tr>
 		</thead>
 	</table>
@@ -92,7 +92,12 @@ function showTypeName(val,row){
 
 function showButtons(val,row){
 	var columnItem = '<span><a href="javascript:void(0)" class="easyui-linkbutton" onclick="processJob(\''+row.id+'\',\''+ row.job_type + '\')" style="width:80px;">处理工单</a></span>&nbsp;&nbsp;';
+	columnItem = columnItem + '<span><a href="javascript:void(0)" class="easyui-linkbutton" onclick="printDevice(\''+ row.box_id + '\')" style="width:80px;">打印安装单</a></span>&nbsp;&nbsp;';
 	return columnItem;
+}
+
+function printDevice(boxId){
+	window.open ('<%=path%>/report/deviceInfo.jsp?boxId=' + boxId, '探测器安装记录表', 'height=900, width=960, top=20, left=100, toolbar=no, menubar=no, scrollbars=no, resizable=no,location=no, status=no');
 }
 
 function processJob(jobId,jobType){

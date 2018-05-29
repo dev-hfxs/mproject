@@ -27,7 +27,7 @@
 <body>
 <div id="dgPanel" class="easyui-panel" data-options="fit:true">
 	<table id="dg" class="easyui-datagrid"  
-			data-options="singleSelect:true,rownumbers:true,pageSize:20,fit:true,url:'<%=path%>/comm/queryForPage.do',pagination:true,method:'post',multiSort:true,toolbar:'#tb'">
+			data-options="singleSelect:true,rownumbers:true,pageSize:30,fit:true,url:'<%=path%>/comm/queryForPage.do',pagination:true,method:'post',multiSort:true,toolbar:'#tb'">
 		<thead>
 			<tr>
 				<th data-options="field:'nfc_code',width:200,sortable:true">NFC序列号</th>

@@ -26,7 +26,7 @@
 <body>
 <div id="dgPanel" class="easyui-panel" data-options="fit:true">
 	<table id="dg" class="easyui-datagrid"  
-			data-options="singleSelect:true,rownumbers:true,pageSize:20,fit:true,url:'<%=path%>/comm/queryForPage.do',pagination:true,method:'post',multiSort:true">
+			data-options="singleSelect:true,rownumbers:true,pageSize:30,fit:true,url:'<%=path%>/comm/queryForPage.do',pagination:true,method:'post',multiSort:true">
 		<thead>
 			<tr>
 				<th data-options="field:'box_number',width:150,sortable:true">机箱编号</th>
@@ -35,7 +35,7 @@
 				<th data-options="field:'latitude',width:100,sortable:true">纬度</th>
 				<th data-options="field:'processor_num',width:200">包含处理器数量</th>
 				<th data-options="field:'submit_num',width:100">提交次数</th>
-				<th data-options="field:'id',width:250,align:'center',formatter:showButtons">操作</th>
+				<th data-options="field:'id',width:300,align:'center',formatter:showButtons">操作</th>
 			</tr>
 		</thead>
 	</table>
@@ -119,8 +119,13 @@ function showButtons(val,row){
 	var columnItem = '<span><a href="javascript:void(0)" class="easyui-linkbutton" onclick="updateBox(\''+val+'\')" style="width:80px;">修改</a></span>&nbsp;&nbsp;'
 				   + '<span><a href="javascript:void(0)" class="easyui-linkbutton" onclick="javascript:configProcessor(\''+row.id+'\',\'' + row.box_number +'\')" style="width:80px;">维护处理器</a></span>&nbsp;&nbsp;'
                    + '<span><a href="javascript:void(0)" class="easyui-linkbutton" onclick="submitBox(\''+val+'\')" style="width:80px;">提交信息</a></span>&nbsp;&nbsp;'
-                   + '<span><a href="javascript:void(0)" class="easyui-linkbutton" onclick="deleteBox(\''+val+'\')" style="width:80px;">删除信息</a></span>&nbsp;&nbsp;';
+                   + '<span><a href="javascript:void(0)" class="easyui-linkbutton" onclick="deleteBox(\''+val+'\')" style="width:80px;">删除信息</a></span>&nbsp;&nbsp;'
+                   + '<span><a href="javascript:void(0)" class="easyui-linkbutton" onclick="printDevice(\''+val+'\')" style="width:80px;">打印安装表</a></span>&nbsp;&nbsp;';
 	return columnItem;
+}
+
+function printDevice(boxId){
+	window.open ('<%=path%>/report/deviceInfo.jsp?boxId=' + boxId, '探测器安装记录表', 'height=900, width=960, top=20, left=100, toolbar=no, menubar=no, scrollbars=no, resizable=no,location=no, status=no');
 }
 
 function configProcessor(boxId,boxNumber){

@@ -23,6 +23,7 @@
 <div style="margin: 20px 0;"></div>
 <div class="easyui-panel"
 	style="width: 100%; max-width: 500px; padding: 30px 30px; border-width:0" >
+	<div id="msg" style="margin-bottom: 10px">&nbsp;</div>
 	<form id="ff" method="post" >
 		<div style="margin-bottom: 20px">
 			<input type="hidden" name="codeName" value="<%=codeName%>">
@@ -63,7 +64,9 @@ function submitForm() {
 		    	$.messager.alert('异常',data.responseText);
 	        }
 		});
-	}	
+	}else{
+		$.messager.alert('提示', '文件校验未通过!');
+	}
 }
 
 function doCancel(){
@@ -71,6 +74,17 @@ function doCancel(){
 }
 
 $(function() {
+	var codeName = '<%=codeName%>';
+	if(codeName == 'box'){
+		$("#msg").html("导入文件名要求以[机箱]文字开始！");
+	}else if(codeName == 'processor'){
+		$("#msg").html("导入文件名要求以[处理器]文字开始！");
+	}else if(codeName == 'moxa'){
+		$("#msg").html("导入文件名要求以[MOXA]文字开始！");
+	}else if(codeName == 'detector'){
+		$("#msg").html("导入文件名要求以[探测器]文字开始！");
+	}
+	
 	$("[type='checkbox'][name='importOption']").next("span").click(function(){
 		$(this).prev().trigger("click");
 	});
@@ -84,6 +98,10 @@ $(function() {
 			var fileObjId = $("[type=file][name=dataFile]").eq(0).attr("id");
 			//验证文件类型
 			var filePath = $(this).filebox('getValue');
+			if(filePath.length < 1){
+				return false;
+			}
+			var originalName = filePath.substring(filePath.lastIndexOf("\\") + 1);
 			var dotPos=filePath.lastIndexOf(".");
 			var nameLength=filePath.length;
 			var suffix=filePath.substring(dotPos+1,nameLength);
@@ -93,6 +111,37 @@ $(function() {
 				$.messager.alert('提示','文件类型有误.');
 				return;
 			}
+			//验证文件名
+			if(codeName == 'box'){
+				if(originalName.indexOf("机箱") ==0){
+				
+				}else{
+					$.messager.alert('提示','导入文件名要求以[机箱]文字开始！');
+					return false;
+				}
+			}else if(codeName == 'processor'){
+				if(originalName.indexOf("处理器") ==0){
+					
+				}else{
+					$.messager.alert('提示','导入文件名要求以[处理器]文字开始！');
+					return false;
+				}
+			}else if(codeName == 'moxa'){
+				if(originalName.toUpperCase().indexOf("MOXA") ==0){
+					
+				}else{
+					$.messager.alert('提示','导入文件名要求以[MOXA]文字开始！');
+					return false;
+				}
+			}else if(codeName == 'detector'){
+				if(originalName.indexOf("探测器") ==0){
+					
+				}else{
+					$.messager.alert('提示','导入文件名要求以[探测器]文字开始！');
+					return false;
+				}
+			}
+			
 			//验证文件大小
 			var dom = document.getElementById(fileObjId);
 			var fileSize =  dom.files[0].size;

@@ -264,4 +264,31 @@ public class BoxMgrControl {
 		result.put("msg", "");
 		return result;
 	}
+	
+	//获取设备安装记录表
+	@RequestMapping(value = "/getDeviceLog")
+	@ResponseBody
+	public Map<String, Object> getPrintData(HttpServletRequest request) {
+		Map<String, Object> result = new HashMap<String, Object>();
+		result.put("returnCode", "fail");
+		if(null == request.getParameter("boxId")) {
+			result.put("msg", "获取打印数据错误,缺少机箱ID.");
+			return result;
+		}
+		String curUserName = UserTool.getLoginUser(request).get("user_name");
+		String boxId = request.getParameter("boxId");
+		
+		List<Map<String, Object>> datas = null;
+		//获取数据
+		try {
+			datas = boxService.getDeviceLog(curUserName, boxId);
+		}catch(BusinessException be) {
+			result.put("msg", be.getMessage());
+			return result;
+		}
+		result.put("datas", datas);
+		result.put("returnCode", "success");
+		result.put("msg", "");
+		return result;
+	}
 }

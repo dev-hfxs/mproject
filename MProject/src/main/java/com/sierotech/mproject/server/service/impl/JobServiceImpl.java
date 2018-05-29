@@ -366,15 +366,16 @@ public class JobServiceImpl implements IJobService {
 				String fileName = configInfoMap.get("fileName").toString();
 				
 				//移动文件
-				String tempFileName = tempUploadDir + File.separator + "configfile_" + id + "_" +  fileName;
-				String newFileName = uploadDir + File.separator + curDate + File.separator + "configfile_" + id + "_" +  fileName;
-				String configFilePath = File.separator + curDate + File.separator + "configfile_" + id + "_" +  fileName;
+				// 分隔符 File.separator 采用 / 替换, 减少数据库中及显示时候的转义
+				
+				String tempFileName = tempUploadDir + "/" + "configfile_" + id + "_" +  fileName;
+				String newFileName = uploadDir + "/" + curDate + "/" + "configfile_" + id + "_" +  fileName;
+				String configFilePath = "/" + curDate + "/" + "configfile_" + id + "_" +  fileName;
 				File tempFile = new File(tempFileName);
 				File newFile = new File(newFileName);
 				// 判断目标路径是否存在，如果不存在就创建一个
 				if (!newFile.getParentFile().exists()) {
 					newFile.getParentFile().mkdirs();
-					
 				}
 				if(tempFile.exists()) {
 					tempFile.renameTo(newFile);
@@ -397,9 +398,9 @@ public class JobServiceImpl implements IJobService {
 				String id = detectorInfoMap.get("id").toString();
 				String fileName = detectorInfoMap.get("fileName").toString();				
 				//移动文件
-				String tempFileName = tempUploadDir + File.separator + "detectorfile_" + id + "_" +  fileName;
-				String newFileName = uploadDir + File.separator + curDate + File.separator + "configfile_" + id + "_" +  fileName;
-				String configFilePath = File.separator + curDate + File.separator + "detectorfile_" + id + "_" +  fileName;
+				String tempFileName = tempUploadDir + "/" + "detectorfile_" + id + "_" +  fileName;
+				String newFileName = uploadDir + "/" + curDate + "/" + "configfile_" + id + "_" +  fileName;
+				String configFilePath = "/" + curDate + "/" + "detectorfile_" + id + "_" +  fileName;
 				File tempFile = new File(tempFileName);
 				File newFile = new File(newFileName);
 				// 判断目标路径是否存在，如果不存在就创建一个

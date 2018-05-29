@@ -9,6 +9,7 @@
 package com.sierotech.mproject.server.service.impl;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -444,9 +445,10 @@ public class BoxServiceImpl implements IBoxService{
 				String fileName = acceptFileMap.get("fileName").toString();
 				
 				//移动文件
-				String tempFileName = tempUploadDir + File.separator + "boxfile_" + id + "_" +  fileName;
-				String newFileName = uploadDir + File.separator + "acceptFile" +File.separator + id + File.separator + fileName;
-				String configFilePath = uploadDir + File.separator + "acceptFile" +File.separator+ id + File.separator + fileName;
+				// 分隔符 File.separator 采用 / 替换, 减少数据库中及显示时候的转义
+				String tempFileName = tempUploadDir + "/" + "boxfile_" + id + "_" +  fileName;
+				String newFileName = uploadDir + "/" + "acceptFile" + "/" + id + "/" + fileName;
+				String configFilePath = "/" + "acceptFile" + "/" + id + "/" + fileName;
 				File tempFile = new File(tempFileName);
 				File newFile = new File(newFileName);
 				// 判断目标路径是否存在，如果不存在就创建一个
@@ -529,5 +531,38 @@ public class BoxServiceImpl implements IBoxService{
 			log.info(dae.toString());
 			throw new BusinessException("修改机箱错误,访问数据库异常.");
 		}
+	}
+
+	@Override
+	public List<Map<String, Object>> getDeviceLog(String curUser, String boxId) throws BusinessException {
+//		List<Map<String, Object>>  result = new ArrayList<Map<String, Object>>();
+		//获取机箱下的处理器
+		String getProcessorPreSql =  ConfigSQLUtil.getCacheSql("mproject-processor-getProcessorList4Report");
+		Map<String, Object> paramsMap = new HashMap<String, Object>();
+		paramsMap.put("boxId", boxId);
+		String getProcessorSql = ConfigSQLUtil.preProcessSQL(getProcessorPreSql, paramsMap);
+		List<Map<String, Object>> alProcessors = new ArrayList<Map<String, Object>>();
+		try {
+			alProcessors = springJdbcDao.queryForList(getProcessorSql);
+		} catch (DataAccessException dae) {
+			log.info(dae.toString());
+		}
+		if(alProcessors != null && alProcessors.size() > 0) {
+			String getDetectorsPreSql = ConfigSQLUtil.getCacheSql("mproject-detector-getListByProcessorId");
+			for(Map<String, Object> processor : alProcessors) {
+				paramsMap.clear();
+				paramsMap.put("processorId", processor.get("id"));
+				String getDetectorsSql = ConfigSQLUtil.preProcessSQL(getDetectorsPreSql, paramsMap);
+				List<Map<String, Object>> alDetectors = new ArrayList<Map<String, Object>>();
+				//获取机箱下的探测器
+				try {
+					alDetectors = springJdbcDao.queryForList(getDetectorsSql);
+				} catch (DataAccessException dae) {
+					log.info(dae.toString());
+				}
+				processor.put("detectors", alDetectors);
+			}
+		}
+		return alProcessors;
 	}
 }

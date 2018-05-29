@@ -183,7 +183,7 @@
 	
 	<sql id="mproject-project-getProcessorList4ViewByBoxId" name="根据机箱ID查看机箱下的处理器">
 		<content>
-		SELECT p.id, p.machine_box_id, p.nfc_number, p.moxa_number, p.ip, p.detector_num, p.create_date, m.nfc_number as box_nfc_number 
+		SELECT p.id, p.machine_box_id, p.nfc_number, p.moxa_number, p.ip, p.detector_num, p.create_date,p.config_file, p.detector_file,  m.nfc_number as box_nfc_number 
 		FROM t_processor p
 		LEFT JOIN t_machine_box m on m.id = p.machine_box_id 
 		WHERE p.machine_box_id = ':boxId' [ AND instr(p.nfc_number,':nfcNumber') > 0 ] 

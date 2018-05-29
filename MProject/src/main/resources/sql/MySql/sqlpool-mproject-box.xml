@@ -160,5 +160,12 @@
 		SELECT id FROM t_machine_box WHERE project_id = ':projectId' and build_manager = ':userId' 
 		</content>
 		<description></description>
-	</sql>	
+	</sql>
+	
+	<sql id="mproject-box-getBoxAcceptFiles" name="获取机箱验收的文件列表">
+		<content>
+		select id, file_name, file_path from t_attach_file where file_owner_obj = 'box' and obj_id = ':boxId' 
+		</content>
+		<description></description>
+	</sql>
 </sqls>

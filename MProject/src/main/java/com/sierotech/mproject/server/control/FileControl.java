@@ -8,9 +8,16 @@
  */
 package com.sierotech.mproject.server.control;
 
+import java.io.BufferedInputStream;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -166,4 +173,75 @@ public class FileControl {
 		}
 		return "success";
 	}
+	
+	
+	/**
+     * 文件下载
+     */
+    @RequestMapping(value = "/download", method = RequestMethod.POST)
+    public String downloadFile(HttpServletRequest request, HttpServletResponse response) {
+    	String filePath = request.getParameter("filePath");
+        if (filePath != null) {
+        	int pos = filePath.lastIndexOf("\\");
+        	if(pos > 0) {
+        		pos = pos + 1;
+        	}
+        	String fileName = filePath;
+        	if(pos > 0) {
+        		fileName = filePath.substring(pos);
+        	}
+        	
+        	if(fileName !=null && fileName.lastIndexOf("_") > 0) {
+        		int underlinePos = fileName.lastIndexOf("_");
+        		fileName = fileName.substring(underlinePos + 1);
+        	}
+            String realPath = AppContext.getUploadDir();
+            String fullPath = realPath + File.separator + filePath;
+            File file = new File(fullPath);
+            if (file.exists()) {
+                response.setContentType("application/force-download");// 设置强制下载不打开
+                String encodeFileName = "";
+				try {
+					encodeFileName = URLEncoder.encode(fileName,"UTF-8");
+				} catch (UnsupportedEncodingException e1) {
+					log.info(e1.getMessage());
+				}
+				response.addHeader("Content-Disposition","attachment;filename=" + encodeFileName );// 设置文件名
+				byte[] buffer = new byte[1024];
+                FileInputStream fis = null;
+                BufferedInputStream bis = null;
+                try {
+                    fis = new FileInputStream(file);
+                    bis = new BufferedInputStream(fis);
+                    OutputStream os = response.getOutputStream();
+                    int i = bis.read(buffer);
+                    while (i != -1) {
+                        os.write(buffer, 0, i);
+                        i = bis.read(buffer);
+                    }
+                } catch (Exception e) {
+                    log.info(e.getMessage());
+                } finally {
+                    if (bis != null) {
+                        try {
+                            bis.close();
+                        } catch (IOException e) {
+                        	log.info(e.getMessage());
+                        }
+                    }
+                    if (fis != null) {
+                        try {
+                            fis.close();
+                        } catch (IOException e) {
+                        	log.info(e.getMessage());
+                        }
+                    }
+                }
+            }else {
+            	request.setAttribute("errorInfo", "访问的文件："+fileName+"不存在!");
+            	return "error/resIsvalid";
+            }
+        }
+        return null;
+    }
 }

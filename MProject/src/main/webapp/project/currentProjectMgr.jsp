@@ -26,7 +26,7 @@
 <body>
 <div id="dgPanel" class="easyui-panel" data-options="fit:true">
 	<table id="dg" class="easyui-datagrid"  
-			data-options="singleSelect:true,rownumbers:true,pageSize:20,fit:true,url:'<%=path%>/comm/queryForPage.do',pagination:true,method:'post',toolbar:'#tb',multiSort:true">
+			data-options="singleSelect:true,rownumbers:true,pageSize:30,fit:true,url:'<%=path%>/comm/queryForPage.do',pagination:true,method:'post',toolbar:'#tb',multiSort:true">
 		<thead>
 			<tr>
 				<th data-options="field:'box_number',width:110,sortable:true">机箱编号</th>
@@ -39,8 +39,8 @@
 				<th data-options="field:'user_name',width:100">施工经理</th>
 				<th data-options="field:'submit_num',width:120">施工经理提交次数</th>
 				<th data-options="field:'new_submit_date',width:130,sortable:true">最新提交时间</th>
-				<th data-options="field:'job_type',width:180,align:'center',formatter:showCurJob">当前工单</th>
-				<th data-options="field:'id',width:250,align:'center',formatter:showButtons">操作</th>
+				<th data-options="field:'job_type',width:120,align:'center',formatter:showCurJob">当前工单</th>
+				<th data-options="field:'id',width:300,align:'center',formatter:showButtons">操作</th>
 			</tr>
 		</thead>
 	</table>
@@ -98,7 +98,7 @@ function showButtons(val,row){
 			}
 		}
 	}
-	
+	columnItem = columnItem + '<span><a href="javascript:void(0)" class="easyui-linkbutton" onclick="printDevice(\''+ row.id + '\')" style="width:80px;">打印安装表</a></span>&nbsp;&nbsp;';
 	return columnItem;
 }
 
@@ -206,6 +206,11 @@ function doSearch(){
 	$('#dg').datagrid('loadData',{total:0,rows:[]});
 	$('#dg').datagrid('reload');
 }
+
+function printDevice(boxId){
+	window.open ('<%=path%>/report/deviceInfo.jsp?boxId=' + boxId, '探测器安装记录表', 'height=900, width=960, top=20, left=100, toolbar=no, menubar=no, scrollbars=no, resizable=no,location=no, status=no');
+}
+
 </script>
 </body>
 </html>
