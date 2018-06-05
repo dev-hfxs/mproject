@@ -169,7 +169,11 @@ create table t_processor
    detector_file        varchar(128)                   null  comment '探测器信息文件路径' ,
    constraint pk_t_processor_id primary key (id)
 );
+alter table t_processor add index index_processor_boxid(machine_box_id);
 
+alter table t_processor add index index_processor_nfc_number(nfc_number);
+
+alter table t_processor add index index_processor_moxa_number(moxa_number);
 
 /*==============================================================*/
 /* Table: t_detector                                            */
@@ -189,6 +193,9 @@ create table t_detector
    constraint pk_t_detector_id primary key clustered (id)
 );
 
+alter table t_detector add index index_detecotr_processorid(processor_id);
+
+alter table t_detector add index index_detecotr_nfc_number(nfc_number);
 
 /*==============================================================*/
 /* Table: t_verification_code                                   */
@@ -357,6 +364,8 @@ create table t_nfc_code_detector
    create_date          varchar(19)                    null comment '创建时间' ,
    constraint pk_t_nfc_code_detector primary key (nfc_code)
 );
+
+alter table t_nfc_code_detector add index index_nfc_detecotr_create_date(create_date);
 
 
 /*==============================================================*/

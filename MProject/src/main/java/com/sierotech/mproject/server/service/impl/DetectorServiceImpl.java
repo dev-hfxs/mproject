@@ -161,6 +161,32 @@ public class DetectorServiceImpl implements IDetectorService{
 				throw new BusinessException("导入探测器错误, 文件中的数据行超出240，单个处理器下的探测器不能超过240个.");
 			}
 			
+			//获取当前处理器下已维护的探测器数
+			String getCountPreSql = ConfigSQLUtil.getCacheSql("mproject-detector-getDetectorNumByProcessorId");
+			Map<String, Object> paramMap = new HashMap<String, Object>();
+		    paramMap.clear();
+		    paramMap.put("processorId", processorId);
+			String getCountSql = ConfigSQLUtil.preProcessSQL(getCountPreSql, paramMap);
+			Map<String,Object> recordMap = null;
+			try {
+				recordMap = springJdbcDao.queryForMap(getCountSql);
+			} catch (DataAccessException dae) {
+				log.info(dae.toString());
+				throw new BusinessException("导入探测器错误, 未获取到当前处理器下的探测器数!");
+			}
+			if(recordMap!= null) {
+				int count = 0;
+				try{
+					count = Integer.parseInt(recordMap.get("countNum").toString());	
+				}catch(NumberFormatException ne) {
+					log.info(ne.getMessage());
+				}
+				int afterSize = datas.size() + count;
+				if(afterSize > 240) {
+					throw new BusinessException("导入探测器错误, 当前处理器下探测器数导入后将超过240!");
+				}
+			}
+			
 			//检查文件中的探测器nfc序列号、编号是否存在
 			StringBuffer checkSql = new StringBuffer();
 			StringBuffer checkUseSql = new StringBuffer();

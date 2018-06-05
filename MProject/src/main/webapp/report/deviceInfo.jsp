@@ -22,6 +22,10 @@
 <script type="text/javascript" src="<%=path%>/js/easyui/locale/easyui-lang-zh_CN.js"></script>
 <script type="text/javascript"	src="<%=path%>/js/common.js"></script>
 <style>
+.fontTitle{
+	font-size:18px;
+}
+
 .font14{
 	font-size:13px;
 }
@@ -152,7 +156,7 @@ $(function() {
 				var pageHtml = '';
 				var strPage = j + 1;
 				pageHtml = '<div style="margin: 60px 50px 60px 50px;"><table border="1" cellspacing="0" cellpadding="0">';
-				pageHtml = pageHtml + '<tr height="40px"><td colspan="8" align="center">智能融合处理器单元和探测器安装记录表 (' + strPage + ')</td></tr>';
+				pageHtml = pageHtml + '<tr height="40px"><td colspan="8" align="center"><span class="fontTitle">智能融合处理器单元和探测器安装记录表 (' + strPage + ')</span></td></tr>';
 				pageHtml = pageHtml + '<tr height="40px"><td colspan="2"  align="center">安装人员</td><td  colspan="3">'+ processorObj.build_manager +'</td><td align="center">施工单位</td><td  colspan="2">' + processorObj.org_name + '</td></tr>';
 				pageHtml = pageHtml + '<tr height="40px"><td colspan="2"  align="center">项目经理</td><td  colspan="3">'+ processorObj.project_manager +'</td><td align="center">安装时间</td><td  colspan="2">' + processorObj.create_date + '</td></tr>';
 				pageHtml = pageHtml + '<tr height="40px"><td colspan="2"  align="center">工程师</td><td  colspan="3">'+ processorObj.install_engineer +'</td><td align="center">安装间距</td><td  colspan="2">' + processorObj.install_space + '</td></tr>';
@@ -190,7 +194,7 @@ $(function() {
 			var detectorObj = emptyDetector;
 			var pageHtml = '';
 			pageHtml = '<div style="margin: 60px 50px 60px 50px;"><table border="1" cellspacing="0" cellpadding="0">';
-			pageHtml = pageHtml + '<tr height="40px"><td colspan="8" align="center">智能融合处理器单元和探测器安装记录表 ()</td></tr>';
+			pageHtml = pageHtml + '<tr height="40px"><td colspan="8" align="center"><span class="fontTitle">智能融合处理器单元和探测器安装记录表 ()</span></td></tr>';
 			pageHtml = pageHtml + '<tr height="40px"><td colspan="2"  align="center">安装人员</td><td  colspan="3"></td><td align="center">施工单位</td><td  colspan="2"></td></tr>';
 			pageHtml = pageHtml + '<tr height="40px"><td colspan="2"  align="center">项目经理</td><td  colspan="3"></td><td align="center">安装时间</td><td  colspan="2"></td></tr>';
 			pageHtml = pageHtml + '<tr height="40px"><td colspan="2"  align="center">工程师</td><td  colspan="3"></td><td align="center">安装间距</td><td  colspan="2"></td></tr>';

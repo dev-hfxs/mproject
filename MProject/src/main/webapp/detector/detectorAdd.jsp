@@ -222,7 +222,7 @@ $(function() {
 	    }
 	});
 	
-	$("#nfcNumber").textbox('textbox').bind("keyup", function () { $(this).val($(this).val().toUpperCase());})
+	$("#nfcNumber").textbox('textbox').bind("keyup", function () { $(this).val($(this).val().toUpperCase());});
 	
 	$("#detectorSeq").textbox({
 		 onChange: function(value) {

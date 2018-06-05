@@ -224,7 +224,9 @@
 			    }
 			});
 			
-			$("#nfcNumber").textbox('textbox').bind("keyup", function () { $(this).val($(this).val().toUpperCase());})
+			$("#nfcNumber").textbox('textbox').bind("keyup", function () { $(this).val($(this).val().toUpperCase());});
+			$("#boxNumber").textbox('textbox').bind("keyup", function () { $(this).val($(this).val().toUpperCase());});
+			
 		});
 		
 	</script>

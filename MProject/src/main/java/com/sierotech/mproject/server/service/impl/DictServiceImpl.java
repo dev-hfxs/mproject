@@ -75,20 +75,31 @@ public class DictServiceImpl implements IDictService {
 						springJdbcDao.update(sbInsert.toString());
 					}catch(DataAccessException dae ) {
 						//
-						sbUpdate.setLength(0);
-						sbUpdate.append(" update ").append(tableName).append(" set number =");
-						sbUpdate.append("'").append(number).append("', box_nfc_code='").append(box_nfc_code).append("' where nfc_code='").append(nfcCode).append("'");
-						try {
-							springJdbcDao.update(sbInsert.toString());
-						}catch(DataAccessException dae2 ) {
-							log.info(dae2.getMessage());
+//						sbUpdate.setLength(0);
+//						sbUpdate.append(" update ").append(tableName).append(" set number =");
+//						sbUpdate.append("'").append(number).append("', box_nfc_code='").append(box_nfc_code).append("' where nfc_code='").append(nfcCode).append("'");
+//						try {
+//							springJdbcDao.update(sbUpdate.toString());
+//						}catch(DataAccessException dae2 ) {
+//							log.info(dae2.getMessage());
+//						}
+						if(dae.getMessage().indexOf("Duplicate") > 0) {
+							throw new BusinessException("NFC序列号[" + nfcCode + "]的数据已存在,导入终止!");
+						}else {
+							log.info(dae.getMessage());
+							throw new BusinessException("NFC序列号[" + nfcCode + "]的数据未知错误, 导入终止!");
 						}
 					}
 				}
 			}else {
+				int pSize =0;
 				for(Map<String, String> data : datas) {
 					if(data.get("nfc_code") == null || "".equals(data.get("nfc_code"))) {
 						continue;
+					}
+					pSize ++;
+					if(pSize % 240 ==0 ) {
+						curDate = DateUtils.getNow(DateUtils.FORMAT_LONG);
 					}
 					String nfcCode = data.get("nfc_code").toString().toUpperCase();
 					String number = data.get("number").toString();
@@ -99,13 +110,20 @@ public class DictServiceImpl implements IDictService {
 						springJdbcDao.update(sbInsert.toString());
 					}catch(DataAccessException dae ) {
 						//
-						sbUpdate.setLength(0);
-						sbUpdate.append(" update ").append(tableName).append(" set number =");
-						sbUpdate.append("'").append(number).append("' where nfc_code='").append(nfcCode).append("'");
-						try {
-							springJdbcDao.update(sbInsert.toString());
-						}catch(DataAccessException dae2 ) {
-							log.info(dae2.getMessage());
+//						sbUpdate.setLength(0);
+//						sbUpdate.append(" update ").append(tableName).append(" set number =");
+//						sbUpdate.append("'").append(number).append("' where nfc_code='").append(nfcCode).append("'");
+//						try {
+//							springJdbcDao.update(sbUpdate.toString());
+//						}catch(DataAccessException dae2 ) {
+//							log.info(dae2.getMessage());
+//						}
+						
+						if(dae.getMessage().indexOf("Duplicate") > 0) {
+							throw new BusinessException("NFC序列号[" + nfcCode + "]的数据已存在,导入终止!");
+						}else {
+							log.info(dae.getMessage());
+							throw new BusinessException("NFC序列号[" + nfcCode + "]的数据未知错误, 导入终止!");
 						}
 					}
 				}

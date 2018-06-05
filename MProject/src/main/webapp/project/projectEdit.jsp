@@ -93,6 +93,8 @@
 		    	$.messager.alert('异常',data.responseText);
 	        }
 		});
+		
+		$("#projectNumber").textbox('textbox').bind("keyup", function () { $(this).val($(this).val().toUpperCase());});
 	});
 	
 		function submitForm() {

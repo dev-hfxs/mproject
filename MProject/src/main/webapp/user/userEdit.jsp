@@ -120,7 +120,7 @@ var fullNameExist = false;
 			    success:function(data) {
 			    	if(data.returnCode == "success"){
 			    		//$.messager.alert('提示','用户修改成功!');
-			    		parent.loadUrl("<%=path%>/user/userList.jsp");
+			    		parent.loadUrl("<%=path%>/user/userList.jsp?pageNum=<%=pageNum%>");
 			    	}else{
 			    		$.messager.alert('提示',data.msg);
 			    	}

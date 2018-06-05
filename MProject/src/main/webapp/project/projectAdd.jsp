@@ -128,6 +128,8 @@
 			$("#projectManager").next("span").click(function(){  
             	showMessageDialog("<%=path%>/user/userSelect.jsp","选择项目经理",640,480,true);
             });
+			
+			$("#projectNumber").textbox('textbox').bind("keyup", function () { $(this).val($(this).val().toUpperCase());});
 		});
 		
 		

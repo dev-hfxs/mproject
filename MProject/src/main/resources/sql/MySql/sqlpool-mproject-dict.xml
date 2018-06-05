@@ -80,7 +80,7 @@
 	
 	<sql id="mproject-dict-detectorNfcCodeCheckUse" name="检查探测器的nfc是否使用">
 		<content>
-		 SELECT count(*) as countNum FROM t_detector WHERE nfc_number = ':nfcCode'  [ and id !=':id']
+		 SELECT count(*) as countNum FROM t_detector WHERE nfc_number = ':nfcCode'  [ and id !=':id'] 
 		</content>
 		<description></description>
 	</sql>

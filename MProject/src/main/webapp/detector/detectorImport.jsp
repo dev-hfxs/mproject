@@ -29,9 +29,15 @@
 			<!-- 
 			<input type="checkbox"  name="importOption" value="enableReplace" ><span>导入时是否覆盖(根据探测器ID)</span>
 			-->
+			<a href="<%=path%>/res/detector-template.xls">下载模板</a>
 		</div>
 		<div style="margin-bottom: 20px">
 			<input type="text" name="dataFile" style="width:100%">
+			<table ><tr>
+				<td height="30px" width="80px">&nbsp;</td>
+				<td  width="100px"><div id="speedBar"><img src="<%=path%>/style/default/image/progress.gif" /></div></td>
+				</tr>
+			</table>
 		</div>
 	</form>
 	<!-- -->
@@ -46,6 +52,8 @@ var fileIsOk = false;
 
 function submitForm() {
 	if(fileIsOk){
+		$("#speedBar").show();
+		
 		// 提交保存
 		$.ajax( {
 			url: "<%=path%>/detector/mgr/dataImport.do",
@@ -57,14 +65,18 @@ function submitForm() {
 		    contentType: false,
 		    success:function(data) {
 		    	if(data.returnCode == "success"){
-		    		parent.refreshDetector();
-		    		parent.closeDialog();
+		    		$.messager.alert('提示','导入成功!','info',function(){
+		    			parent.refreshDetector();
+			    		parent.closeDialog();
+		    		});		    		
 		    	}else{
 		    		$.messager.alert('提示',data.msg);
+		    		$("#speedBar").hide();
 		    	}
 		    },
 		    error : function(data) {
 		    	$.messager.alert('异常',data.responseText);
+		    	$("#speedBar").hide();
 	        }
 		});
 	}	
@@ -75,6 +87,9 @@ function doCancel(){
 }
 
 $(function() {
+	
+	$("#speedBar").hide();
+	
 	$("[type='checkbox'][name='importOption']").next("span").click(function(){
 		$(this).prev().trigger("click");
 	});

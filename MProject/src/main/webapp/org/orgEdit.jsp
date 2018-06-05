@@ -202,6 +202,8 @@
 			    	$.messager.alert('异常',data.responseText);
 		        }
 			});
+			
+			$("#orgCode").textbox('textbox').bind("keyup", function () { $(this).val($(this).val().toUpperCase());});
 		});
 		
 		$.extend($.fn.validatebox.defaults.rules, {
