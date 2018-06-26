@@ -30,8 +30,8 @@
 		<thead>
 			<tr>
 				<th data-options="field:'status',width:100,formatter:showStatusName">工单状态</th>
-				<th data-options="field:'job_type',width:120,formatter:showTypeName">工单类型</th>
-				<th data-options="field:'user_name',width:150">工程师</th>
+				<th data-options="field:'job_type',width:100,formatter:showTypeName">工单类型</th>
+				<th data-options="field:'full_name',width:170">工程师</th>
 				<th data-options="field:'work_content',width:250,sortable:true">工作内容</th>
 				<th data-options="field:'project_number',width:100,sortable:true">项目编号</th>
 				<th data-options="field:'project_name',width:200,sortable:true">项目名称</th>
@@ -97,7 +97,7 @@ function showButtons(val,row){
 }
 
 function printDevice(boxId){
-	window.open ('<%=path%>/report/deviceInfo.jsp?boxId=' + boxId, '探测器安装记录表', 'height=900, width=960, top=20, left=100, toolbar=no, menubar=no, scrollbars=no, resizable=no,location=no, status=no');
+	window.open ('<%=path%>/report/deviceInfo.jsp?entrance=jobProcess&boxId=' + boxId, '探测器安装记录表', 'height=900, width=960, top=20, left=100, toolbar=no, menubar=no, scrollbars=no, resizable=no,location=no, status=no');
 }
 
 function processJob(jobId,jobType){
@@ -108,7 +108,7 @@ function processJob(jobId,jobType){
 	$(document.body).append(boarddiv);
 	var win = $('#msgwindow').dialog({
 		content : content,
-		width : '720',
+		width : '740',
 		height : '560',
 		modal : true,
 		title : '处理工单',

@@ -223,6 +223,7 @@ public class JobServiceImpl implements IJobService {
 		paramsMap.clear();
 		paramsMap.put("jobId", jobId);
 		paramsMap.put("userId", curUser);
+		paramsMap.put("posDesc", boxPos);
 		paramsMap.put("curDate", DateUtils.getNow(DateUtils.FORMAT_LONG));		
 		String installJobUpdateBoxSql =  ConfigSQLUtil.preProcessSQL(installJobUpdateBoxPreSql, paramsMap);
 		try {

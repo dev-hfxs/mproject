@@ -10,7 +10,7 @@
 	
 	<sql id="mproject-job-getWaitingJobListByUser" name="获取未处理工单列表">
 		<content>
-		 SELECT j.id, p.project_number, p.project_name, b.box_number, j.create_date, j.process_person, j.work_content, j.status, j.job_desc, j.job_type, u.user_name  
+		 SELECT j.id, p.project_number, p.project_name, b.box_number,b.id as box_id, j.create_date, j.process_person, j.work_content, j.status, j.job_desc, j.job_type, u.user_name, u.full_name   
 		 FROM t_job j 
 		 LEFT JOIN t_project p ON j.project_id = p.id 
 		 LEFT JOIN t_machine_box b ON j.machine_box_id = b.id 
@@ -23,7 +23,7 @@
 	
 	<sql id="mproject-job-getProcessedJobListByUser" name="获取处理工单列表">
 		<content>
-		 SELECT j.id, p.project_number, p.project_name, b.box_number, j.create_date, j.process_person, j.work_content, j.status, j.job_desc, j.job_type, u.user_name  
+		 SELECT j.id, p.project_number, p.project_name, b.box_number, j.create_date, j.process_person, j.work_content, j.status, j.job_desc, j.job_type, u.user_name, u.full_name 
 		 FROM t_job j 
 		 LEFT JOIN t_project p ON j.project_id = p.id 
 		 LEFT JOIN t_machine_box b ON j.machine_box_id = b.id 
@@ -49,7 +49,7 @@
 	
 	<sql id="mproject-job-getProjectJobListByUser" name="获取项目下用户的工单">
 		<content>
-		 SELECT j.id, p.project_number, p.project_name, b.box_number, j.create_date, j.process_person, j.work_content, j.status, j.job_desc, j.job_type, u.user_name  
+		 SELECT j.id, p.project_number, p.project_name, b.box_number, j.create_date, j.process_person, j.work_content, j.status, j.job_desc, j.job_type, u.user_name, u.full_name 
 		 FROM t_job j 
 		 LEFT JOIN t_project p ON j.project_id = p.id 
 		 LEFT JOIN t_machine_box b ON j.machine_box_id = b.id 
@@ -67,7 +67,7 @@
      	 select id,device_desc, device_type from (
            select d.id, concat('处理器NFC[', t0.nfc_number, ']-探测器编号[', d.detector_seq, ']位置描述:') AS device_desc, 'D' AS device_type from t_detector d 
            LEFT JOIN t_processor t0 on d.processor_id = t0.id 
-           where d.processor_id IN (select id from t_processor t2 where exists (select machine_box_id from t_job j where j.machine_box_id = t2.machine_box_id AND j.id = ':jobId') ) order by d.processor_id,d.detector_seq asc 
+           where d.processor_id IN (select id from t_processor t2 where exists (select machine_box_id from t_job j where j.machine_box_id = t2.machine_box_id AND j.id = ':jobId') ) order by d.processor_id,d.order_num asc 
     	) td 
 		</content>
 		<description></description>
@@ -130,7 +130,7 @@
 	
 	<sql id="mproject-job-updateInstallJobBoxConfirm" name="工单完成修改安装工程师确认信息">
 		<content>
-		UPDATE t_machine_box m SET m.install_engineer = ':userId', m.confirm_install_date = ':curDate' 
+		UPDATE t_machine_box m SET m.install_engineer = ':userId', m.confirm_install_date = ':curDate', m.pos_desc = ':posDesc' 
 		WHERE EXISTS (SELECT machine_box_id FROM t_job j WHERE j.id = ':jobId' AND j.machine_box_id = m.id)
 		</content>
 		<description></description>

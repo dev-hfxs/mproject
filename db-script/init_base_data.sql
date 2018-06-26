@@ -82,6 +82,7 @@ INSERT INTO  t_menu(id,menu_name,menu_code,menu_url,icon_url,parent_id,order_num
 INSERT INTO  t_menu(id,menu_name,menu_code,menu_url,icon_url,parent_id,order_num) VALUES ('mf3102526t2f4bdt9fa3e1xce9df5945','查看日志','m.log.view','','','ROOT',8);
 INSERT INTO  t_menu(id,menu_name,menu_code,menu_url,icon_url,parent_id,order_num) VALUES ('mf3102526t2f4bdt9fa3e1exe9df5931','用户登录日志','m.session.log.view','/log/logSession.jsp','','mf3102526t2f4bdt9fa3e1xce9df5945',81);
 INSERT INTO  t_menu(id,menu_name,menu_code,menu_url,icon_url,parent_id,order_num) VALUES ('mf3102526t2f4bdt9fa3e1txt9df5977','管理员操作日志','m.admin.log.view','/log/logAdminOperation.jsp','','mf3102526t2f4bdt9fa3e1xce9df5945',82);
+INSERT INTO  t_menu(id,menu_name,menu_code,menu_url,icon_url,parent_id,order_num) VALUES ('mf3102526t2f4bdt9fa3e1prp9df5878','报表打印日志','m.print.log.view','/log/logPrint.jsp','','mf3102526t2f4bdt9fa3e1xce9df5945',83);
 
 
 /* 初始角色权限 */
@@ -101,6 +102,26 @@ INSERT INTO  t_role_res(id,role_id,res_type,res_id) VALUES ('rr5abe33b3ae4f459cf
 INSERT INTO  t_role_res(id,role_id,res_type,res_id) VALUES ('rr5abe33b3ae4f459cf554859d9d1abp','r0dd980638bc43efb2e01d362db32151','M','me93bc69648a4e8eae2a78fd883aea19');
 INSERT INTO  t_role_res(id,role_id,res_type,res_id) VALUES ('rr5abe33b3ae4f459cf554859d9d1abr','r0dd980638bc43efb2e01d362db32151','M','me93bc69648a4e8eae2a78fd883aca89');
 INSERT INTO  t_role_res(id,role_id,res_type,res_id) VALUES ('rr5abe33b3ae4f459cf554859d9d1abs','r0dd980638bc43efb2e01d362db32151','M','me93bc69648a4e8eae2a78fd883aba36');
+
+/* 超级管理员增加的字典管理*/
+INSERT INTO  t_role_res(id,role_id,res_type,res_id) VALUES ('rr5abe13b3ke4f459cf554859d8c1986','r0dd980638bc43efb2e01d362db32151','M','mf900252694f4bd99fa3e16ce9df3e5n');
+INSERT INTO  t_role_res(id,role_id,res_type,res_id) VALUES ('rr5abe13b3ke4f459cf554859d8c2011','r0dd980638bc43efb2e01d362db32151','M','mf900252694f4bd99fa3e16ce9dm201a');
+INSERT INTO  t_role_res(id,role_id,res_type,res_id) VALUES ('rr5abe13b3ke4f459cf554859d8c2080','r0dd980638bc43efb2e01d362db32151','M','mf910252694f4bd99fa3e16ce9dm201b');
+INSERT INTO  t_role_res(id,role_id,res_type,res_id) VALUES ('rr5abe13b3ke4f459cf554859d8c3011','r0dd980638bc43efb2e01d362db32151','M','mf9c0252694f4bd99fa3e16ce9dm201c');
+INSERT INTO  t_role_res(id,role_id,res_type,res_id) VALUES ('rr5abe13b3ke4f459cf554859d8cc015','r0dd980638bc43efb2e01d362db32151','M','mf9f0252694f4bd99fa3e16ce9dm201d');
+
+/* 超级管理员增加的IP管理*/
+INSERT INTO  t_role_res(id,role_id,res_type,res_id) VALUES ('rr5abe13b3ke89019cf554859d8c3071','r0dd980638bc43efb2e01d362db32151','M','mf310252694f4bdt9fa3e1xce9df9688');
+INSERT INTO  t_role_res(id,role_id,res_type,res_id) VALUES ('rr5a3721bxke79639cf554859d8cc065','r0dd980638bc43efb2e01d362db32151','M','mf3102526cmf4bdt9fa3e1xce9df7680');
+
+
+/* 超级管理员增加的查看日志*/
+INSERT INTO  t_role_res(id,role_id,res_type,res_id) VALUES ('rr5abe13b3ke89019cf554859d1c3030','r0dd980638bc43efb2e01d362db32151','M','mf3102526t2f4bdt9fa3e1xce9df5945');
+INSERT INTO  t_role_res(id,role_id,res_type,res_id) VALUES ('rr5a3721bxke79639cf554859d8c8787','r0dd980638bc43efb2e01d362db32151','M','mf3102526t2f4bdt9fa3e1exe9df5931');
+INSERT INTO  t_role_res(id,role_id,res_type,res_id) VALUES ('rr5a3721bxke79639cf554859d9c8386','r0dd980638bc43efb2e01d362db32151','M','mf3102526t2f4bdt9fa3e1txt9df5977');
+INSERT INTO  t_role_res(id,role_id,res_type,res_id) VALUES ('rr5a3721bxke79639cf554xy9d9c8188','r0dd980638bc43efb2e01d362db32151','M','mf3102526t2f4bdt9fa3e1prp9df5878');
+
+
 
 /* 管理员拥有的菜单 */
 INSERT INTO  t_role_res(id,role_id,res_type,res_id) VALUES ('rr5abe33b3ae4f459cf554859d9d1abx','r0dd980638bc43efb2e01d362db32152','M','ma900252694f4bd99fa3e16ce9df3cd1');
@@ -135,6 +156,8 @@ INSERT INTO  t_role_res(id,role_id,res_type,res_id) VALUES ('rr5a3721bxae79639cf
 INSERT INTO  t_role_res(id,role_id,res_type,res_id) VALUES ('rr5abe13b3ae89019cf554859d1f3030','r0dd980638bc43efb2e01d362db32152','M','mf3102526t2f4bdt9fa3e1xce9df5945');
 INSERT INTO  t_role_res(id,role_id,res_type,res_id) VALUES ('rr5a3721bxae79639cf554859d8x8787','r0dd980638bc43efb2e01d362db32152','M','mf3102526t2f4bdt9fa3e1exe9df5931');
 INSERT INTO  t_role_res(id,role_id,res_type,res_id) VALUES ('rr5a3721bxae79639cf554859d9y8386','r0dd980638bc43efb2e01d362db32152','M','mf3102526t2f4bdt9fa3e1txt9df5977');
+INSERT INTO  t_role_res(id,role_id,res_type,res_id) VALUES ('rr5a3721bxae79639cf554xy9d9y8188','r0dd980638bc43efb2e01d362db32152','M','mf3102526t2f4bdt9fa3e1prp9df5878');
+
 
 
 /* 系统工程师拥有的菜单 */

@@ -54,7 +54,6 @@ html{-webkit-text-size-adjust: none;}
 
 
 <script>
-
 function doPrint(){
 	$("#tbDiv").hide();
 	window.print();
@@ -72,7 +71,7 @@ $(function() {
 	    data:{
 	    	'boxId':'<%=boxId%>',
 	    	'entrance':'<%=entrance%>',
-	    	'reportName':'探测器安装表',
+	    	'reportName':'探测器验收安装表',
 	    	'userName':'${loginUser.user_name}'
 	    },
 	    type:'post',
@@ -118,11 +117,11 @@ $(function() {
 				var curPage = j + 1;
 				pageHtml = '<div style="margin: 10px 10px 10px 10px;"><table border="1" cellspacing="0" cellpadding="0">';
 				pageHtml = pageHtml + '<tr height="40px"><td colspan="10" align="center"><span class="fontTitle">智能融合处理器单元和探测器安装记录表 (' + curPage + ')</span></td></tr>';
-				pageHtml = pageHtml + '<tr height="30px"><td colspan="2"  align="center">安装人员</td><td  colspan="4"><span class="font14">'+ processorObj.build_manager +'</span></td><td colspan="2" align="center">施工单位</td><td  colspan="2"><span class="small-font">' + processorObj.org_name + '</span></td></tr>';
+				pageHtml = pageHtml + '<tr height="30px"><td colspan="2"  align="center">安装人员</td><td  colspan="4"><span class="font14">'+ processorObj.build_manager +'</span></td><td colspan="2" align="center">施工单位</td><td  colspan="2"><span class="font14">' + '天津航峰希萨科技有限公司' + '</span></td></tr>';
 				pageHtml = pageHtml + '<tr height="30px"><td colspan="2"  align="center">项目经理</td><td  colspan="4"><span class="font14">'+ processorObj.project_manager +'</span></td><td colspan="2" align="center">安装时间</td><td  colspan="2"><span class="font14">' + processorObj.create_date + '</span></td></tr>';
 				pageHtml = pageHtml + '<tr height="30px"><td colspan="2"  align="center">工程师</td><td  colspan="4"><span class="font14">'+ processorObj.install_engineer +'</span></td><td colspan="2" align="center">安装间距</td><td  colspan="2"><span class="font14">' + processorObj.install_space + '</span></td></tr>';
 				pageHtml = pageHtml + '<tr height="30px"><td colspan="2" align="center">机箱编号</td><td  colspan="2"><span class="font14">' + processorObj.box_number + '</span></td><td  colspan="2"  align="left"><span class="font14">CLQ序号:</span>&nbsp;'+clqSeq+'</td><td  colspan="2"  align="right"><span class="font14">CLQNFC序列号</span>&nbsp;</td><td  colspan="2"><span class="font14">'+ processorObj.nfc_number + '</span></td></tr>';
-				pageHtml = pageHtml + '<tr height="30px"><td colspan="2" align="center">机箱位置</td><td colspan="2"><span class="font14">经度:'+ processorObj.longitude +'</span><br><span class="font14">纬度:'+ processorObj.latitude + '</span></td><td  colspan="4"><span class="font14">'+ processorObj.pos_desc + '</span></td><td  colspan="2"><span class="font14">MOXA序列号:</span><br><span class="font14">' + processorObj.moxa_number + '</span></td></tr>';
+				pageHtml = pageHtml + '<tr height="30px"><td colspan="2" align="center">机箱位置</td><td colspan="2"><span class="font14">经度:'+ processorObj.longitude +'</span><br><span class="font14">纬度:'+ processorObj.latitude + '</span></td><td  colspan="4"><span class="font14">' + processorObj.pos_desc+'</span></td><td  colspan="2"><span class="font14">MOXA序列号:</span><br><span class="font14">' + processorObj.moxa_number + '</span></td></tr>';
 				pageHtml = pageHtml + '<tr height="30px"><td colspan="2" align="center">IP</td><td colspan="4">&nbsp;<span class="font14">' + processorObj.ip + '</span></td><td  colspan="2" width="120px" align="center">软件工程师确认</td><td  colspan="2"></td></tr>';
 				pageHtml = pageHtml + '<tr height="30px"><td rowspan="2" align="center">TCQ-NFC<br>序列号(14位)</td><td rowspan="2" align="center">起止</td><td rowspan="2" align="center">TCQ<br>编号</td><td colspan="4" align="center">TCQ位置信息</td><td rowspan="2" width="60px" style="border-right-style:none">&nbsp;</td><td rowspan="2"  width="100px" style="border-left-style:none;border-right-style:none" align="center">位置描述</td><td rowspan="2"  width="60px" style="border-left-style:none;" width="60px">&nbsp;</td></tr>';
 				pageHtml = pageHtml + '<tr height="30px"><td align="center"><span class="font14">经度</span></td><td align="center"><span class="font14">纬度</span></td><td align="center"><span class="font14">北斗经度</span></td><td align="center"><span class="font14">北斗纬度</span></td></tr>';
@@ -144,23 +143,23 @@ $(function() {
 					}else{
 						//
 					}
+					
 					var detectorPos = detectorObj.pos_desc;
 					if(detectorPos != null && detectorPos.length > 18){
 						var hzLen = 0;
-						var isNewLine = false;
 						for(var n = 0; n<detectorPos.length; n++){
 							if(detectorPos.charCodeAt(n) > 255){
 								hzLen = hzLen + 2;
 							}else{
 								hzLen = hzLen + 1;
 							}
-							if(hzLen >= 36 && isNewLine == false){
+							if(hzLen >= 36){
 								detectorPos = detectorPos.substring(0,n) + "<br>" + detectorPos.substring(n);
-								isNewLine = true;
 								break;
 							}
 						}
 					}
+					
 					//输出探测器信息行
 					var detectorLineHtml = '<tr height="36px">';
 					detectorLineHtml = detectorLineHtml + '<td width="100px" class="font14"><span>'+ detectorObj.nfc_number + '</span></td>';
@@ -184,11 +183,11 @@ $(function() {
 			var curPage = 1;
 			pageHtml = '<div style="margin: 10px 10px 10px 10px;"><table border="1" cellspacing="0" cellpadding="0">';
 			pageHtml = pageHtml + '<tr height="40px"><td colspan="10" align="center"><span class="fontTitle">智能融合处理器单元和探测器安装记录表 (' + curPage + ')</span></td></tr>';
-			pageHtml = pageHtml + '<tr height="30px"><td colspan="2"  align="center">安装人员</td><td  colspan="4"><span class="font14">'+ processorObj.build_manager +'</span></td><td colspan="2" align="center">施工单位</td><td  colspan="2"><span class="font14">' + processorObj.org_name + '</span></td></tr>';
+			pageHtml = pageHtml + '<tr height="30px"><td colspan="2"  align="center">安装人员</td><td  colspan="4"><span class="font14">'+ processorObj.build_manager +'</span></td><td colspan="2" align="center">施工单位</td><td  colspan="2"><span class="font14">' + '天津航峰希萨科技有限公司' + '</span></td></tr>';
 			pageHtml = pageHtml + '<tr height="30px"><td colspan="2"  align="center">项目经理</td><td  colspan="4"><span class="font14">'+ processorObj.project_manager +'</span></td><td colspan="2" align="center">安装时间</td><td  colspan="2"><span class="font14">' + processorObj.create_date + '</span></td></tr>';
 			pageHtml = pageHtml + '<tr height="30px"><td colspan="2"  align="center">工程师</td><td  colspan="4"><span class="font14">'+ processorObj.install_engineer +'</span></td><td colspan="2" align="center">安装间距</td><td  colspan="2"><span class="font14">' + processorObj.install_space + '</span></td></tr>';
 			pageHtml = pageHtml + '<tr height="30px"><td colspan="2" align="center">机箱编号</td><td  colspan="2"><span class="font14">' + processorObj.box_number + '</span></td><td  colspan="2"  align="left"><span class="font14">CLQ序号:</span>&nbsp;'+clqSeq+'</td><td  colspan="2"  align="right"><span class="font14">CLQNFC序列号</span>&nbsp;</td><td  colspan="2"><span class="font14">'+ processorObj.nfc_number + '</span></td></tr>';
-			pageHtml = pageHtml + '<tr height="30px"><td colspan="2" align="center">机箱位置</td><td colspan="2"><span class="font14">经度:'+ processorObj.longitude +'</span><br><span class="font14">纬度:'+ processorObj.latitude + '</span></td><td  colspan="4"><span class="font14">'+ processorObj.pos_desc + '</span></td><td  colspan="2"><span class="font14">MOXA序列号:</span><br><span class="font14">' + processorObj.moxa_number + '</span></td></tr>';
+			pageHtml = pageHtml + '<tr height="30px"><td colspan="2" align="center">机箱位置</td><td colspan="2"><span class="font14">经度:'+ processorObj.longitude +'</span><br><span class="font14">纬度:'+ processorObj.latitude + '</span></td><td  colspan="4"></td><td  colspan="2"><span class="font14">MOXA序列号:</span><br><span class="font14">' + processorObj.moxa_number + '</span></td></tr>';
 			pageHtml = pageHtml + '<tr height="30px"><td colspan="2" align="center">IP</td><td colspan="4">&nbsp;<span class="font14">' + processorObj.ip + '</span></td><td  colspan="2" width="120px" align="center">软件工程师确认</td><td  colspan="2"></td></tr>';
 			pageHtml = pageHtml + '<tr height="30px"><td rowspan="2" align="center">TCQ-NFC<br>序列号(14位)</td><td rowspan="2" align="center">起止</td><td rowspan="2" align="center">TCQ<br>编号</td><td colspan="4" align="center">TCQ位置信息</td><td rowspan="2" width="60px" style="border-right-style:none">&nbsp;</td><td rowspan="2"  width="100px" style="border-left-style:none;border-right-style:none" align="center">位置描述</td><td rowspan="2"  width="60px" style="border-left-style:none;" width="60px">&nbsp;</td></tr>';
 			pageHtml = pageHtml + '<tr height="30px"><td align="center"><span class="font14">经度</span></td><td align="center"><span class="font14">纬度</span></td><td align="center"><span class="font14">北斗经度</span></td><td align="center"><span class="font14">北斗纬度</span></td></tr>';

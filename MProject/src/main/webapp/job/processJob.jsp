@@ -339,27 +339,30 @@
 					return;
 				}
 				var boxPos = $("[intype='boxPos']").val();
-				if(boxPos == null || boxPos == ""){
-					$.messager.alert('提示','请填写机箱位置描述.');
-					return;
-				}
+				// 关闭空检查
+				//if(boxPos == null || boxPos == ""){
+				//	$.messager.alert('提示','请填写机箱位置描述.');
+				//	return;
+				//}
 				//获取探测器位置输入项
 				var detectorPosArr = [];
 				var detectorOk = true;
 				$("input[intype='detectorPos']").each(function(i,item){
-					if(item.value == null || item.value == ''){
-						detectorOk = false;
-						return false;
-					}
+					//if(item.value == null || item.value == ''){
+					//	detectorOk = false;
+					//	return false;
+					//}
 					var detectorPos = {};
 					var itemId = item.id;
 					detectorPos['id'] = itemId.split("_")[1];
 					detectorPos['posDesc'] = item.value;
+					detectorPosArr[detectorPosArr.length] = detectorPos;
 				});
-				if(detectorOk ==  false){
-					$.messager.alert('提示','有探测器位置描述为空,请填写完整.');
-					return;
-				}
+				// 关闭空检查
+				//if(detectorOk ==  false){
+				//	$.messager.alert('提示','有探测器位置描述为空,请填写完整.');
+				//	return;
+				//}
 				submitData['installOption'] = JSON.stringify(installOptionObj);
 				submitData['machineBoxPos'] = boxPos;
 				//submitData['processorInfo'] = JSON.stringify(processorInfoArr);

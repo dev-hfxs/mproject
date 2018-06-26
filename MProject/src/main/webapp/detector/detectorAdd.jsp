@@ -25,7 +25,7 @@
 </style>
 </head>
 <body>
-<div style="margin: 20px 0;"></div>
+<div style="margin: 10px 0;"></div>
 <div class="easyui-panel"
 	style="width: 100%; max-width: 480px; padding: 30px 30px; border-width:0" >
 	<form id="ff" method="post" >
@@ -45,13 +45,22 @@
 		-->
 		<div style="margin-bottom: 20px">
 			<input class="easyui-textbox" id="longitude" name="longitude" style="width: 90%"
-				data-options="label:'经度 :',required:true,validType:'checkLng'">
+				data-options="label:'WGS84经度 :',required:true,validType:'checkLng'">
 		</div>
 		<div style="margin-bottom: 20px">
 			<input class="easyui-textbox" id="latitude" name="latitude" style="width: 90%"
-				data-options="label:'纬度 :',required:true,validType:'checkLat'">
+				data-options="label:'WGS84纬度 :',required:true,validType:'checkLat'">
 		</div>
 		<div style="margin-bottom: 20px">
+			<input class="easyui-textbox" id="gcjLongitude" name="gcjLongitude" style="width: 90%"
+				data-options="label:'北斗经度 :',required:true,validType:'checkLng'">
+		</div>
+		<div style="margin-bottom: 20px">
+			<input class="easyui-textbox" id="gcjLatitude" name="gcjLatitude" style="width: 90%"
+				data-options="label:'北斗纬度 :',required:true,validType:'checkLat'">
+		</div>
+		
+		<div style="margin-bottom: 10px">
 			<div>一个处理器下的探测器只能有一个起点和终点.</div>
 			<div>
 				<input id="chkStartPoint" type="checkbox" name="startPoint"><span id="spanStart">起点</span>&nbsp;&nbsp;&nbsp;&nbsp;<span id="spanStartPointTip"></span>
@@ -63,7 +72,6 @@
 	</form>
 	<!-- -->
 	<div style="text-align: center; padding: 5px 0">
-		<br>
 		<a href="javascript:void(0)" class="easyui-linkbutton"	onclick="submitForm()" style="width: 80px">确认</a> &nbsp;&nbsp;
 		<a href="javascript:void(0)" class="easyui-linkbutton" 	onclick="doCancel()" style="width: 80px">取消</a>
 	</div>
@@ -110,6 +118,8 @@ function submitForm() {
 	    	'nfcNumber':$("#nfcNumber").val(),
 	    	'longitude':$("#longitude").val(),
 	    	'latitude':$("#latitude").val(),
+	    	'gcjLongitude':$("#gcjLongitude").val(),
+	    	'gcjLatitude':$("#gcjLatitude").val(),
 	    	'startPoint':isStart,
 	    	'endPoint':isEnd
 	    },

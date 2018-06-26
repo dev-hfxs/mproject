@@ -99,6 +99,7 @@ function showButtons(val,row){
 		}
 	}
 	columnItem = columnItem + '<span><a href="javascript:void(0)" class="easyui-linkbutton" onclick="printDevice(\''+ row.id + '\')" style="width:80px;">打印安装表</a></span>&nbsp;&nbsp;';
+	columnItem = columnItem + '<span><a href="javascript:void(0)" class="easyui-linkbutton" onclick="printDevice2(\''+ row.id + '\')" style="width:80px;">打印验收安装表</a></span>&nbsp;&nbsp;';
 	return columnItem;
 }
 
@@ -208,7 +209,11 @@ function doSearch(){
 }
 
 function printDevice(boxId){
-	window.open ('<%=path%>/report/deviceInfo.jsp?boxId=' + boxId, '探测器安装记录表', 'height=900, width=960, top=20, left=100, toolbar=no, menubar=no, scrollbars=no, resizable=no,location=no, status=no');
+	window.open ('<%=path%>/report/deviceInfo.jsp?entrance=projectMgr&boxId=' + boxId, '探测器安装记录表', 'height=900, width=960, top=20, left=100, toolbar=no, menubar=no, scrollbars=no, resizable=no,location=no, status=no');
+}
+
+function printDevice2(boxId){
+	window.open ('<%=path%>/report/deviceInfo-accept.jsp?entrance=projectMgr&boxId=' + boxId, '探测器安装验收表', 'height=900, width=960, top=20, left=100, toolbar=no, menubar=no, scrollbars=no, resizable=no,location=no, status=no');
 }
 
 </script>

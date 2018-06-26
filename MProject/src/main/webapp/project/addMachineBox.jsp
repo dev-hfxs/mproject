@@ -56,11 +56,19 @@
 			-->
 			<div style="margin-bottom: 20px">
 				<input class="easyui-textbox" id="longitude" name="longitude" style="width: 100%"
-					data-options="label:'经度 :',required:true,validType:'checkLng'">
+					data-options="label:'WGS84经度 :',required:true,validType:'checkLng'">
 			</div>
 			<div style="margin-bottom: 20px">
 				<input class="easyui-textbox" id="latitude" name="latitude" style="width: 100%"
-					data-options="label:'纬度 :', required:true,validType:'checkLat'">
+					data-options="label:'WGS84纬度 :', required:true,validType:'checkLat'">
+			</div>
+			<div style="margin-bottom: 20px">
+				<input class="easyui-textbox" id="gcjLongitude" name="gcjLongitude" style="width: 100%"
+					data-options="label:'北斗经度 :',required:true,validType:'checkLng'">
+			</div>
+			<div style="margin-bottom: 20px">
+				<input class="easyui-textbox" id="gcjLatitude" name="gcjLatitude" style="width: 100%"
+					data-options="label:'北斗纬度 :', required:true,validType:'checkLat'">
 			</div>
 			<div style="margin-bottom: 20px">
 				<input class="easyui-numberbox" id="processorNum" name="processorNum" style="width: 100%"
@@ -139,6 +147,8 @@
 			    	'allowBoxNum':$("#allowBoxNum").val(),
 			    	'longitude':$("#longitude").val(),
 			    	'latitude':$("#latitude").val(),
+			    	'gcjLongitude':$("#gcjLongitude").val(),
+			    	'gcjLatitude':$("#gcjLatitude").val(),
 			    	'processorNum':$("#processorNum").val(),
 			    	'installSpace':$("#installSpace").val()	
 			    },

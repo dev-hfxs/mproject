@@ -40,6 +40,14 @@
 					data-options="label:'纬度 :',required:true,precision:6,validType:'length[8,10]'">
 			</div>
 			<div style="margin-bottom: 20px">
+				<input class="easyui-numberbox" id="gcjLongitude" name="gcjLongitude" style="width: 100%"
+					data-options="label:'国测经度 :',required:true,precision:6,validType:'length[8,10]'">
+			</div>
+			<div style="margin-bottom: 20px">
+				<input class="easyui-numberbox" id="gcjLatitude" name="gcjLatitude" style="width: 100%"
+					data-options="label:'国测纬度 :',required:true,precision:6,validType:'length[8,10]'">
+			</div>
+			<div style="margin-bottom: 20px">
 				<input class="easyui-numberbox" id="processorNum" name="processorNum" style="width: 100%"
 					data-options="label:'处理器数量 :',required:true,validType:'length[1,1]'">
 			</div>

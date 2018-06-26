@@ -58,8 +58,10 @@
 					<!-- 
 					<th data-options="field:'detector_id',width:200,sortable:true">探测器ID</th>
 					 -->
-					<th data-options="field:'longitude',width:100,sortable:true">经度</th>
-					<th data-options="field:'latitude',width:200">纬度</th>
+					<th data-options="field:'longitude',width:120">WGS84经度</th>
+					<th data-options="field:'latitude',width:120">WGS84纬度</th>
+					<th data-options="field:'gcj_longitude',width:120">北斗经度</th>
+					<th data-options="field:'gcj_latitude',width:120">北斗纬度</th>
 					<th data-options="field:'start_point',width:100,formatter:showStatus">起点</th>
 					<th data-options="field:'end_point',width:100,formatter:showStatus">终点</th>
 					<th data-options="field:'id',width:150,align:'center',formatter:showDetectorButtons">操作</th>
@@ -87,7 +89,8 @@ $(function() {
 	$('#dg').datagrid({
 		onLoadSuccess:function(data){
 			if(data!=null && data.rows !=null && data.rows.length >0){
-				curProcessorId = data.rows[0].id;
+				//curProcessorId = data.rows[0].id;
+				//$('#dg').datagrid('selectRow',0);
 				refreshDetector();
 			}
 		}
@@ -150,12 +153,12 @@ function addDetector(){
 		return;
 	}
 	var datas = $('#dg2').datagrid('getData');
-	if(datas != null && datas.rows!=null && datas.rows.length > 2){
-		$.messager.alert('提示','单个处理器下面不能维护128个以上的探测器!');
+	if(datas != null && datas.rows!=null && datas.rows.length > 210){
+		$.messager.alert('提示','单个处理器下面不能维护210个以上的探测器!');
 		return;
 	}
-	var content = '<iframe src="<%=path%>/detector/detectorAdd.jsp?processorId='+curProcessorId+'" width="100%" height="90%" frameborder="0" scrolling="no"></iframe>';
-	var boarddiv = '<div id="msgwindow" title="添加探测器" ></div>'// style="overflow:hidden;"可以去掉滚动条
+	var content = '<iframe src="<%=path%>/detector/detectorAdd.jsp?processorId='+curProcessorId+'" width="100%" height="100%" frameborder="0" scrolling="no"></iframe>';
+	var boarddiv = '<div id="msgwindow" title="添加探测器" style="overflow:hidden;"></div>'// 可以去掉滚动条
 	$(document.body).append(boarddiv);
 	var win = $('#msgwindow').dialog({
 		content : content,
@@ -191,8 +194,8 @@ function updateProcesor(id){
 }
 
 function updateDetector(id){
-	var content = '<iframe src="<%=path%>/detector/detectorEdit.jsp?id=' + id + '&processorId=' + curProcessorId + '" width="100%" height="90%" frameborder="0" scrolling="no"></iframe>';
-	var boarddiv = '<div id="msgwindow" title="修改探测器" ></div>'// style="overflow:hidden;"可以去掉滚动条
+	var content = '<iframe src="<%=path%>/detector/detectorEdit.jsp?id=' + id + '&processorId=' + curProcessorId + '" width="100%" height="100%" frameborder="0" scrolling="no"></iframe>';
+	var boarddiv = '<div id="msgwindow" title="修改探测器" style="overflow:hidden;"></div>'// 可以去掉滚动条
 	$(document.body).append(boarddiv);
 	var win = $('#msgwindow').dialog({
 		content : content,
@@ -243,8 +246,11 @@ function deleteProcessor(id){
 			    dataType:'json',
 			    success:function(data) {
 			    	if(data.returnCode == "success"){
+			    		curProcessorId = null;
 			    		$('#dg').datagrid('loadData',{total:0,rows:[]});
 			    		$('#dg').datagrid('reload');
+			    		$('#dg2').datagrid('loadData',{total:0,rows:[]});
+			    		//$('#dg2').datagrid('reload');
 			    	}else{
 			    		$.messager.alert('提示',data.msg);
 			    	}

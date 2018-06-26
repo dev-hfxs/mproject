@@ -68,24 +68,28 @@ public class DetectorServiceImpl implements IDetectorService{
 			log.info(dae.toString());
 			throw new BusinessException("添加探测器错误,未获取到当前处理器下的探测器数.");
 		}
+		int curCount = 0; 
 		if(recordMap!= null) {
-			int count = 0;
 			try{
-				count = Integer.parseInt(recordMap.get("countNum").toString());	
+				curCount = Integer.parseInt(recordMap.get("countNum").toString());	
 			}catch(NumberFormatException ne) {
 				log.info(ne.getMessage());
 			}
-			if(count > 240) {
+			if(curCount > 240) {
 				throw new BusinessException("添加探测器错误, 当前处理器探测器数已到上限.");
 			}
 		}
 		// 保存数据到库
 		String primarykey = UUIDGenerator.getUUID();
+		int orderNum = curCount + 1;
 		detectorObj.put("id", primarykey);
-		detectorObj.put("creator", curUser);
-		detectorObj.put("createDate", DateUtils.getNow(DateUtils.FORMAT_LONG));
+		detectorObj.put("orderNum", orderNum);
+		//detectorObj.put("creator", curUser);
+		//detectorObj.put("createDate", DateUtils.getNow(DateUtils.FORMAT_LONG));
 		String preSql = ConfigSQLUtil.getCacheSql("mproject-detector-add");
 		String sql = ConfigSQLUtil.preProcessSQL(preSql, detectorObj);
+		log.info(sql);
+		
 		try {
 			springJdbcDao.update(sql);
 		} catch (DataAccessException dae) {
@@ -157,8 +161,8 @@ public class DetectorServiceImpl implements IDetectorService{
 	public void update4ImportDetector(String curUser,String processorId,boolean ignoreExistsData, boolean enableReplace, List<Map<String, String>> datas)
 			throws BusinessException {
 		if(datas!= null && datas.size() >0) {
-			if(datas.size() > 240) {
-				throw new BusinessException("导入探测器错误, 文件中的数据行超出240，单个处理器下的探测器不能超过240个.");
+			if(datas.size() > 210) {
+				throw new BusinessException("导入探测器错误, 文件中的数据行超出210，单个处理器下的探测器不能超过210个.");
 			}
 			
 			//获取当前处理器下已维护的探测器数
@@ -174,16 +178,16 @@ public class DetectorServiceImpl implements IDetectorService{
 				log.info(dae.toString());
 				throw new BusinessException("导入探测器错误, 未获取到当前处理器下的探测器数!");
 			}
+			int curCount = 0;
 			if(recordMap!= null) {
-				int count = 0;
 				try{
-					count = Integer.parseInt(recordMap.get("countNum").toString());	
+					curCount = Integer.parseInt(recordMap.get("countNum").toString());	
 				}catch(NumberFormatException ne) {
 					log.info(ne.getMessage());
 				}
-				int afterSize = datas.size() + count;
-				if(afterSize > 240) {
-					throw new BusinessException("导入探测器错误, 当前处理器下探测器数导入后将超过240!");
+				int afterSize = datas.size() + curCount;
+				if(afterSize > 210) {
+					throw new BusinessException("导入探测器错误, 当前处理器下探测器数导入后将超过210!");
 				}
 			}
 			
@@ -191,6 +195,7 @@ public class DetectorServiceImpl implements IDetectorService{
 			StringBuffer checkSql = new StringBuffer();
 			StringBuffer checkUseSql = new StringBuffer();
 			StringBuffer importDataSql = new StringBuffer();
+			int orderNum = curCount;
 			for(Map<String, String> data : datas) {
 				checkSql.setLength(0);
 				String longitude = data.get("longitude");
@@ -200,6 +205,15 @@ public class DetectorServiceImpl implements IDetectorService{
 				String latitude = data.get("latitude");
 				if(latitude == null || latitude.indexOf(".") < 1 || latitude.substring(latitude.lastIndexOf(".")).length() < 7) {
 					throw new BusinessException("导入探测器错误, 文件中的纬度" + longitude + "精度不正确.");
+				}
+				
+				String gcjLongitude = data.get("gcj_longitude");
+				if(gcjLongitude == null || gcjLongitude.indexOf(".") < 1 || gcjLongitude.substring(gcjLongitude.lastIndexOf(".")).length() < 7) {
+					throw new BusinessException("导入探测器错误, 文件中的北斗经度" + longitude + "精度不正确.");
+				}
+				String gcjLatitude = data.get("gcj_latitude");
+				if(gcjLatitude == null || gcjLatitude.indexOf(".") < 1 || gcjLatitude.substring(gcjLatitude.lastIndexOf(".")).length() < 7) {
+					throw new BusinessException("导入探测器错误, 文件中的北斗纬度" + longitude + "精度不正确.");
 				}
 				
 				if(data.get("nfc_number") != null) {
@@ -240,21 +254,22 @@ public class DetectorServiceImpl implements IDetectorService{
 				
 				String detectorSeq = data.get("detector_seq")!= null ? data.get("detector_seq").toString() : "";
 				String start_point = data.get("start_point")!= null ? data.get("start_point").toString() : "N";
-				if("是".equals(start_point)) {
+				if("是".equals(start_point) || "y".equals(start_point)) {
 					start_point = "Y";
 				}
-				if("否".equals(start_point)) {
+				if("否".equals(start_point) || "n".equals(start_point)) {
 					start_point = "N";
 				}
 				
 				String end_point = data.get("end_point")!= null ? data.get("end_point").toString() : "N";
-				if("是".equals(end_point)) {
+				if("是".equals(end_point) || "y".equals(end_point)) {
 					end_point = "Y";
 				}
-				if("否".equals(end_point)) {
+				if("否".equals(end_point) || "n".equals(end_point)) {
 					end_point = "N";
 				}
-				importDataSql.append(" insert into t_detector(id,detector_id, detector_seq,processor_id,nfc_number,longitude,latitude,start_point,end_point) values (");
+				orderNum ++;
+				importDataSql.append(" insert into t_detector(id,detector_id, detector_seq,processor_id,nfc_number,longitude,latitude,gcj_longitude,gcj_latitude, start_point, end_point, order_num) values (");
 				importDataSql.append(" '").append(UUIDGenerator.getUUID()).append("'");
 				// importDataSql.append(",'").append(data.get("detector_id")).append("'");
 				importDataSql.append(",'").append("").append("'");
@@ -263,8 +278,11 @@ public class DetectorServiceImpl implements IDetectorService{
 				importDataSql.append(",'").append(data.get("nfc_number")).append("'");
 				importDataSql.append(", ").append(longitude).append("");
 				importDataSql.append(", ").append(latitude).append("");
+				importDataSql.append(", ").append(gcjLongitude).append("");
+				importDataSql.append(", ").append(gcjLatitude).append("");
 				importDataSql.append(", '").append(start_point).append("'");
 				importDataSql.append(", '").append(end_point).append("'");
+				importDataSql.append(", ").append(orderNum).append(" ");
 				importDataSql.append(" ) ;\n");
 			}
 			if(importDataSql.length()> 0) {

@@ -32,7 +32,7 @@
 			<tr>
 				<th data-options="field:'status',width:100,formatter:showStatusName">工单状态</th>
 				<th data-options="field:'job_type',width:120,formatter:showTypeName">工单类型</th>
-				<th data-options="field:'user_name',width:200">工程师</th>
+				<th data-options="field:'full_name',width:200">工程师</th>
 				<th data-options="field:'work_content',width:250,sortable:true">工作内容</th>
 				<th data-options="field:'project_number',width:120,sortable:true">项目编号</th>
 				<th data-options="field:'project_name',width:200,sortable:true">项目名称</th>

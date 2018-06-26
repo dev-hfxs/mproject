@@ -249,7 +249,7 @@
 	</dependency>
 </dependencies>
   <build>
-    <finalName>DMonitorServer</finalName>
+    <finalName>MProject</finalName>
      <plugins>
 		<plugin> 
 			<groupId>org.apache.maven.plugins</groupId> 

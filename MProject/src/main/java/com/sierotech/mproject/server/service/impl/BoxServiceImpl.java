@@ -515,7 +515,7 @@ public class BoxServiceImpl implements IBoxService{
 			throw new BusinessException("修改机箱错误,缺少纬度!");
 		}
 		if (null == boxObj.get("processorNum")) {
-			throw new BusinessException("修改机箱错误,处理器数量!");
+			throw new BusinessException("修改机箱错误,缺少处理器数量!");
 		}
 		// 检查机箱编号是否重复
 		boolean boxExists = checkBoxNumber(boxObj.get("boxId").toString(), boxObj.get("boxNumber").toString());
@@ -534,7 +534,7 @@ public class BoxServiceImpl implements IBoxService{
 	}
 
 	@Override
-	public List<Map<String, Object>> getDeviceLog(String curUser, String boxId) throws BusinessException {
+	public List<Map<String, Object>> queryDeviceLog(String curUser, String boxId, String entrance, String reportName) throws BusinessException {
 //		List<Map<String, Object>>  result = new ArrayList<Map<String, Object>>();
 		//获取机箱下的处理器
 		String getProcessorPreSql =  ConfigSQLUtil.getCacheSql("mproject-processor-getProcessorList4Report");
@@ -562,6 +562,24 @@ public class BoxServiceImpl implements IBoxService{
 				}
 				processor.put("detectors", alDetectors);
 			}
+			//获取打印数据后记录日志
+			String addPrintLogPreSql =  ConfigSQLUtil.getCacheSql("mproject-log-logPrint");
+			paramsMap.clear();
+			
+			paramsMap.put("id", UUIDGenerator.getUUID());
+			paramsMap.put("boxId", boxId);
+			paramsMap.put("userName", curUser);
+			paramsMap.put("curDate", DateUtils.getNow(DateUtils.FORMAT_LONG));
+			paramsMap.put("printEntrance", entrance);
+			paramsMap.put("reportName", reportName);
+			
+			String addPrintLogSql =  ConfigSQLUtil.preProcessSQL(addPrintLogPreSql, paramsMap);
+			//日志入库
+			try {
+				springJdbcDao.execute(addPrintLogSql);
+			} catch (DataAccessException dae) {
+				log.info(dae.toString());
+			}			
 		}
 		return alProcessors;
 	}

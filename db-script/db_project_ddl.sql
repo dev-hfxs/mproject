@@ -19,7 +19,7 @@ create table t_user
    create_date          varchar(19)                    null ,
    constraint pk_t_user_id primary key (id)
 );
-
+alter table t_user add index index_user_user_name(user_name);
 
 /*==============================================================*/
 /* Table: t_project_personnel                                */
@@ -121,6 +121,8 @@ create table t_machine_box
    nfc_number           varchar(20)                    null comment 'NFC编号' ,
    longitude            decimal(10,7)                  null comment '经度' ,
    latitude             decimal(10,7)                  null comment '纬度' ,
+   gcj_longitude        decimal(10,7)                  null comment '国测经度' ,
+   gcj_latitude         decimal(10,7)                  null comment '国测纬度' ,
    pos_desc             varchar(128)                   null comment '位置描述' ,
    processor_num        int(4)                         null comment '处理器数量' ,
    install_space        varchar(20)                    null comment '安装间距' ,
@@ -185,13 +187,21 @@ create table t_detector
    detector_seq	        varchar(10)                    null comment '探测器编号' ,
    processor_id         varchar(32)                    null comment '对应处理器id' ,
    nfc_number           varchar(20)                    null comment 'NFC序列号' ,
-   longitude            decimal(10,7)                   null comment '经度' ,
-   latitude             decimal(10,7)                   null comment '纬度' ,
+   longitude            decimal(10,7)                  null comment '经度' ,
+   latitude             decimal(10,7)                  null comment '纬度' ,
+   gcj_longitude        decimal(10,7)                  null comment '国测经度' ,
+   gcj_latitude         decimal(10,7)                  null comment '国测纬度' ,
    start_point          char(1)			       null comment '起点' ,
    end_point            char(1)                        null comment '终点' ,
    pos_desc             varchar(128)                   null comment '位置描述' ,
    constraint pk_t_detector_id primary key clustered (id)
 );
+
+alter table t_detector add column gcj_longitude  decimal(10,7) null comment '国测经度';
+
+alter table t_detector add column gcj_latitude  decimal(10,7) null comment '国测纬度';
+
+alter table t_detector add column order_num int null comment '排序号';
 
 alter table t_detector add index index_detecotr_processorid(processor_id);
 
@@ -308,6 +318,8 @@ create table t_session_log
    constraint pk_t_session_log_id primary key (id)
 );
 
+alter table t_session_log add index index_session_user_name(user_name);
+
 /*==============================================================*/
 /* Table: t_admin_log                                           */
 /*==============================================================*/
@@ -320,6 +332,22 @@ create table t_admin_log
    operation_desc       varchar(256)                   null comment '操作描述' ,
    constraint pk_t_admin_log_id primary key (id)
 );
+
+/*==============================================================*/
+/* Table: t_print_log                                           */
+/*==============================================================*/
+
+create table t_print_log 
+(
+   id                   varchar(32)                    not null,
+   user_name            varchar(64)                    null comment '操作的用户' ,
+   operation_date       varchar(19)                    null comment '操作时间' ,
+   print_entrance       varchar(40)                    null comment '打印入口' ,
+   report_name          varchar(64)                    null comment '报表名称' ,
+   box_id               varchar(32)                    null comment '机箱ID' ,
+   constraint pk_t_print_log_id primary key (id)
+);
+
 
 /*==============================================================*/
 /* Table: t_nfc_code_machinebox                                           */

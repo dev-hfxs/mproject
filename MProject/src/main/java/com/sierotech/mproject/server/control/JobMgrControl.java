@@ -138,7 +138,6 @@ public class JobMgrControl {
 				result.put("msg", "处理器IP、探测器位置参数格式错误.");
 				return result;
 			}
-			
 			try {
 				String curUserId = UserTool.getLoginUser(request).get("id");
 				jobService.updateJob(curUserId, jobId, jobStatus, "", boxPos, installOptionMap, detectorPosList);

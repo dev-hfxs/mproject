@@ -31,8 +31,10 @@
 			<tr>
 				<th data-options="field:'box_number',width:150,sortable:true">机箱编号</th>
 				<th data-options="field:'nfc_number',width:150,sortable:true">NFC序列号</th>
-				<th data-options="field:'longitude',width:200,sortable:true">经度</th>
-				<th data-options="field:'latitude',width:100,sortable:true">纬度</th>
+				<th data-options="field:'longitude',width:120">WGS84经度</th>
+				<th data-options="field:'latitude',width:120">WGS84纬度</th>
+				<th data-options="field:'gcj_longitude',width:120">北斗经度</th>
+				<th data-options="field:'gcj_latitude',width:120">北斗纬度</th>
 				<th data-options="field:'processor_num',width:200">包含处理器数量</th>
 				<th data-options="field:'submit_num',width:100">提交次数</th>
 				<th data-options="field:'id',width:300,align:'center',formatter:showButtons">操作</th>
@@ -125,7 +127,7 @@ function showButtons(val,row){
 }
 
 function printDevice(boxId){
-	window.open ('<%=path%>/report/deviceInfo.jsp?boxId=' + boxId, '探测器安装记录表', 'height=900, width=960, top=20, left=100, toolbar=no, menubar=no, scrollbars=no, resizable=no,location=no, status=no');
+	window.open ('<%=path%>/report/deviceInfo.jsp?entrance=boxWrite&boxId=' + boxId, '探测器安装记录表', 'height=900, width=960, top=20, left=100, toolbar=no, menubar=no, scrollbars=no, resizable=no,location=no, status=no');
 }
 
 function configProcessor(boxId,boxNumber){
@@ -133,8 +135,8 @@ function configProcessor(boxId,boxNumber){
 }
 
 function updateBox(boxId){
-	var content = '<iframe src="<%=path%>/box/machineBoxEdit.jsp?boxId='+boxId+'" width="100%" height="80%" frameborder="0" scrolling="no"></iframe>';
-	var boarddiv = '<div id="msgwindow" title="修改机箱" ></div>'// style="overflow:hidden;"可以去掉滚动条
+	var content = '<iframe src="<%=path%>/box/machineBoxEdit.jsp?boxId='+boxId+'" width="100%" height="100%" frameborder="0" scrolling="no"></iframe>';
+	var boarddiv = '<div id="msgwindow" title="修改机箱" style="overflow:hidden;"></div>'// 可以去掉滚动条
 	$(document.body).append(boarddiv);
 	var win = $('#msgwindow').dialog({
 		content : content,

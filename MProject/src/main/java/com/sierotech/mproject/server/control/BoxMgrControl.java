@@ -268,7 +268,7 @@ public class BoxMgrControl {
 	//获取设备安装记录表
 	@RequestMapping(value = "/getDeviceLog")
 	@ResponseBody
-	public Map<String, Object> getPrintData(HttpServletRequest request) {
+	public Map<String, Object> queryPrintData(HttpServletRequest request) {
 		Map<String, Object> result = new HashMap<String, Object>();
 		result.put("returnCode", "fail");
 		if(null == request.getParameter("boxId")) {
@@ -276,12 +276,16 @@ public class BoxMgrControl {
 			return result;
 		}
 		String curUserName = UserTool.getLoginUser(request).get("user_name");
-		String boxId = request.getParameter("boxId");
+		String boxId = request.getParameter("boxId");		
+		String userName = request.getParameter("userName");
+		String entrance = request.getParameter("entrance");
+		String reportName = request.getParameter("reportName");		
+		
 		
 		List<Map<String, Object>> datas = null;
 		//获取数据
 		try {
-			datas = boxService.getDeviceLog(curUserName, boxId);
+			datas = boxService.queryDeviceLog(curUserName, boxId, entrance, reportName);
 		}catch(BusinessException be) {
 			result.put("msg", be.getMessage());
 			return result;

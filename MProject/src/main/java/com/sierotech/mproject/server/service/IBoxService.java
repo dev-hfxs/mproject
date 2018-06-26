@@ -34,6 +34,6 @@ public interface IBoxService {
 	
 	public void updateBox4Accept(String curUser, String boxId, List<Map> acceptFileList) throws BusinessException;
 	
-	public List<Map<String, Object>> getDeviceLog(String curUser, String boxId) throws BusinessException;
+	public List<Map<String, Object>> queryDeviceLog(String curUser, String boxId, String entrance, String reportName) throws BusinessException;
 		
 }

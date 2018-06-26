@@ -20,7 +20,7 @@
 <script type="text/javascript"	src="<%=path%>/js/common.js"></script>
 </head>
 <body>
-	<div style="margin: 20px 0;"></div>
+	<div style="margin: 10px 0;"></div>
 	<div class="easyui-panel"
 		style="width: 100%; max-width: 480px; padding: 30px 60px; border-width:0" >
 		<form id="ff" method="post" >
@@ -34,11 +34,19 @@
 			</div>
 			<div style="margin-bottom: 20px">
 				<input class="easyui-textbox" id="longitude" name="longitude" style="width: 90%"
-					data-options="label:'经度 :',required:true,precision:6,validType:'checkLng'">
+					data-options="label:'WGS84经度 :',required:true,precision:6,validType:'checkLng'">
 			</div>
 			<div style="margin-bottom: 20px">
 				<input class="easyui-textbox" id="latitude" name="latitude" style="width: 90%"
-					data-options="label:'纬度 :',required:true,precision:6,validType:'checkLat'">
+					data-options="label:'WGS84纬度 :',required:true,precision:6,validType:'checkLat'">
+			</div>
+			<div style="margin-bottom: 20px">
+				<input class="easyui-textbox" id="gcjLongitude" name="gcjLongitude" style="width: 90%"
+					data-options="label:'北斗经度 :',required:true,precision:6,validType:'checkLng'">
+			</div>
+			<div style="margin-bottom: 20px">
+				<input class="easyui-textbox" id="gcjLatitude" name="gcjLatitude" style="width: 90%"
+					data-options="label:'北斗纬度 :',required:true,precision:6,validType:'checkLat'">
 			</div>
 			<div style="margin-bottom: 20px">
 				<input class="easyui-numberbox" id="processorNum" name="processorNum" style="width: 90%"
@@ -111,6 +119,8 @@
 			    	'nfcNumber':$("#nfcNumber").val(),
 			    	'longitude':$("#longitude").val(),
 			    	'latitude':$("#latitude").val(),
+			    	'gcjLongitude':$("#gcjLongitude").val(),
+			    	'gcjLatitude':$("#gcjLatitude").val(),
 			    	'processorNum':$("#processorNum").val(),
 			    	'installSpace':$("#installSpace").val()	
 			    },
@@ -159,8 +169,10 @@
 			    		$("#nfcNumber").textbox('setValue', boxObj.nfc_number);
 			    		$("#longitude").textbox('setValue', boxObj.longitude);
 			    		$("#latitude").textbox('setValue', boxObj.latitude);
+			    		$("#gcjLongitude").textbox('setValue', boxObj.gcj_longitude);
+			    		$("#gcjLatitude").textbox('setValue', boxObj.gcj_latitude);
 			    		$("#processorNum").textbox('setValue', boxObj.processor_num);
-			    		$("#installSpace").textbox('setValue', boxObj.install_space);	
+			    		$("#installSpace").textbox('setValue', boxObj.install_space);
 			    	}
 			    },
 			    error : function(data) {

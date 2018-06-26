@@ -50,4 +50,23 @@
 		</content>
 		<description></description>
 	</sql>
+	
+	<sql id="mproject-log-logPrint" name="记录打印信息">
+		<content>
+		 INSERT INTO t_print_log (id, user_name, operation_date, print_entrance, report_name, box_id) 
+		 VALUES (':id', ':userName', ':curDate', ':printEntrance', ':reportName', ':boxId' )  
+		</content>
+		<description></description>
+	</sql>
+	
+	<sql id="mproject-log-getPrintLog" name="获取打印日志信息">
+		<content>
+		 select p.id, p.user_name, p.operation_date, p.print_entrance, p.report_name, m.box_number 
+    	 from t_print_log p 
+		 left join t_machine_box m on p.box_id = m.id where 1=1 [ and instr(m.box_number,':boxNumber') > 0 ]
+		 order by p.operation_date desc  
+		</content>
+		<description></description>
+	</sql>
+	
 </sqls>
