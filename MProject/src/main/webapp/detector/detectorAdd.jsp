@@ -51,6 +51,7 @@
 			<input class="easyui-textbox" id="latitude" name="latitude" style="width: 90%"
 				data-options="label:'WGS84纬度 :',required:true,validType:'checkLat'">
 		</div>
+		<!-- 
 		<div style="margin-bottom: 20px">
 			<input class="easyui-textbox" id="gcjLongitude" name="gcjLongitude" style="width: 90%"
 				data-options="label:'北斗经度 :',required:true,validType:'checkLng'">
@@ -59,7 +60,7 @@
 			<input class="easyui-textbox" id="gcjLatitude" name="gcjLatitude" style="width: 90%"
 				data-options="label:'北斗纬度 :',required:true,validType:'checkLat'">
 		</div>
-		
+		 -->
 		<div style="margin-bottom: 10px">
 			<div>一个处理器下的探测器只能有一个起点和终点.</div>
 			<div>
